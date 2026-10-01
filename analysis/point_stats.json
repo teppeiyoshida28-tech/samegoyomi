@@ -1,0 +1,1601 @@
+{
+ "generated_at": "2026-08-27T01:42:15.352604",
+ "source": "phase1/dive_logs_structured_full.json (2014-2026, 4026 articles)",
+ "definition": "rate = P(hammer_seen==True | point dived, condition). hammer_seen=None counted as not-seen. Multi-point articles credit all listed points.",
+ "n_articles_used": 3330,
+ "baseline_rate": 0.6967,
+ "alias_table": {
+  "kame_ne": [
+   "カメ根",
+   "亀根",
+   "かメ根",
+   "かめ根",
+   "KAMENE",
+   "Kamene",
+   "kamene",
+   "Kame-ne"
+  ],
+  "jab_ne": [
+   "ジャブ根",
+   "青根(=同一根の別名)"
+  ],
+  "eno_kuchi": [
+   "江の口",
+   "江ノ口",
+   "Enokuchi",
+   "ENOKUCHI"
+  ],
+  "A_point": [
+   "Aポイント",
+   "A ポイント",
+   "Apoint"
+  ],
+  "zabu_ne": [
+   "ザブ根",
+   "ZABUNE",
+   "Zabu-ne",
+   "Zabune"
+  ],
+  "mitsu_ne": [
+   "三ツ根",
+   "三つ根",
+   "ミツネ",
+   "ミツ根"
+  ],
+  "kado_ne": [
+   "カド根"
+  ],
+  "hashigodan": [
+   "はしご段",
+   "ハシゴ段",
+   "梯子段"
+  ],
+  "shirane": [
+   "白根"
+  ],
+  "karito": [
+   "カリトの鼻",
+   "karito"
+  ],
+  "higashi_ne": [
+   "東の根"
+  ],
+  "hammers_rock": [
+   "ハンマーズロック"
+  ],
+  "andoro": [
+   "アンドロ"
+  ],
+  "plate": [
+   "プレート"
+  ],
+  "third_takane": [
+   "三つ目の高根"
+  ]
+ },
+ "merged": {
+  "ao_ne": "jab_ne"
+ },
+ "observation_bias_note": "hammer_points はガイドの行先選択に強く依存する観測バイアスあり。カメ根が全記事の約7割に登場するのは『ハンマーが出るから行く』と『行くから記録される』の両方の効果を含む。出現率の点間比較は参考値。",
+ "points": {
+  "kame_ne": {
+   "overall": {
+    "n": 2802,
+    "seen": 2010,
+    "rate": 0.7173,
+    "reliable": true
+   },
+   "by_tide_name": {
+    "中潮": {
+     "n": 992,
+     "seen": 721,
+     "rate": 0.7268,
+     "reliable": true
+    },
+    "大潮": {
+     "n": 842,
+     "seen": 622,
+     "rate": 0.7387,
+     "reliable": true
+    },
+    "小潮": {
+     "n": 477,
+     "seen": 347,
+     "rate": 0.7275,
+     "reliable": true
+    },
+    "若潮": {
+     "n": 174,
+     "seen": 134,
+     "rate": 0.7701,
+     "reliable": true
+    },
+    "長潮": {
+     "n": 160,
+     "seen": 115,
+     "rate": 0.7188,
+     "reliable": true
+    }
+   },
+   "by_month": {
+    "1": {
+     "n": 96,
+     "seen": 51,
+     "rate": 0.5312,
+     "reliable": true
+    },
+    "10": {
+     "n": 283,
+     "seen": 208,
+     "rate": 0.735,
+     "reliable": true
+    },
+    "11": {
+     "n": 220,
+     "seen": 168,
+     "rate": 0.7636,
+     "reliable": true
+    },
+    "12": {
+     "n": 128,
+     "seen": 89,
+     "rate": 0.6953,
+     "reliable": true
+    },
+    "2": {
+     "n": 72,
+     "seen": 45,
+     "rate": 0.625,
+     "reliable": true
+    },
+    "3": {
+     "n": 82,
+     "seen": 47,
+     "rate": 0.5732,
+     "reliable": true
+    },
+    "4": {
+     "n": 133,
+     "seen": 75,
+     "rate": 0.5639,
+     "reliable": true
+    },
+    "5": {
+     "n": 265,
+     "seen": 163,
+     "rate": 0.6151,
+     "reliable": true
+    },
+    "6": {
+     "n": 358,
+     "seen": 273,
+     "rate": 0.7626,
+     "reliable": true
+    },
+    "7": {
+     "n": 449,
+     "seen": 349,
+     "rate": 0.7773,
+     "reliable": true
+    },
+    "8": {
+     "n": 394,
+     "seen": 287,
+     "rate": 0.7284,
+     "reliable": true
+    },
+    "9": {
+     "n": 322,
+     "seen": 255,
+     "rate": 0.7919,
+     "reliable": true
+    }
+   },
+   "by_flow": {
+    "down": {
+     "n": 1373,
+     "seen": 1086,
+     "rate": 0.791,
+     "reliable": true
+    },
+    "up": {
+     "n": 348,
+     "seen": 200,
+     "rate": 0.5747,
+     "reliable": true
+    }
+   },
+   "by_kuroshio": {
+    "LM": {
+     "n": 1779,
+     "seen": 1415,
+     "rate": 0.7954,
+     "reliable": true
+    },
+    "nNLM": {
+     "n": 470,
+     "seen": 301,
+     "rate": 0.6404,
+     "reliable": true
+    },
+    "oNLM": {
+     "n": 434,
+     "seen": 202,
+     "rate": 0.4654,
+     "reliable": true
+    },
+    "post_LM_transition": {
+     "n": 119,
+     "seen": 92,
+     "rate": 0.7731,
+     "reliable": true
+    }
+   }
+  },
+  "jab_ne": {
+   "overall": {
+    "n": 1347,
+    "seen": 1023,
+    "rate": 0.7595,
+    "reliable": true
+   },
+   "by_tide_name": {
+    "中潮": {
+     "n": 468,
+     "seen": 353,
+     "rate": 0.7543,
+     "reliable": true
+    },
+    "大潮": {
+     "n": 390,
+     "seen": 309,
+     "rate": 0.7923,
+     "reliable": true
+    },
+    "小潮": {
+     "n": 243,
+     "seen": 184,
+     "rate": 0.7572,
+     "reliable": true
+    },
+    "若潮": {
+     "n": 89,
+     "seen": 75,
+     "rate": 0.8427,
+     "reliable": true
+    },
+    "長潮": {
+     "n": 82,
+     "seen": 66,
+     "rate": 0.8049,
+     "reliable": true
+    }
+   },
+   "by_month": {
+    "1": {
+     "n": 44,
+     "seen": 27,
+     "rate": 0.6136,
+     "reliable": true
+    },
+    "10": {
+     "n": 169,
+     "seen": 134,
+     "rate": 0.7929,
+     "reliable": true
+    },
+    "11": {
+     "n": 130,
+     "seen": 108,
+     "rate": 0.8308,
+     "reliable": true
+    },
+    "12": {
+     "n": 78,
+     "seen": 67,
+     "rate": 0.859,
+     "reliable": true
+    },
+    "2": {
+     "n": 38,
+     "seen": 25,
+     "rate": 0.6579,
+     "reliable": true
+    },
+    "3": {
+     "n": 63,
+     "seen": 30,
+     "rate": 0.4762,
+     "reliable": true
+    },
+    "4": {
+     "n": 47,
+     "seen": 23,
+     "rate": 0.4894,
+     "reliable": true
+    },
+    "5": {
+     "n": 77,
+     "seen": 45,
+     "rate": 0.5844,
+     "reliable": true
+    },
+    "6": {
+     "n": 114,
+     "seen": 89,
+     "rate": 0.7807,
+     "reliable": true
+    },
+    "7": {
+     "n": 184,
+     "seen": 149,
+     "rate": 0.8098,
+     "reliable": true
+    },
+    "8": {
+     "n": 195,
+     "seen": 154,
+     "rate": 0.7897,
+     "reliable": true
+    },
+    "9": {
+     "n": 208,
+     "seen": 172,
+     "rate": 0.8269,
+     "reliable": true
+    }
+   },
+   "by_flow": {
+    "down": {
+     "n": 980,
+     "seen": 769,
+     "rate": 0.7847,
+     "reliable": true
+    },
+    "up": {
+     "n": 99,
+     "seen": 62,
+     "rate": 0.6263,
+     "reliable": true
+    }
+   },
+   "by_kuroshio": {
+    "LM": {
+     "n": 878,
+     "seen": 750,
+     "rate": 0.8542,
+     "reliable": true
+    },
+    "nNLM": {
+     "n": 164,
+     "seen": 106,
+     "rate": 0.6463,
+     "reliable": true
+    },
+    "oNLM": {
+     "n": 272,
+     "seen": 136,
+     "rate": 0.5,
+     "reliable": true
+    },
+    "post_LM_transition": {
+     "n": 33,
+     "seen": 31,
+     "rate": 0.9394,
+     "reliable": true
+    }
+   }
+  },
+  "eno_kuchi": {
+   "overall": {
+    "n": 719,
+    "seen": 420,
+    "rate": 0.5841,
+    "reliable": true
+   },
+   "by_tide_name": {
+    "中潮": {
+     "n": 236,
+     "seen": 139,
+     "rate": 0.589,
+     "reliable": true
+    },
+    "大潮": {
+     "n": 178,
+     "seen": 108,
+     "rate": 0.6067,
+     "reliable": true
+    },
+    "小潮": {
+     "n": 154,
+     "seen": 103,
+     "rate": 0.6688,
+     "reliable": true
+    },
+    "若潮": {
+     "n": 53,
+     "seen": 35,
+     "rate": 0.6604,
+     "reliable": true
+    },
+    "長潮": {
+     "n": 47,
+     "seen": 25,
+     "rate": 0.5319,
+     "reliable": true
+    }
+   },
+   "by_month": {
+    "1": {
+     "n": 39,
+     "seen": 16,
+     "rate": 0.4103,
+     "reliable": true
+    },
+    "10": {
+     "n": 65,
+     "seen": 38,
+     "rate": 0.5846,
+     "reliable": true
+    },
+    "11": {
+     "n": 45,
+     "seen": 35,
+     "rate": 0.7778,
+     "reliable": true
+    },
+    "12": {
+     "n": 29,
+     "seen": 23,
+     "rate": 0.7931,
+     "reliable": true
+    },
+    "2": {
+     "n": 41,
+     "seen": 19,
+     "rate": 0.4634,
+     "reliable": true
+    },
+    "3": {
+     "n": 55,
+     "seen": 10,
+     "rate": 0.1818,
+     "reliable": true
+    },
+    "4": {
+     "n": 43,
+     "seen": 11,
+     "rate": 0.2558,
+     "reliable": true
+    },
+    "5": {
+     "n": 55,
+     "seen": 20,
+     "rate": 0.3636,
+     "reliable": true
+    },
+    "6": {
+     "n": 44,
+     "seen": 25,
+     "rate": 0.5682,
+     "reliable": true
+    },
+    "7": {
+     "n": 96,
+     "seen": 67,
+     "rate": 0.6979,
+     "reliable": true
+    },
+    "8": {
+     "n": 107,
+     "seen": 75,
+     "rate": 0.7009,
+     "reliable": true
+    },
+    "9": {
+     "n": 100,
+     "seen": 81,
+     "rate": 0.81,
+     "reliable": true
+    }
+   },
+   "by_flow": {
+    "down": {
+     "n": 424,
+     "seen": 254,
+     "rate": 0.5991,
+     "reliable": true
+    },
+    "up": {
+     "n": 64,
+     "seen": 29,
+     "rate": 0.4531,
+     "reliable": true
+    }
+   },
+   "by_kuroshio": {
+    "LM": {
+     "n": 341,
+     "seen": 250,
+     "rate": 0.7331,
+     "reliable": true
+    },
+    "nNLM": {
+     "n": 118,
+     "seen": 48,
+     "rate": 0.4068,
+     "reliable": true
+    },
+    "oNLM": {
+     "n": 240,
+     "seen": 102,
+     "rate": 0.425,
+     "reliable": true
+    },
+    "post_LM_transition": {
+     "n": 20,
+     "seen": 20,
+     "rate": 1.0,
+     "reliable": true
+    }
+   }
+  },
+  "A_point": {
+   "overall": {
+    "n": 369,
+    "seen": 294,
+    "rate": 0.7967,
+    "reliable": true
+   },
+   "by_tide_name": {
+    "中潮": {
+     "n": 137,
+     "seen": 112,
+     "rate": 0.8175,
+     "reliable": true
+    },
+    "大潮": {
+     "n": 125,
+     "seen": 93,
+     "rate": 0.744,
+     "reliable": true
+    },
+    "小潮": {
+     "n": 59,
+     "seen": 46,
+     "rate": 0.7797,
+     "reliable": true
+    },
+    "若潮": {
+     "n": 19,
+     "seen": 16,
+     "rate": 0.8421,
+     "reliable": true
+    },
+    "長潮": {
+     "n": 17,
+     "seen": 16,
+     "rate": 0.9412,
+     "reliable": true
+    }
+   },
+   "by_month": {
+    "2": {
+     "n": 1,
+     "seen": 1,
+     "rate": 1.0,
+     "reliable": false
+    },
+    "3": {
+     "n": 2,
+     "seen": 1,
+     "rate": 0.5,
+     "reliable": false
+    },
+    "4": {
+     "n": 16,
+     "seen": 14,
+     "rate": 0.875,
+     "reliable": true
+    },
+    "5": {
+     "n": 38,
+     "seen": 32,
+     "rate": 0.8421,
+     "reliable": true
+    },
+    "6": {
+     "n": 111,
+     "seen": 80,
+     "rate": 0.7207,
+     "reliable": true
+    },
+    "7": {
+     "n": 172,
+     "seen": 143,
+     "rate": 0.8314,
+     "reliable": true
+    },
+    "8": {
+     "n": 26,
+     "seen": 21,
+     "rate": 0.8077,
+     "reliable": true
+    },
+    "9": {
+     "n": 3,
+     "seen": 2,
+     "rate": 0.6667,
+     "reliable": false
+    }
+   },
+   "by_flow": {
+    "down": {
+     "n": 201,
+     "seen": 176,
+     "rate": 0.8756,
+     "reliable": true
+    }
+   },
+   "by_kuroshio": {
+    "LM": {
+     "n": 246,
+     "seen": 200,
+     "rate": 0.813,
+     "reliable": true
+    },
+    "nNLM": {
+     "n": 30,
+     "seen": 26,
+     "rate": 0.8667,
+     "reliable": true
+    },
+    "oNLM": {
+     "n": 14,
+     "seen": 9,
+     "rate": 0.6429,
+     "reliable": true
+    },
+    "post_LM_transition": {
+     "n": 79,
+     "seen": 59,
+     "rate": 0.7468,
+     "reliable": true
+    }
+   }
+  },
+  "mitsu_ne": {
+   "overall": {
+    "n": 201,
+    "seen": 101,
+    "rate": 0.5025,
+    "reliable": true
+   },
+   "by_tide_name": {
+    "中潮": {
+     "n": 55,
+     "seen": 33,
+     "rate": 0.6,
+     "reliable": true
+    },
+    "大潮": {
+     "n": 46,
+     "seen": 17,
+     "rate": 0.3696,
+     "reliable": true
+    },
+    "小潮": {
+     "n": 45,
+     "seen": 29,
+     "rate": 0.6444,
+     "reliable": true
+    },
+    "若潮": {
+     "n": 10,
+     "seen": 5,
+     "rate": 0.5,
+     "reliable": true
+    },
+    "長潮": {
+     "n": 15,
+     "seen": 9,
+     "rate": 0.6,
+     "reliable": true
+    }
+   },
+   "by_month": {
+    "1": {
+     "n": 6,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "10": {
+     "n": 7,
+     "seen": 3,
+     "rate": 0.4286,
+     "reliable": false
+    },
+    "11": {
+     "n": 4,
+     "seen": 2,
+     "rate": 0.5,
+     "reliable": false
+    },
+    "12": {
+     "n": 2,
+     "seen": 1,
+     "rate": 0.5,
+     "reliable": false
+    },
+    "2": {
+     "n": 10,
+     "seen": 3,
+     "rate": 0.3,
+     "reliable": true
+    },
+    "3": {
+     "n": 6,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "4": {
+     "n": 2,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "5": {
+     "n": 14,
+     "seen": 3,
+     "rate": 0.2143,
+     "reliable": true
+    },
+    "6": {
+     "n": 19,
+     "seen": 9,
+     "rate": 0.4737,
+     "reliable": true
+    },
+    "7": {
+     "n": 55,
+     "seen": 34,
+     "rate": 0.6182,
+     "reliable": true
+    },
+    "8": {
+     "n": 53,
+     "seen": 31,
+     "rate": 0.5849,
+     "reliable": true
+    },
+    "9": {
+     "n": 23,
+     "seen": 15,
+     "rate": 0.6522,
+     "reliable": true
+    }
+   },
+   "by_flow": {
+    "down": {
+     "n": 113,
+     "seen": 64,
+     "rate": 0.5664,
+     "reliable": true
+    },
+    "up": {
+     "n": 19,
+     "seen": 5,
+     "rate": 0.2632,
+     "reliable": true
+    }
+   },
+   "by_kuroshio": {
+    "LM": {
+     "n": 88,
+     "seen": 58,
+     "rate": 0.6591,
+     "reliable": true
+    },
+    "nNLM": {
+     "n": 54,
+     "seen": 27,
+     "rate": 0.5,
+     "reliable": true
+    },
+    "oNLM": {
+     "n": 58,
+     "seen": 15,
+     "rate": 0.2586,
+     "reliable": true
+    },
+    "post_LM_transition": {
+     "n": 1,
+     "seen": 1,
+     "rate": 1.0,
+     "reliable": false
+    }
+   }
+  },
+  "zabu_ne": {
+   "overall": {
+    "n": 144,
+    "seen": 94,
+    "rate": 0.6528,
+    "reliable": true
+   },
+   "by_tide_name": {
+    "中潮": {
+     "n": 53,
+     "seen": 32,
+     "rate": 0.6038,
+     "reliable": true
+    },
+    "大潮": {
+     "n": 32,
+     "seen": 19,
+     "rate": 0.5938,
+     "reliable": true
+    },
+    "小潮": {
+     "n": 33,
+     "seen": 23,
+     "rate": 0.697,
+     "reliable": true
+    },
+    "若潮": {
+     "n": 12,
+     "seen": 10,
+     "rate": 0.8333,
+     "reliable": true
+    },
+    "長潮": {
+     "n": 14,
+     "seen": 10,
+     "rate": 0.7143,
+     "reliable": true
+    }
+   },
+   "by_month": {
+    "1": {
+     "n": 6,
+     "seen": 4,
+     "rate": 0.6667,
+     "reliable": false
+    },
+    "10": {
+     "n": 18,
+     "seen": 8,
+     "rate": 0.4444,
+     "reliable": true
+    },
+    "11": {
+     "n": 12,
+     "seen": 6,
+     "rate": 0.5,
+     "reliable": true
+    },
+    "12": {
+     "n": 6,
+     "seen": 5,
+     "rate": 0.8333,
+     "reliable": false
+    },
+    "2": {
+     "n": 4,
+     "seen": 1,
+     "rate": 0.25,
+     "reliable": false
+    },
+    "3": {
+     "n": 5,
+     "seen": 5,
+     "rate": 1.0,
+     "reliable": false
+    },
+    "4": {
+     "n": 1,
+     "seen": 1,
+     "rate": 1.0,
+     "reliable": false
+    },
+    "5": {
+     "n": 10,
+     "seen": 6,
+     "rate": 0.6,
+     "reliable": true
+    },
+    "6": {
+     "n": 11,
+     "seen": 9,
+     "rate": 0.8182,
+     "reliable": true
+    },
+    "7": {
+     "n": 22,
+     "seen": 18,
+     "rate": 0.8182,
+     "reliable": true
+    },
+    "8": {
+     "n": 24,
+     "seen": 15,
+     "rate": 0.625,
+     "reliable": true
+    },
+    "9": {
+     "n": 25,
+     "seen": 16,
+     "rate": 0.64,
+     "reliable": true
+    }
+   },
+   "by_flow": {
+    "down": {
+     "n": 7,
+     "seen": 5,
+     "rate": 0.7143,
+     "reliable": false
+    },
+    "up": {
+     "n": 7,
+     "seen": 6,
+     "rate": 0.8571,
+     "reliable": false
+    }
+   },
+   "by_kuroshio": {
+    "LM": {
+     "n": 110,
+     "seen": 69,
+     "rate": 0.6273,
+     "reliable": true
+    },
+    "nNLM": {
+     "n": 16,
+     "seen": 14,
+     "rate": 0.875,
+     "reliable": true
+    },
+    "oNLM": {
+     "n": 17,
+     "seen": 10,
+     "rate": 0.5882,
+     "reliable": true
+    },
+    "post_LM_transition": {
+     "n": 1,
+     "seen": 1,
+     "rate": 1.0,
+     "reliable": false
+    }
+   }
+  },
+  "shirane": {
+   "overall": {
+    "n": 133,
+    "seen": 39,
+    "rate": 0.2932,
+    "reliable": true
+   },
+   "by_tide_name": {
+    "中潮": {
+     "n": 34,
+     "seen": 12,
+     "rate": 0.3529,
+     "reliable": true
+    },
+    "大潮": {
+     "n": 29,
+     "seen": 9,
+     "rate": 0.3103,
+     "reliable": true
+    },
+    "小潮": {
+     "n": 17,
+     "seen": 5,
+     "rate": 0.2941,
+     "reliable": true
+    },
+    "若潮": {
+     "n": 14,
+     "seen": 6,
+     "rate": 0.4286,
+     "reliable": true
+    },
+    "長潮": {
+     "n": 10,
+     "seen": 5,
+     "rate": 0.5,
+     "reliable": true
+    }
+   },
+   "by_month": {
+    "1": {
+     "n": 8,
+     "seen": 1,
+     "rate": 0.125,
+     "reliable": false
+    },
+    "10": {
+     "n": 5,
+     "seen": 1,
+     "rate": 0.2,
+     "reliable": false
+    },
+    "11": {
+     "n": 3,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "12": {
+     "n": 6,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "2": {
+     "n": 4,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "3": {
+     "n": 7,
+     "seen": 1,
+     "rate": 0.1429,
+     "reliable": false
+    },
+    "4": {
+     "n": 4,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "5": {
+     "n": 13,
+     "seen": 1,
+     "rate": 0.0769,
+     "reliable": true
+    },
+    "6": {
+     "n": 21,
+     "seen": 5,
+     "rate": 0.2381,
+     "reliable": true
+    },
+    "7": {
+     "n": 27,
+     "seen": 10,
+     "rate": 0.3704,
+     "reliable": true
+    },
+    "8": {
+     "n": 19,
+     "seen": 7,
+     "rate": 0.3684,
+     "reliable": true
+    },
+    "9": {
+     "n": 16,
+     "seen": 13,
+     "rate": 0.8125,
+     "reliable": true
+    }
+   },
+   "by_flow": {
+    "down": {
+     "n": 56,
+     "seen": 12,
+     "rate": 0.2143,
+     "reliable": true
+    },
+    "up": {
+     "n": 29,
+     "seen": 6,
+     "rate": 0.2069,
+     "reliable": true
+    }
+   },
+   "by_kuroshio": {
+    "LM": {
+     "n": 53,
+     "seen": 22,
+     "rate": 0.4151,
+     "reliable": true
+    },
+    "nNLM": {
+     "n": 33,
+     "seen": 4,
+     "rate": 0.1212,
+     "reliable": true
+    },
+    "oNLM": {
+     "n": 47,
+     "seen": 13,
+     "rate": 0.2766,
+     "reliable": true
+    }
+   }
+  },
+  "kado_ne": {
+   "overall": {
+    "n": 57,
+    "seen": 28,
+    "rate": 0.4912,
+    "reliable": true
+   },
+   "by_tide_name": {
+    "中潮": {
+     "n": 18,
+     "seen": 11,
+     "rate": 0.6111,
+     "reliable": true
+    },
+    "大潮": {
+     "n": 13,
+     "seen": 7,
+     "rate": 0.5385,
+     "reliable": true
+    },
+    "小潮": {
+     "n": 10,
+     "seen": 7,
+     "rate": 0.7,
+     "reliable": true
+    },
+    "若潮": {
+     "n": 5,
+     "seen": 3,
+     "rate": 0.6,
+     "reliable": false
+    },
+    "長潮": {
+     "n": 3,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   },
+   "by_month": {
+    "1": {
+     "n": 5,
+     "seen": 3,
+     "rate": 0.6,
+     "reliable": false
+    },
+    "10": {
+     "n": 4,
+     "seen": 1,
+     "rate": 0.25,
+     "reliable": false
+    },
+    "11": {
+     "n": 4,
+     "seen": 3,
+     "rate": 0.75,
+     "reliable": false
+    },
+    "12": {
+     "n": 5,
+     "seen": 4,
+     "rate": 0.8,
+     "reliable": false
+    },
+    "2": {
+     "n": 6,
+     "seen": 1,
+     "rate": 0.1667,
+     "reliable": false
+    },
+    "3": {
+     "n": 6,
+     "seen": 1,
+     "rate": 0.1667,
+     "reliable": false
+    },
+    "4": {
+     "n": 2,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "5": {
+     "n": 8,
+     "seen": 2,
+     "rate": 0.25,
+     "reliable": false
+    },
+    "6": {
+     "n": 3,
+     "seen": 1,
+     "rate": 0.3333,
+     "reliable": false
+    },
+    "7": {
+     "n": 4,
+     "seen": 4,
+     "rate": 1.0,
+     "reliable": false
+    },
+    "8": {
+     "n": 2,
+     "seen": 2,
+     "rate": 1.0,
+     "reliable": false
+    },
+    "9": {
+     "n": 8,
+     "seen": 6,
+     "rate": 0.75,
+     "reliable": false
+    }
+   },
+   "by_flow": {
+    "down": {
+     "n": 27,
+     "seen": 10,
+     "rate": 0.3704,
+     "reliable": true
+    },
+    "up": {
+     "n": 7,
+     "seen": 3,
+     "rate": 0.4286,
+     "reliable": false
+    }
+   },
+   "by_kuroshio": {
+    "LM": {
+     "n": 23,
+     "seen": 16,
+     "rate": 0.6957,
+     "reliable": true
+    },
+    "nNLM": {
+     "n": 16,
+     "seen": 8,
+     "rate": 0.5,
+     "reliable": true
+    },
+    "oNLM": {
+     "n": 17,
+     "seen": 3,
+     "rate": 0.1765,
+     "reliable": true
+    },
+    "post_LM_transition": {
+     "n": 1,
+     "seen": 1,
+     "rate": 1.0,
+     "reliable": false
+    }
+   }
+  },
+  "hashigodan": {
+   "overall": {
+    "n": 43,
+    "seen": 14,
+    "rate": 0.3256,
+    "reliable": true
+   },
+   "by_tide_name": {
+    "中潮": {
+     "n": 13,
+     "seen": 5,
+     "rate": 0.3846,
+     "reliable": true
+    },
+    "大潮": {
+     "n": 5,
+     "seen": 2,
+     "rate": 0.4,
+     "reliable": false
+    },
+    "小潮": {
+     "n": 3,
+     "seen": 2,
+     "rate": 0.6667,
+     "reliable": false
+    },
+    "若潮": {
+     "n": 3,
+     "seen": 1,
+     "rate": 0.3333,
+     "reliable": false
+    },
+    "長潮": {
+     "n": 2,
+     "seen": 1,
+     "rate": 0.5,
+     "reliable": false
+    }
+   },
+   "by_month": {
+    "1": {
+     "n": 12,
+     "seen": 1,
+     "rate": 0.0833,
+     "reliable": true
+    },
+    "10": {
+     "n": 4,
+     "seen": 3,
+     "rate": 0.75,
+     "reliable": false
+    },
+    "11": {
+     "n": 7,
+     "seen": 5,
+     "rate": 0.7143,
+     "reliable": false
+    },
+    "12": {
+     "n": 6,
+     "seen": 1,
+     "rate": 0.1667,
+     "reliable": false
+    },
+    "2": {
+     "n": 7,
+     "seen": 1,
+     "rate": 0.1429,
+     "reliable": false
+    },
+    "3": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "5": {
+     "n": 1,
+     "seen": 1,
+     "rate": 1.0,
+     "reliable": false
+    },
+    "6": {
+     "n": 2,
+     "seen": 1,
+     "rate": 0.5,
+     "reliable": false
+    },
+    "7": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "8": {
+     "n": 2,
+     "seen": 1,
+     "rate": 0.5,
+     "reliable": false
+    }
+   },
+   "by_flow": {
+    "down": {
+     "n": 12,
+     "seen": 2,
+     "rate": 0.1667,
+     "reliable": true
+    },
+    "up": {
+     "n": 26,
+     "seen": 9,
+     "rate": 0.3462,
+     "reliable": true
+    }
+   },
+   "by_kuroshio": {
+    "LM": {
+     "n": 10,
+     "seen": 6,
+     "rate": 0.6,
+     "reliable": true
+    },
+    "nNLM": {
+     "n": 12,
+     "seen": 5,
+     "rate": 0.4167,
+     "reliable": true
+    },
+    "oNLM": {
+     "n": 21,
+     "seen": 3,
+     "rate": 0.1429,
+     "reliable": true
+    }
+   }
+  },
+  "higashi_ne": {
+   "overall": {
+    "n": 4,
+    "seen": 1,
+    "rate": 0.25,
+    "reliable": false
+   },
+   "by_tide_name": {
+    "中潮": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "大潮": {
+     "n": 1,
+     "seen": 1,
+     "rate": 1.0,
+     "reliable": false
+    },
+    "小潮": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "長潮": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   },
+   "by_month": {
+    "10": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "5": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    },
+    "7": {
+     "n": 2,
+     "seen": 1,
+     "rate": 0.5,
+     "reliable": false
+    }
+   },
+   "by_flow": {
+    "up": {
+     "n": 1,
+     "seen": 1,
+     "rate": 1.0,
+     "reliable": false
+    }
+   },
+   "by_kuroshio": {
+    "LM": {
+     "n": 3,
+     "seen": 1,
+     "rate": 0.3333,
+     "reliable": false
+    },
+    "oNLM": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   }
+  },
+  "hammers_rock": {
+   "overall": {
+    "n": 2,
+    "seen": 1,
+    "rate": 0.5,
+    "reliable": false
+   },
+   "by_tide_name": {
+    "小潮": {
+     "n": 2,
+     "seen": 1,
+     "rate": 0.5,
+     "reliable": false
+    }
+   },
+   "by_month": {
+    "1": {
+     "n": 1,
+     "seen": 1,
+     "rate": 1.0,
+     "reliable": false
+    },
+    "5": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   },
+   "by_flow": {},
+   "by_kuroshio": {
+    "LM": {
+     "n": 1,
+     "seen": 1,
+     "rate": 1.0,
+     "reliable": false
+    },
+    "post_LM_transition": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   }
+  },
+  "andoro": {
+   "overall": {
+    "n": 1,
+    "seen": 0,
+    "rate": 0.0,
+    "reliable": false
+   },
+   "by_tide_name": {},
+   "by_month": {
+    "10": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   },
+   "by_flow": {
+    "up": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   },
+   "by_kuroshio": {
+    "nNLM": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   }
+  },
+  "plate": {
+   "overall": {
+    "n": 1,
+    "seen": 0,
+    "rate": 0.0,
+    "reliable": false
+   },
+   "by_tide_name": {
+    "小潮": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   },
+   "by_month": {
+    "5": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   },
+   "by_flow": {},
+   "by_kuroshio": {
+    "post_LM_transition": {
+     "n": 1,
+     "seen": 0,
+     "rate": 0.0,
+     "reliable": false
+    }
+   }
+  }
+ }
+}

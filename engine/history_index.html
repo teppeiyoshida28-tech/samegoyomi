@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>検証ログ (過去1年) — 鮫暦AI 神子元ハンマー潮予報</title>
+<meta property="og:title" content="検証ログ — 鮫暦AI 神子元ハンマー潮予報">
+<meta property="og:image" content="/hammerhead/img/hero_ukiyoe.png">
+<link rel="icon" type="image/png" href="/hammerhead/img/kamon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --abyss: #0d1b2e;
+  --deep: #16283e;
+  --water: #1f3550;
+  --water-2: #3a5878;
+  --pelagic: #9aaabf;
+  --surface: #8fb0d4;
+  --foam: #f2ead8;
+  --coral: #c9a54e;
+  --shu: #cc5a42;
+  --warm: #d49b4e;
+  --gold: #c9a54e;
+  --cold: #5b87c9;
+  --neon: #7fb8a8;
+  --tier-s: #d45a3f;
+  --tier-a: #c9a54e;
+  --tier-b: #6fae9e;
+  --tier-c: #6f92c4;
+  --tier-d: #7b8aa0;
+  --tier-e: #8593ab;
+  --line: rgba(242,234,216,0.10);
+  --line-strong: rgba(242,234,216,0.22);
+  --glass: rgba(26,47,74,0.55);
+  --glass-strong: rgba(22,40,62,0.85);
+  --shadow: 0 4px 24px rgba(0,0,0,0.25), 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-hi: 0 10px 40px rgba(0,0,0,0.4), 0 4px 12px rgba(0,0,0,0.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  background: var(--abyss);
+  color: var(--foam);
+  font-family: 'Zen Kaku Gothic New', 'Zen Kaku Gothic New', 'Noto Sans JP', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+body {
+  background:
+    radial-gradient(ellipse 800px 600px at 15% 5%, rgba(201,165,78,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 700px 500px at 85% 15%, rgba(127,184,168,0.05) 0%, transparent 55%),
+    radial-gradient(ellipse 600px 800px at 50% 100%, rgba(91,135,201,0.07) 0%, transparent 60%),
+    linear-gradient(180deg, #10233a 0%, #0d1b2e 40%, #0a1626 100%);
+  min-height: 100vh;
+}
+.wrap { max-width: 1080px; margin: 0 auto; padding: 28px 18px 80px; }
+header.page { margin-bottom: 28px; }
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  padding: 18px 28px;
+  background: var(--glass-strong);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--line);
+}
+.topbar .brand { display:flex; align-items:center; gap:10px; font-family:'Shippori Mincho',serif; font-weight:800; font-size:20px; letter-spacing:0.12em; }
+.topbar .brand img { width:36px; height:36px; border-radius:50%; box-shadow:0 0 0 1px rgba(201,165,78,0.35); }
+.topbar .brand em { color: var(--gold); font-style: normal; }
+.topbar .brand .bsub { font-size:10px; letter-spacing:0.3em; color:var(--pelagic); font-weight:600; margin-top:3px; }
+.site-nav { display:flex; flex-wrap:wrap; gap:8px; }
+.site-nav a {
+  display:inline-flex; align-items:center;
+  color:var(--foam); text-decoration:none; font-weight:700; font-size:13px;
+  font-family:'Shippori Mincho',serif; letter-spacing:0.08em;
+  padding:7px 15px; border-radius:999px;
+  border:1px solid rgba(201,165,78,0.4);
+  background:rgba(201,165,78,0.08);
+  transition:all 0.15s ease;
+}
+.site-nav a.here { color:#0d1b2e; background:var(--gold); border-color:var(--gold); box-shadow:0 2px 12px rgba(201,165,78,0.4); }
+.site-nav a:hover:not(.here) { color:var(--gold); border-color:var(--gold); background:rgba(201,165,78,0.16); }
+h1 { font-family:'Shippori Mincho',serif; font-size: clamp(26px, 5vw, 40px); font-weight:800; letter-spacing:0.06em; padding-left:14px; border-left:4px solid var(--gold); }
+h1 .accent { color: var(--gold); }
+.sub { color:var(--pelagic); font-size:14px; margin-top:8px; line-height:1.7; }
+.gen { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--water-2); margin-top:6px; }
+
+/* summary cards */
+.stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin:26px 0; }
+.stat {
+  background:var(--glass-strong); border:1px solid var(--line); border-radius:16px;
+  padding:16px 18px; box-shadow:var(--shadow);
+}
+.stat .k { font-size:11px; color:var(--pelagic); font-weight:700; letter-spacing:0.06em; }
+.stat .v { font-family:'Shippori Mincho',serif; font-size:32px; font-weight:900; margin-top:4px; }
+.stat .v small { font-size:14px; color:var(--pelagic); font-weight:400; }
+.stat .note { font-size:10.5px; color:var(--pelagic); margin-top:4px; line-height:1.5; }
+.v.good { color:var(--tier-b); }
+.v.mid { color:var(--warm); }
+
+/* legend */
+.legend { display:flex; flex-wrap:wrap; gap:10px 16px; font-size:11.5px; color:var(--pelagic); margin-bottom:14px; }
+.legend b { font-family:'JetBrains Mono',monospace; }
+
+/* day rows */
+.days { display:flex; flex-direction:column; gap:10px; }
+.day {
+  display:grid; grid-template-columns: 92px 1fr 34px 1fr; gap:12px; align-items:center;
+  background:var(--glass-strong); border:1px solid var(--line); border-radius:16px;
+  padding:14px 18px; box-shadow:var(--shadow);
+  transition: box-shadow .15s ease;
+}
+.day:hover { box-shadow:var(--shadow-hi); }
+.day.hit { border-left:4px solid var(--tier-b); }
+.day.miss { border-left:4px solid var(--shu); }
+.day.noreport { opacity:0.55; border-left:4px solid var(--water-2); }
+.dcol .date { font-family:'JetBrains Mono',monospace; font-weight:600; font-size:14px; }
+.dcol .wd { font-size:11px; color:var(--pelagic); }
+.side-label { font-size:10px; font-weight:700; letter-spacing:0.08em; color:var(--pelagic); margin-bottom:3px; }
+.tierchip {
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:'JetBrains Mono',monospace; font-weight:600; font-size:13px;
+  padding:3px 10px; border-radius:999px; color:#fff;
+}
+.tier-S{background:var(--tier-s)} .tier-A{background:var(--tier-a)} .tier-B{background:var(--tier-b)}
+.tier-C{background:var(--tier-c)} .tier-D{background:var(--tier-d)} .tier-E{background:var(--tier-e); color:var(--foam)}
+.meta { font-size:11px; color:var(--pelagic); margin-top:5px; line-height:1.6; }
+.meta b { color:var(--foam); font-weight:700; }
+.arrow { text-align:center; color:var(--water-2); font-size:18px; }
+.actual-badge { font-size:12px; font-weight:700; margin-top:4px; }
+.seen-yes { color:var(--tier-b); }
+.seen-no { color:var(--shu); }
+.pts { font-size:10.5px; color:var(--pelagic); }
+.result-icon { font-size:15px; margin-left:6px; }
+.noreport-txt { font-size:12px; color:var(--pelagic); font-style:italic; }
+
+/* month nav */
+.monthnav { display:flex; flex-wrap:wrap; gap:6px; margin:6px 0 10px; }
+.monthnav button {
+  font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:600;
+  border:1px solid var(--line-strong); background:var(--glass); color:var(--surface);
+  border-radius:999px; padding:5px 12px; cursor:pointer;
+}
+.monthnav button.on { background:var(--gold); color:#0d1b2e; border-color:var(--gold); }
+.month-summary { font-size:12px; color:var(--pelagic); margin-bottom:12px; }
+
+.method {
+  margin-top:34px; background:var(--glass); border:1px solid var(--line); border-radius:16px;
+  padding:18px 20px; font-size:12.5px; color:var(--pelagic); line-height:1.9;
+}
+.method h2 { font-family:'Shippori Mincho',serif; font-size:16px; color:var(--foam); margin-bottom:8px; }
+
+@media (max-width: 700px) {
+  .day { grid-template-columns: 1fr; gap:8px; }
+  .arrow { display:none; }
+  .dcol { display:flex; gap:10px; align-items:baseline; }
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="brand">
+    <img src="/hammerhead/img/kamon.png" alt="鮫暦AI 紋章">
+    <div>鮫暦<em>AI</em><div class="bsub">神子元ハンマー潮予報</div></div>
+  </div>
+  <nav class="site-nav">
+    <a href="../">◆ 今日の予報</a>
+    <a href="../map/">◇ 予測マップ</a>
+    <a href="../aim/">◆ 狙い目カレンダー</a>
+    <a href="./" class="here">◇ 検証ログ</a>
+  </nav>
+</div>
+<div class="wrap">
+<header class="page">
+  <h1>予測 <span class="accent">vs</span> 実測 — 過去1年</h1>
+  <div class="sub">毎日の予測(前日までの情報のみで算出)と、現地ショップの実測ログを突き合わせた答え合わせ。<br>群れ規模・透明度・水温・出現ポイントまで予測し、モデルの信頼度を透明化する検証ページです。</div>
+  <div class="gen" id="gen"></div>
+</header>
+
+<div class="stats" id="stats"></div>
+<div class="legend">
+  <span><b style="color:var(--tier-b)">■</b> 的中(目撃有無が一致)</span>
+  <span><b style="color:var(--shu)">■</b> 外れ</span>
+  <span><b style="color:var(--water-2)">■</b> ショップ報告なし(海況不良・休業等)</span>
+  <span>ランク: <b>S</b> 青潮×大群 / <b>A</b> 大群 / <b>B</b> 中群 / <b>C</b> 小〜中群 / <b>D</b> 単体〜幸運 / <b>E</b> 厳しい</span>
+</div>
+<div class="monthnav" id="monthnav"></div>
+<div class="month-summary" id="month-summary"></div>
+<div class="days" id="days"></div>
+
+<div class="method">
+  <h2>検証方法</h2>
+  リーク防止のため、各日の予測は<b>前日までのショップ観測のみ</b>を使って再計算しています。群れ規模・透明度の各モデルは<b>バックテスト期間より前の実測 (2015年〜) だけで学習</b>したリッジ回帰。水温はOpen-Meteo SSTに直近実測オフセット補正。出現ポイントは月別出現気候値と潮流ベースのポイントスコアのブレンドでTop3を予測。環境データはOpen-Meteo再解析値。実測ランクは「透明度×群れ規模」マトリクスで判定し、予測ランクも同じマトリクスを予測透明度×予測規模に適用しています。
+</div>
+</div>
+
+<script>
+const DATA = /*__BACKTEST_JSON__*/ null;
+
+const sizeLabel = {large:'大群(100+)', medium:'中群(50前後)', small:'小群(20前後)', single:'単体〜数匹'};
+const ptName = {kame_ne:'カメ根', A_point:'Aポイント', ao_ne:'青根', jab_ne:'ジャブ根', zabu_ne:'ザブ根',
+  mitsu_ne:'三ツ根', kado_ne:'カド根', eno_kuchi:'江の口', andoro:'アンドロ', hammers_rock:'ハンマーズロック',
+  plate:'プレート', third_takane:'三つ目の高根', eagleray_rock:'トビエイロック', west_takane:'西の高根',
+  twin_peaks:'ツインピークス', view_point:'ビューポイント', kabe_ne:'カベ根', kita_ne:'北の根',
+  higashi_ne:'東の根', karito:'カリトの鼻', shirane:'白根', hashigodan:'はしご段', oota_ne:'オオタ根'};
+const TIERNUM = {S:5,A:4,B:3,C:2,D:1,E:0};
+
+function pct(x){ return x==null ? '—' : Math.round(x*100)+'%'; }
+function ptJa(k){ return ptName[k]||k; }
+
+let curMonth = null;
+
+function renderStats(){
+  const s = DATA.summary;
+  const stats = [
+    {k:'目撃有無 的中率', v:pct(s.seen_hit_rate), cls:(s.seen_hit_rate>=0.8?'good':'mid'), note:'規模モデル≥単体相当=出る予想'},
+    {k:'欠航予測 精度', v:pct(s.cancel_accuracy), cls:(s.cancel_accuracy>=0.75?'good':'mid'), note:`捕捉率 ${pct(s.cancel_recall)} / 適中率 ${pct(s.cancel_precision)}`},
+    {k:'規模 ±1クラス以内', v:pct(s.size_within1_rate), cls:(s.size_within1_rate>=0.7?'good':'mid'), note:`完全一致 ${pct(s.size_exact_rate)} / 相関 ${s.size_correlation??'—'}`},
+    {k:'透明度 平均誤差', v:`±${s.visibility_mae_m}<small>m</small>`, cls:(s.visibility_mae_m<=4?'good':'mid'), note:'予測透明度 vs 実測上限'},
+    {k:'水温 平均誤差', v:`±${s.water_temp_mae_c}<small>℃</small>`, cls:(s.water_temp_mae_c<=1.5?'good':'mid'), note:'SST+直近実測オフセット補正'},
+    {k:'ポイントTop3的中', v:pct(s.point_top3_hit_rate), cls:(s.point_top3_hit_rate>=0.6?'good':'mid'), note:`目撃ポイント報告のある${s.n_point_days}日で検証`},
+    {k:'ランク±1以内', v:pct(s.tier_within1_rate), cls:(s.tier_within1_rate>=0.6?'good':'mid'), note:`完全一致 ${pct(s.tier_exact_rate)}`},
+    {k:'検証日数', v:`${s.n_evaluated}<small> / ${s.n_days}日</small>`, cls:'', note:`報告なし ${s.n_no_report}日 / 学習 ${s.n_train_days}日(期間外)`},
+  ];
+  document.getElementById('stats').innerHTML = stats.map(x=>
+    `<div class="stat"><div class="k">${x.k}</div><div class="v ${x.cls}">${x.v}</div><div class="note">${x.note}</div></div>`).join('');
+}
+
+function months(){
+  const ms = [...new Set(DATA.days.map(d=>d.date.slice(0,7)))];
+  ms.sort();
+  return ms;
+}
+
+function renderNav(){
+  const ms = months();
+  document.getElementById('monthnav').innerHTML = ms.map(m=>
+    `<button class="${m===curMonth?'on':''}" onclick="setMonth('${m}')">${m.slice(0,4)}.${m.slice(5)}</button>`).join('');
+}
+
+function setMonth(m){ curMonth = m; renderNav(); renderDays(); }
+
+function renderDays(){
+  const TIERNUMloc = TIERNUM;
+  const days = DATA.days.filter(d=>d.date.slice(0,7)===curMonth).reverse();
+
+  // 月内サマリ
+  const ev = days.filter(d=>d.actual);
+  const seen = ev.filter(d=>d.actual.hammer_seen!==null);
+  const hits = seen.filter(d=>(d.predicted.size_num>=0.5)===!!d.actual.hammer_seen).length;
+  document.getElementById('month-summary').textContent =
+    `${curMonth}: 検証${ev.length}日 / 目撃的中 ${seen.length?Math.round(hits/seen.length*100)+'%':'—'} / 報告なし${days.length-ev.length}日`;
+
+  const rows = days.map(d=>{
+    const p = d.predicted;
+    const predPts = (p.points||[]).map(ptJa).join('・');
+    const predHtml = `
+      <div class="side-label">予測(前日時点)</div>
+      <span class="tierchip tier-${p.tier}">${p.tier}</span>
+      <span style="font-weight:700;font-size:12.5px;margin-left:6px">${p.size_label}</span>
+      <div class="meta">透明度 <b>${p.visibility_m}m</b> / 水温 <b>${p.water_temp}℃</b> (平年${p.avg_anomaly>=0?'+':''}${p.avg_anomaly}) / 流速 <b>${p.avg_current_kmh}km/h</b> / 波 <b>${p.max_wave}m</b> / 欠航確率 <b style="${p.cancel_flag?'color:var(--shu)':''}">${Math.round((p.cancel_prob||0)*100)}%</b>${p.cancel_flag?' <b style="color:var(--shu)">⚠欠航予想</b>':''}<br>📍予想: <b>${predPts}</b></div>`;
+
+    let cls='noreport', icon='', actHtml='';
+    if(d.actual){
+      const a = d.actual;
+      const hit = (p.size_num>=0.5) === !!a.hammer_seen;
+      cls = hit ? 'hit' : 'miss';
+      icon = hit ? '✅' : '❌';
+      const pts = (a.hammer_points||[]).map(ptJa).slice(0,3).join('・');
+      const ptHit = (a.hammer_points||[]).some(x=>(p.points||[]).includes(x));
+      actHtml = `
+        <div class="side-label">実測(ショップログ)</div>
+        <span class="tierchip tier-${a.tier}">${a.tier}</span>
+        <span class="actual-badge ${a.hammer_seen?'seen-yes':'seen-no'}">${a.hammer_seen?'◆ 目撃':'目撃なし'}${a.hammer_size?' — '+(sizeLabel[a.hammer_size]||a.hammer_size):''}</span>
+        <div class="meta">${a.visibility?`透明度 <b>${a.visibility}</b>`:''}${a.water_temp?` / 水温 <b>${a.water_temp}</b>`:''}${pts?` / <span class="pts">📍${pts}${ptHit?' <b style="color:var(--tier-b)">ポイント的中✓</b>':''}</span>`:''}${a.shops_reporting&&a.shops_reporting.length?` / 報告${a.shops_reporting.length}店`:''}</div>`;
+    } else {
+      const cHit = !!p.cancel_flag;
+      icon = cHit ? '✅' : '';
+      actHtml = `<div class="side-label">実測</div><div class="noreport-txt">ショップ報告なし(海況不良・クローズ等)${cHit?' — <b style="color:var(--tier-b)">欠航予測的中✓</b>':''}</div>`;
+    }
+
+    return `<div class="day ${cls}">
+      <div class="dcol"><div class="date">${d.date.slice(5)}</div><div class="wd">${d.weekday}曜</div></div>
+      <div>${predHtml}</div>
+      <div class="arrow">→${icon?`<span class="result-icon">${icon}</span>`:''}</div>
+      <div>${actHtml}</div>
+    </div>`;
+  });
+  document.getElementById('days').innerHTML = rows.join('') || '<div class="noreport-txt">この月のデータなし</div>';
+}
+
+function render(){
+  if(!DATA){ document.getElementById('days').textContent = 'データ未生成'; return; }
+  document.getElementById('gen').textContent =
+    `期間: ${DATA.period.start} 〜 ${DATA.period.end} (365日) / 生成: ${DATA.generated_at.slice(0,16).replace('T',' ')}`;
+  renderStats();
+  const ms = months();
+  curMonth = ms[ms.length-1];
+  renderNav();
+  renderDays();
+}
+render();
+</script>
+</body>
+</html>

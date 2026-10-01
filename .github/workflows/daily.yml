@@ -1,0 +1,142 @@
+name: daily-forecast
+
+on:
+  schedule:
+    # UTC 21:30 = JST 6:30
+    - cron: "30 21 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-forecast
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Incremental scrape (shop blogs)
+        working-directory: data
+        continue-on-error: true
+        run: |
+          python3 - <<'EOF'
+          import json
+          p = 'scrape_state.json'
+          s = json.load(open(p))
+          s['url_lists'] = {}  # リスト再収集 (新着発見)
+          json.dump(s, open(p, 'w'), ensure_ascii=False)
+          print('[cron] url_lists reset for incremental scrape')
+          EOF
+          timeout 3600 python3 full_scraper.py || echo "::warning::scraper exited nonzero (continuing with existing data)"
+
+      - name: Structure logs
+        working-directory: data
+        run: |
+          python3 make_interim.py || true
+          python3 structure_full.py
+
+      - name: Sync structured logs to engine
+        working-directory: data
+        run: |
+          python3 - <<'EOF'
+          import json
+          full = json.load(open('dive_logs_structured_full.json'))
+          daily = full['daily_summary']
+          for s in daily:
+              if 'tropical_count' not in s:
+                  s['tropical_count'] = len(s.get('tropical_species') or [])
+          json.dump({'generated_at': full.get('generated_at'), 'source': 'github_actions',
+                     'n_days': len(daily), 'daily_summary': daily},
+                    open('../engine/dive_logs_structured.json', 'w'), ensure_ascii=False)
+          print(f'[cron] structured -> engine: {len(daily)} days')
+          EOF
+
+      - name: Retrain weights (full data)
+        working-directory: data
+        run: python3 learn_full.py || echo "::warning::learn_full failed, keeping old weights"
+
+      - name: Biweekly backtest (even ISO week, Sunday JST)
+        working-directory: engine
+        run: |
+          DOW=$(TZ=Asia/Tokyo date +%u)
+          WEEK=$(TZ=Asia/Tokyo date +%V)
+          if [ "$DOW" = "7" ] && [ $((10#$WEEK % 2)) -eq 0 ]; then
+            echo "[cron] biweekly backtest run"
+            timeout 1800 python3 backtest.py || echo "::warning::backtest failed"
+          else
+            echo "[cron] backtest skipped (biweekly: even-week Sunday only)"
+          fi
+
+      - name: Forecast + ML enrich
+        working-directory: engine
+        run: |
+          timeout 600 python3 forecast_engine.py
+          timeout 1800 python3 enrich_forecast.py
+
+      - name: Tide heatmap + longrange calendar
+        working-directory: engine
+        run: |
+          python3 tide_hammer_correlation.py
+          python3 - <<'EOF'
+          import json
+          d = json.load(open('forecast_data.json'))
+          d['tide_heatmap'] = json.load(open('tide_hammer_heatmap.json'))
+          json.dump(d, open('forecast_data.json', 'w'), ensure_ascii=False, indent=2)
+          print('[cron] tide_heatmap swapped')
+          EOF
+          python3 build_longrange.py
+
+      - name: Build HTML -> docs/
+        run: |
+          cd engine
+          python3 build_html.py
+          python3 build_history_html.py
+          cd ..
+          mkdir -p docs/map docs/aim docs/history
+          cp engine/mikomoto_forecast.html docs/index.html
+          cp engine/mikomoto_map.html      docs/map/index.html
+          cp engine/mikomoto_aim.html      docs/aim/index.html
+          cp engine/mikomoto_history.html  docs/history/index.html
+          touch docs/.nojekyll
+
+      - name: Kuroshio forecast expiry check
+        working-directory: engine
+        run: |
+          python3 - <<'EOF'
+          import json
+          from datetime import date
+          k = json.load(open('kuroshio_forecast.json'))
+          days_left = (date.fromisoformat(k['valid_until']) - date.today()).days
+          if days_left <= 14:
+              print(f"::warning::黒潮長期予測の有効期限まで残り{days_left}日! JAMSTEC黒潮親潮ウォッチ(毎週水曜更新)を確認して engine/kuroshio_forecast.json を更新してください")
+          else:
+              print(f"[cron] kuroshio forecast ok ({days_left} days left)")
+          EOF
+
+      - name: Commit & push updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A data engine docs
+          if git diff --cached --quiet; then
+            echo "[cron] no changes to commit"
+          else
+            git commit -m "daily update $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')"
+            git pull --rebase origin main || true
+            git push origin main
+          fi
+
+      - name: Health check (monitor)
+        run: python3 engine/monitor.py

@@ -1,0 +1,19 @@
+{
+  "trained_at": "2026-10-01T08:01:35.064525",
+  "n_records": 2523,
+  "source": "phase1 full logs (hammers+ms+290 partial)",
+  "bias": 0.11338369237509788,
+  "raw_weights": {
+    "f_sst_anomaly": 0.1506775612617949,
+    "f_visibility": 0.1521388344376572,
+    "f_tropical": 0.12063137305879697,
+    "f_recent_actual": 0.44270658911536337
+  },
+  "normalized_weights": {
+    "f_sst_anomaly": 0.17396155765088409,
+    "f_visibility": 0.17564863936164252,
+    "f_tropical": 0.13927237329261266,
+    "f_recent_actual": 0.5111174296948607
+  },
+  "mae": 0.28159535149337594
+}

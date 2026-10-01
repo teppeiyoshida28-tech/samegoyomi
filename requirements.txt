@@ -1,0 +1,6 @@
+# 鮫暦AI daily pipeline の必須依存
+requests>=2.31
+beautifulsoup4>=4.12
+
+# 以下はオプション (使うスクリプトを動かす時のみ):
+#   ephem — data/moon_tide.py (月齢カレンダー再生成。通常は生成済み moon_tide_calendar.json を使う)

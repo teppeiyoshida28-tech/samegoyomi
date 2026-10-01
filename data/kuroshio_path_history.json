@@ -1,0 +1,72 @@
+{
+  "generated_at": "2026-08-25T01:15:00+09:00",
+  "description": "黒潮流路タイプ履歴 (2013-2026)。typeは JMA 分類: nNLM=非大蛇行接岸流路(N型, 八丈島の北), oNLM=非大蛇行離岸流路(C型, 八丈島の南), LM=大蛇行流路。日次の流路タイプデータは公開機関からは一括入手不可のため、海上保安庁 海洋速報トピックス(流路転換の発表日)と気象庁 海洋の健康診断表(大蛇行期間の公式判定)から遷移イベント列として構築した。",
+  "sources": [
+    {
+      "name": "海上保安庁 海洋速報＆海流推測図 更新情報(流路転換トピックス)",
+      "url": "https://www1.kaiho.mlit.go.jp/KANKYO/KAIYO/qboc/",
+      "note": "『本州南方の黒潮流路について』の各発表(2013-2017)より流路転換日を取得"
+    },
+    {
+      "name": "気象庁 海洋の健康診断表 黒潮の数か月から十年規模の変動(流路) 令和8年2月27日発表",
+      "url": "https://www.data.jma.go.jp/kaiyou/data/shindan/b_2/kuroshio_stream/kuroshio_stream.html",
+      "note": "黒潮大蛇行の公式判定期間リスト(1965年以降)と2025年の詳細経過"
+    },
+    {
+      "name": "気象庁 日本近海の海流(月概況) 2026年7月",
+      "url": "https://www.data.jma.go.jp/kaiyou/data/shindan/c_1/jpn_monthly/jpn_monthly_cur.html",
+      "note": "大蛇行終息後の伊豆諸島付近の黒潮通過位置"
+    }
+  ],
+  "official_large_meander_periods_since_1965": [
+    {"start": "1975-08", "end": "1980-03"},
+    {"start": "1981-11", "end": "1984-05"},
+    {"start": "1986-12", "end": "1988-07"},
+    {"start": "1989-12", "end": "1990-12"},
+    {"start": "2004-07", "end": "2005-08"},
+    {"start": "2017-08", "end": "2025-04", "note": "継続7年9か月、1965年以降最長。2020年10月の冷水渦切離時も大蛇行継続と判定 (JMA)"}
+  ],
+  "transition_events": [
+    {"date": "2013-08-06", "event": "遠州灘沖で北緯32度付近まで蛇行 (大蛇行判定には至らず)", "type_after": "meander_non_LM", "source": "JHA topics 2013.8.6"},
+    {"date": "2013-09-02", "event": "蛇行が八丈島の南へ移動", "type_after": "oNLM", "source": "JHA topics 2013.9.2"},
+    {"date": "2014-03-17", "event": "八丈島の北を通過する流路へ", "type_after": "nNLM", "source": "JHA topics 2014.3.17"},
+    {"date": "2014-04-03", "event": "八丈島の南側を通る型へ", "type_after": "oNLM", "source": "JHA topics 2014.4.3"},
+    {"date": "2014-05-07", "event": "八丈島の北側を通る型へ", "type_after": "nNLM", "source": "JHA topics 2014.5.7"},
+    {"date": "2015-01-27", "event": "八丈島の南側を通るC型へ", "type_after": "oNLM", "source": "JHA topics 2015.1.27"},
+    {"date": "2015-07-07", "event": "八丈島の北側を通るN型へ", "type_after": "nNLM", "source": "JHA topics 2015.7.7"},
+    {"date": "2015-08-25", "event": "八丈島の南を通過する流路へ", "type_after": "oNLM", "source": "JHA topics 2015.8.25"},
+    {"date": "2015-11-16", "event": "八丈島の北を通過する流路へ", "type_after": "nNLM", "source": "JHA topics 2015.11.16"},
+    {"date": "2015-12-24", "event": "八丈島の南を通過する流路へ", "type_after": "oNLM", "source": "JHA topics 2015.12.24"},
+    {"date": "2016-02-01", "event": "八丈島の北を通過する流路へ", "type_after": "nNLM", "source": "JHA topics 2016.2.1"},
+    {"date": "2016-04-15", "event": "八丈島の南を通過する流路へ", "type_after": "oNLM", "source": "JHA topics 2016.4.15"},
+    {"date": "2016-08-24", "event": "八丈島の北を通過する流路へ", "type_after": "nNLM", "source": "JHA topics 2016.8.24"},
+    {"date": "2016-10-03", "event": "八丈島の南を通過する流路へ", "type_after": "oNLM", "source": "JHA topics 2016.10.3"},
+    {"date": "2017-01-04", "event": "八丈島の北を通過する流路へ", "type_after": "nNLM", "source": "JHA topics 2017.1.4"},
+    {"date": "2017-02-06", "event": "八丈島の南を通過する流路へ", "type_after": "oNLM", "source": "JHA topics 2017.2.6"},
+    {"date": "2017-08-01", "event": "黒潮大蛇行 開始 (JMA公式判定は2017年8月から。JHAは2017.9.29に『12年ぶりに大蛇行』と発表)", "type_after": "LM", "source": "JMA kuroshio_stream; JHA topics 2017.9.29"},
+    {"date": "2025-04-30", "event": "黒潮大蛇行 終息 (JMA公式判定: 2025年4月まで。4月下旬の冷水渦切離後に蛇行縮小)", "type_after": "post_LM_transition", "source": "JMA kuroshio_stream (令和8年2月27日発表)"},
+    {"date": "2025-07-15", "event": "伊豆諸島付近で八丈島付近または八丈島の南を通過 (2025年7月中旬〜11月上旬)", "type_after": "oNLM", "source": "JMA kuroshio_stream 2025年診断"},
+    {"date": "2025-11-15", "event": "三宅島と八丈島の間または三宅島付近を通過 (2025年11月中旬以降)", "type_after": "nNLM", "source": "JMA kuroshio_stream 2025年診断"},
+    {"date": "2026-07-01", "event": "2026年7月: 上中旬は三宅島付近、下旬は三宅島と八丈島の間を通過", "type_after": "nNLM", "source": "JMA 月概況 2026年7月"}
+  ],
+  "monthly_type_2015_2026": {
+    "note": "transition_eventsから展開した月別代表流路タイプ (月の過半を占めた型)。日次精度は無いため月単位の近似。",
+    "2015": {"01": "nNLM", "02": "oNLM", "03": "oNLM", "04": "oNLM", "05": "oNLM", "06": "oNLM", "07": "nNLM", "08": "oNLM", "09": "oNLM", "10": "oNLM", "11": "nNLM", "12": "oNLM"},
+    "2016": {"01": "oNLM", "02": "nNLM", "03": "nNLM", "04": "oNLM", "05": "oNLM", "06": "oNLM", "07": "oNLM", "08": "nNLM", "09": "nNLM", "10": "oNLM", "11": "oNLM", "12": "oNLM"},
+    "2017": {"01": "nNLM", "02": "oNLM", "03": "oNLM", "04": "oNLM", "05": "oNLM", "06": "oNLM", "07": "oNLM", "08": "LM", "09": "LM", "10": "LM", "11": "LM", "12": "LM"},
+    "2018": "all LM",
+    "2019": "all LM",
+    "2020": "all LM",
+    "2021": "all LM",
+    "2022": "all LM",
+    "2023": "all LM",
+    "2024": "all LM",
+    "2025": {"01": "LM", "02": "LM", "03": "LM", "04": "LM", "05": "transition", "06": "transition", "07": "oNLM", "08": "oNLM", "09": "oNLM", "10": "oNLM", "11": "nNLM", "12": "nNLM"},
+    "2026": {"01": "nNLM", "02": "nNLM", "03": "nNLM", "04": "nNLM", "05": "nNLM", "06": "nNLM", "07": "nNLM", "08": "nNLM(推定)"}
+  },
+  "caveats": [
+    "2017-08〜2025-04のLM期間中も、神子元島近傍の局所流況は蛇行の位相・切離渦により大きく変動した (例: 2020年10月の冷水渦切離)。月別型はあくまで大分類。",
+    "2025-05〜06は大蛇行終息直後の遷移期でJMAの明確な型分類記述がないため 'transition' とした。",
+    "JHAの流路転換発表は2017年以降大蛇行関連のみとなり、N/C転換の週次アナウンスは大蛇行期間中は無い。"
+  ]
+}

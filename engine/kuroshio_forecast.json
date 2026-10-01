@@ -1,0 +1,10 @@
+{
+  "updated": "2026-08-25",
+  "source": "JAMSTEC 黒潮親潮ウォッチ 長期予測 (2026-08-20発表, JCOPE3M)",
+  "source_url": "https://www.jamstec.go.jp/aplinfo/kowatch/",
+  "status": "nNLM",
+  "label": "接岸流路 (八丈島の北) 継続予測",
+  "valid_until": "2026-10-17",
+  "score": 1.0,
+  "note": "大蛇行は2025年に終息、非大蛇行接岸型が継続。毎週水曜更新をチェック。"
+}
