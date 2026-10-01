@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-01T08:01:36.396835",
+  "generated_at": "2026-10-01T08:11:51.214856",
   "location": {
     "lat": 34.5717,
     "lon": 138.9433,
@@ -14,7 +14,7 @@
     2025
   ],
   "learned_weights": {
-    "trained_at": "2026-10-01T08:01:35.064525",
+    "trained_at": "2026-10-01T08:11:49.885271",
     "n_records": 2523,
     "source": "phase1 full logs (hammers+ms+290 partial)",
     "bias": 0.11338369237509788,
@@ -227,7 +227,7 @@
     }
   ],
   "tide_heatmap": {
-    "generated_at": "2026-10-01T08:01:39.342121",
+    "generated_at": "2026-10-01T08:11:53.677966",
     "n_days": 189,
     "window_days": 365,
     "entries": [
