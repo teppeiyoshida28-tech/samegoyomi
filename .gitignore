@@ -2,6 +2,9 @@ __pycache__/
 *.pyc
 *.tmp
 *.log
+.venv/
+.pytest_cache/
+
 
 # 生記事テキスト (著作権配慮のためリポジトリに含めない — Actions 実行時に一時生成されるのみ)
 data/articles.jsonl

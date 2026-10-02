@@ -81,6 +81,10 @@ def append_article(rec):
         f.write(json.dumps(rec, ensure_ascii=False) + "\n")
 
 
+def retry_due(url, retry_after, now):
+    return now >= retry_after.get(url, 0)
+
+
 # ============================================================
 # URL list collection
 # ============================================================
@@ -377,6 +381,8 @@ def main():
 
     done = set(state["done_urls"])
     failed = set(state["failed_urls"])
+    retry_after = state.setdefault("retry_after", {})
+    retry_count = state.setdefault("retry_count", {})
 
     # Phase B: fetch articles — newest first per shop, round-robin-ish by shop order
     t0 = time.time()
@@ -384,7 +390,9 @@ def main():
     for shop in ["hammers", "ms", "290"]:
         urls = state["url_lists"].get(shop, [])
         # list pages already yield newest-first order
-        pending = [u for u in urls if u not in done and u not in failed]
+        new_urls = [u for u in urls if u not in done and u not in failed]
+        retries = sorted(u for u in failed if u in urls and retry_due(u, retry_after, time.time()))[:10]
+        pending = new_urls + retries  # 全失敗URLを一斉再取得せず、1店1回10件まで
         print(f"[fetch] {shop}: {len(pending)} pending", flush=True)
         for i, u in enumerate(pending):
             try:
@@ -392,9 +400,14 @@ def main():
                 rec = PARSERS[shop](u, r.text)
                 append_article(rec)
                 done.add(u)
+                failed.discard(u)
+                retry_after.pop(u, None)
+                retry_count.pop(u, None)
             except Exception as e:
                 print(f"    FAIL {u}: {e}", flush=True)
                 failed.add(u)
+                retry_count[u] = retry_count.get(u, 0) + 1
+                retry_after[u] = time.time() + min(7, 2 ** min(3, retry_count[u] - 1)) * 86400
             n_since_save += 1
             if n_since_save >= 25:
                 state["done_urls"] = sorted(done)

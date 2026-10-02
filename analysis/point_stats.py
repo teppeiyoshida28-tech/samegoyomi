@@ -10,7 +10,7 @@
   analysis/point_stats.json  (機械可読: forecast_engine.py が読む)
   analysis/point_stats.md    (人間可読レポート)
 
-定義:
+旧集計の定義（2026-10改訂前。現行は未知を除外し、訪問地点を明記した記事のみ）:
   出現率 = P(hammer_seen==True | そのポイントに潜った記事, 条件)
   - hammer_seen が None (記載なし/曖昧) の記事は「目撃なし」として分母に含める
     (ショップログは目撃時にほぼ必ず言及するため、無言及≒不発の近似。
@@ -20,11 +20,15 @@
 """
 import json
 import re
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT / "engine"))
+from domain import now_jst, BIAS_NOTE
+
 OUT_JSON = ROOT / "analysis" / "point_stats.json"
 OUT_MD = ROOT / "analysis" / "point_stats.md"
 
@@ -94,10 +98,10 @@ def load_kuroshio_daily():
     return type_on
 
 
-def cell(seen, n):
+def cell(seen, n, unknown=0):
     rate = seen / n if n else None
     return {
-        "n": n, "seen": seen,
+        "n": n, "seen": seen, "unknown": unknown, "total": n + unknown,
         "rate": round(rate, 4) if rate is not None else None,
         "reliable": n >= 10,
     }
@@ -110,13 +114,14 @@ def main():
     kuro_on = load_kuroshio_daily()
 
     # 集計コンテナ: point → dim → key → [seen, n]
-    agg = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: [0, 0])))
-    overall = defaultdict(lambda: [0, 0])
+    agg = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: [0, 0, 0])))
+    overall = defaultdict(lambda: [0, 0, 0])
     total_logs = 0
     total_seen = 0
+    total_known = 0
 
     for l in logs:
-        pts = l.get("points") or []
+        pts = l.get("visited_points") or []
         pts = sorted({MERGE.get(p, p) for p in pts})
         if not pts:
             continue
@@ -124,6 +129,8 @@ def main():
         seen = 1 if l.get("hammer_seen") is True else 0
         total_logs += 1
         total_seen += seen
+        known = int(l.get("hammer_seen") is not None)
+        total_known += known
 
         month = int(date[5:7])
         tide_name = mt.get(date, {}).get("tide_name")
@@ -132,44 +139,44 @@ def main():
 
         for p in pts:
             overall[p][0] += seen
-            overall[p][1] += 1
+            overall[p][1] += known
+            overall[p][2] += 1 - known
             if tide_name:
                 agg[p]["by_tide_name"][tide_name][0] += seen
-                agg[p]["by_tide_name"][tide_name][1] += 1
+                agg[p]["by_tide_name"][tide_name][1] += known
+                agg[p]["by_tide_name"][tide_name][2] += 1 - known
             agg[p]["by_month"][str(month)][0] += seen
-            agg[p]["by_month"][str(month)][1] += 1
+            agg[p]["by_month"][str(month)][1] += known
+            agg[p]["by_month"][str(month)][2] += 1 - known
             if flow in ("up", "down"):
                 agg[p]["by_flow"][flow][0] += seen
-                agg[p]["by_flow"][flow][1] += 1
+                agg[p]["by_flow"][flow][1] += known
+                agg[p]["by_flow"][flow][2] += 1 - known
             if kuro:
                 agg[p]["by_kuroshio"][kuro][0] += seen
-                agg[p]["by_kuroshio"][kuro][1] += 1
+                agg[p]["by_kuroshio"][kuro][1] += known
+                agg[p]["by_kuroshio"][kuro][2] += 1 - known
 
-    baseline = total_seen / total_logs if total_logs else 0.5
+    baseline = total_seen / total_known if total_known else 0.5
 
     points_out = {}
-    for p, (s, n) in sorted(overall.items(), key=lambda kv: -kv[1][1]):
-        entry = {"overall": cell(s, n)}
+    for p, (s, n, unknown) in sorted(overall.items(), key=lambda kv: -kv[1][1]):
+        entry = {"overall": cell(s, n, unknown)}
         for dim in ("by_tide_name", "by_month", "by_flow", "by_kuroshio"):
-            entry[dim] = {k: cell(v[0], v[1])
+            entry[dim] = {k: cell(*v)
                           for k, v in sorted(agg[p][dim].items())}
         points_out[p] = entry
 
     out = {
-        "generated_at": datetime.now().isoformat(),
-        "source": "phase1/dive_logs_structured_full.json (2014-2026, 4026 articles)",
-        "definition": ("rate = P(hammer_seen==True | point dived, condition). "
-                       "hammer_seen=None counted as not-seen. "
-                       "Multi-point articles credit all listed points."),
+        "generated_at": now_jst().isoformat(),
+        "source": "data/dive_logs_structured_full.json",
+        "n_known_articles": total_known, "n_unknown_articles": total_logs - total_known,
+        "definition": "P(article reports a sighting | explicitly visited point, known seen label). Unknown excluded. Multi-point articles do not confirm the exact sighting location.",
         "n_articles_used": total_logs,
         "baseline_rate": round(baseline, 4),
         "alias_table": ALIAS_TABLE,
         "merged": MERGE,
-        "observation_bias_note": (
-            "hammer_points はガイドの行先選択に強く依存する観測バイアスあり。"
-            "カメ根が全記事の約7割に登場するのは『ハンマーが出るから行く』と"
-            "『行くから記録される』の両方の効果を含む。出現率の点間比較は参考値。"
-        ),
+        "observation_bias_note": BIAS_NOTE + " 複数訪問地点の記事率であり、その地点での目撃確定率ではありません。",
         "points": points_out,
     }
     OUT_JSON.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -192,17 +199,9 @@ def main():
     lines = []
     lines.append("# 神子元 ポイント別ハンマー実績出現率\n")
     lines.append(f"生成: {out['generated_at'][:19]} / 対象: 2014-2026 全{total_logs:,}記事 (ポイント記載あり)\n")
-    lines.append(f"**全体ベースライン出現率: {baseline*100:.1f}%** "
-                 "(定義: ポイントに潜った記事のうち hammer_seen=True の割合。"
-                 "hammer_seen=None は不発扱い)\n")
-    lines.append("## ⚠ 観測バイアスについて (重要)\n")
-    lines.append("- **行先選択バイアス**: ガイドは「出そうな所」に客を連れて行く。カメ根が全記事の約70%に"
-                 "登場するのは実力と選好の両方。**「カメ根の出現率が高い」≠「他ポイントで出ない」**。"
-                 "低頻度ポイント (ハンマーズロック n=2 等) は「行っていないだけ」でデータが無い。\n"
-                 "- **帰属曖昧性**: 1記事に複数ポイントが載る場合、どこでハンマーを見たか特定できないため"
-                 "全ポイントに目撃をクレジットしている。併記されやすいポイントの率は互いに引っ張られる。\n"
-                 "- **無言及=不発の近似**: hammer_seen=None (曖昧) を不発扱いにしている。"
-                 "明示的な「見えなかった」記事は90件しかなく、None を除外すると出現率が96%に張り付いて無意味になるため。\n")
+    lines.append(f"**既知ラベルの記事目撃率: {baseline*100:.1f}%** / 既知 {total_known}件、未知 {total_logs-total_known}件。未知は分母から除外。\n")
+    lines.append("## 観測バイアスと帰属の限界\n")
+    lines.append(BIAS_NOTE + " 複数の訪問地点に対する記事目撃率であり、その地点で見たという確定ラベルではありません。高率でも一般の遭遇確率とは解釈できません。\n")
     lines.append("## エイリアス統合対応表\n")
     lines.append("| 正規キー | 統合した表記 |")
     lines.append("|---|---|")
@@ -212,11 +211,11 @@ def main():
 
     lines.append("## ポイント別出現率 (⚠ = n<10 信頼性低)\n")
     lines.append("### 全期間\n")
-    lines.append("| ポイント | 出現率 | 潜水記事数 |")
+    lines.append("| ポイント | 記事目撃率 | 既知/未知記事数 |")
     lines.append("|---|---|---|")
     for p, e in points_out.items():
         o = e["overall"]
-        lines.append(f"| {JA.get(p, p)} | {fmt(o)} | {o['n']} |")
+        lines.append(f"| {JA.get(p, p)} | {fmt(o)} | {o['n']} / {o['unknown']} |")
 
     lines.append("\n### 潮名別 (大潮/中潮/小潮/長潮/若潮, 2015年以降)\n")
     header = "| ポイント | " + " | ".join(TIDE_NAMES) + " |"
@@ -251,8 +250,7 @@ def main():
         row = [JA.get(p, p), fmt(e["by_flow"].get("up", {"n": 0})),
                fmt(e["by_flow"].get("down", {"n": 0}))]
         lines.append("| " + " | ".join(row) + " |")
-    lines.append("\n※ 流向記載は下り潮に大きく偏る (下り潮1,748日 vs 上げ潮442日): "
-                 "神子元のガイドは下り潮の時間帯を選んで潜る傾向。\n")
+    lines.append("\n※ 潮汐フェーズにもガイドの行先・時刻選択による偏りがあります。\n")
 
     lines.append("\n### 黒潮流路タイプ別\n")
     lines.append("| ポイント | nNLM (接岸) | oNLM (離岸) | LM (大蛇行) |")

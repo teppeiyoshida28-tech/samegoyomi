@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>検証ログ (過去1年) — 鮫暦AI 神子元ハンマー潮予報</title>
+<title>予報の検証 — 鮫暦AI 神子元ハンマー潮予報</title>
 <meta property="og:title" content="検証ログ — 鮫暦AI 神子元ハンマー潮予報">
 <meta property="og:image" content="/hammerhead/img/hero_ukiyoe.png">
 <link rel="icon" type="image/png" href="/hammerhead/img/kamon.png">
@@ -93,6 +93,10 @@ h1 .accent { color: var(--gold); }
 }
 .stat .k { font-size:11px; color:var(--pelagic); font-weight:700; letter-spacing:0.06em; }
 .stat .v { font-family:'Shippori Mincho',serif; font-size:32px; font-weight:900; margin-top:4px; }
+main > p { margin: 12px 0; line-height: 1.7; }
+select { color: var(--foam); background: var(--deep); border: 1px solid var(--line-strong); padding: 6px 10px; border-radius: 6px; }
+label { display: inline-block; margin: 8px 12px 8px 0; }
+th, td { padding: 6px 8px; }
 .stat .v small { font-size:14px; color:var(--pelagic); font-weight:400; }
 .stat .note { font-size:10.5px; color:var(--pelagic); margin-top:4px; line-height:1.5; }
 .v.good { color:var(--tier-b); }
@@ -158,148 +162,61 @@ h1 .accent { color: var(--gold); }
 </style>
 </head>
 <body>
-<div class="topbar">
-  <div class="brand">
-    <img src="/hammerhead/img/kamon.png" alt="鮫暦AI 紋章">
-    <div>鮫暦<em>AI</em><div class="bsub">神子元ハンマー潮予報</div></div>
-  </div>
-  <nav class="site-nav">
-    <a href="../">◆ 今日の予報</a>
-    <a href="../map/">◇ 予測マップ</a>
-    <a href="../aim/">◆ 狙い目カレンダー</a>
-    <a href="./" class="here">◇ 検証ログ</a>
-  </nav>
-</div>
-<div class="wrap">
-<header class="page">
-  <h1>予測 <span class="accent">vs</span> 実測 — 過去1年</h1>
-  <div class="sub">毎日の予測(前日までの情報のみで算出)と、現地ショップの実測ログを突き合わせた答え合わせ。<br>群れ規模・透明度・水温・出現ポイントまで予測し、モデルの信頼度を透明化する検証ページです。</div>
-  <div class="gen" id="gen"></div>
-</header>
-
+<div class="topbar"><div class="brand">鮫暦<em>AI</em></div><nav class="site-nav"><a href="../">今日の予報</a><a href="../map/">地図</a><a href="../aim/">狙い目</a></nav></div>
+<main style="max-width:1200px;margin:auto;padding:24px">
+<h1>予報の検証</h1>
+<p>当時発表した予報と、過去の環境値による再計算を区別して評価します。</p>
+<label>検証方法 <select id="mode"><option value="issued">保存した発表予報</option><option value="retrospective">過去データで再計算</option></select></label>
+<label id="lead-label">何日前の予報 <select id="lead"></select></label>
+<p id="method"></p><p id="coverage"></p>
 <div class="stats" id="stats"></div>
-<div class="legend">
-  <span><b style="color:var(--tier-b)">■</b> 的中(目撃有無が一致)</span>
-  <span><b style="color:var(--shu)">■</b> 外れ</span>
-  <span><b style="color:var(--water-2)">■</b> ショップ報告なし(海況不良・休業等)</span>
-  <span>ランク: <b>S</b> 青潮×大群 / <b>A</b> 大群 / <b>B</b> 中群 / <b>C</b> 小〜中群 / <b>D</b> 単体〜幸運 / <b>E</b> 厳しい</span>
-</div>
-<div class="monthnav" id="monthnav"></div>
-<div class="month-summary" id="month-summary"></div>
-<div class="days" id="days"></div>
-
-<div class="method">
-  <h2>検証方法</h2>
-  リーク防止のため、各日の予測は<b>前日までのショップ観測のみ</b>を使って再計算しています。群れ規模・透明度の各モデルは<b>バックテスト期間より前の実測 (2015年〜) だけで学習</b>したリッジ回帰。水温はOpen-Meteo SSTに直近実測オフセット補正。出現ポイントは月別出現気候値と潮流ベースのポイントスコアのブレンドでTop3を予測。環境データはOpen-Meteo再解析値。実測ランクは「透明度×群れ規模」マトリクスで判定し、予測ランクも同じマトリクスを予測透明度×予測規模に適用しています。
-</div>
-</div>
-
+<div class="method"><h2>目撃予測と単純な予測の比較</h2>
+<div style="overflow:auto"><table style="width:100%;text-align:left"><thead><tr><th>方法</th><th>評価件数</th><th>的中率</th><th>非目撃の識別率</th><th>均衡精度</th><th>Brier ↓</th><th>AUC ↑</th></tr></thead><tbody id="baselines"></tbody></table></div>
+<p>Brierは確率の誤差（小さいほど良い）、AUCは目撃あり/なしの順位識別（0.5が無差別）。均衡精度は目撃あり・なしを同じ重みで評価します。片方のラベルしかない場合は算出しません。前日実績が不明な日は持続予測を採点せず、モデルも同じ対象日の成績を併記します。</p>
+<h2>確率の校正</h2><p id="calibration"></p>
+<h2>観測データの限界</h2><p id="bias"></p><p>報告なしは欠航、不明は非目撃として扱いません。ポイント評価には目撃地点が明示された観測だけを使用します。カメ根の分解根は記録粒度に合わせて同じエリアとして評価します。</p></div>
+<div class="monthnav" id="monthnav"></div><div class="days" id="days"></div>
+</main>
 <script>
 const DATA = /*__BACKTEST_JSON__*/ null;
-
-const sizeLabel = {large:'大群(100+)', medium:'中群(50前後)', small:'小群(20前後)', single:'単体〜数匹'};
-const ptName = {kame_ne:'カメ根', A_point:'Aポイント', ao_ne:'青根', jab_ne:'ジャブ根', zabu_ne:'ザブ根',
-  mitsu_ne:'三ツ根', kado_ne:'カド根', eno_kuchi:'江の口', andoro:'アンドロ', hammers_rock:'ハンマーズロック',
-  plate:'プレート', third_takane:'三つ目の高根', eagleray_rock:'トビエイロック', west_takane:'西の高根',
-  twin_peaks:'ツインピークス', view_point:'ビューポイント', kabe_ne:'カベ根', kita_ne:'北の根',
-  higashi_ne:'東の根', karito:'カリトの鼻', shirane:'白根', hashigodan:'はしご段', oota_ne:'オオタ根'};
-const TIERNUM = {S:5,A:4,B:3,C:2,D:1,E:0};
-
-function pct(x){ return x==null ? '—' : Math.round(x*100)+'%'; }
-function ptJa(k){ return ptName[k]||k; }
-
-let curMonth = null;
-
-function renderStats(){
-  const s = DATA.summary;
-  const stats = [
-    {k:'目撃有無 的中率', v:pct(s.seen_hit_rate), cls:(s.seen_hit_rate>=0.8?'good':'mid'), note:'規模モデル≥単体相当=出る予想'},
-    {k:'欠航予測 精度', v:pct(s.cancel_accuracy), cls:(s.cancel_accuracy>=0.75?'good':'mid'), note:`捕捉率 ${pct(s.cancel_recall)} / 適中率 ${pct(s.cancel_precision)}`},
-    {k:'規模 ±1クラス以内', v:pct(s.size_within1_rate), cls:(s.size_within1_rate>=0.7?'good':'mid'), note:`完全一致 ${pct(s.size_exact_rate)} / 相関 ${s.size_correlation??'—'}`},
-    {k:'透明度 平均誤差', v:`±${s.visibility_mae_m}<small>m</small>`, cls:(s.visibility_mae_m<=4?'good':'mid'), note:'予測透明度 vs 実測上限'},
-    {k:'水温 平均誤差', v:`±${s.water_temp_mae_c}<small>℃</small>`, cls:(s.water_temp_mae_c<=1.5?'good':'mid'), note:'SST+直近実測オフセット補正'},
-    {k:'ポイントTop3的中', v:pct(s.point_top3_hit_rate), cls:(s.point_top3_hit_rate>=0.6?'good':'mid'), note:`目撃ポイント報告のある${s.n_point_days}日で検証`},
-    {k:'ランク±1以内', v:pct(s.tier_within1_rate), cls:(s.tier_within1_rate>=0.6?'good':'mid'), note:`完全一致 ${pct(s.tier_exact_rate)}`},
-    {k:'検証日数', v:`${s.n_evaluated}<small> / ${s.n_days}日</small>`, cls:'', note:`報告なし ${s.n_no_report}日 / 学習 ${s.n_train_days}日(期間外)`},
-  ];
-  document.getElementById('stats').innerHTML = stats.map(x=>
-    `<div class="stat"><div class="k">${x.k}</div><div class="v ${x.cls}">${x.v}</div><div class="note">${x.note}</div></div>`).join('');
+const $ = s => document.querySelector(s);
+const pct = x => x == null ? '—' : (100*x).toFixed(1)+'%';
+const num = x => x == null ? '—' : Number(x).toFixed(3);
+const esc = x => String(x??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let month = '';
+function state(){
+  const issued = $('#mode').value === 'issued';
+  const lead = $('#lead').value;
+  return {issued, rows:issued?(DATA.issued?.days||[]).filter(r=>String(r.lead_days)===lead):DATA.days,
+          summary:issued?(DATA.issued?.by_lead||{})[lead]:DATA.summary};
 }
-
-function months(){
-  const ms = [...new Set(DATA.days.map(d=>d.date.slice(0,7)))];
-  ms.sort();
-  return ms;
+function metricsRow(name,m={}){
+  return `<tr><td>${esc(name)}</td><td>${m.n??0}（目撃${m.positive??0}/非目撃${m.negative??0}）</td><td>${pct(m.accuracy)}</td><td>${pct(m.specificity)}</td><td>${pct(m.balanced_accuracy)}</td><td>${num(m.brier)}</td><td>${num(m.auc)}</td></tr>`;
 }
-
-function renderNav(){
-  const ms = months();
-  document.getElementById('monthnav').innerHTML = ms.map(m=>
-    `<button class="${m===curMonth?'on':''}" onclick="setMonth('${m}')">${m.slice(0,4)}.${m.slice(5)}</button>`).join('');
-}
-
-function setMonth(m){ curMonth = m; renderNav(); renderDays(); }
-
-function renderDays(){
-  const TIERNUMloc = TIERNUM;
-  const days = DATA.days.filter(d=>d.date.slice(0,7)===curMonth).reverse();
-
-  // 月内サマリ
-  const ev = days.filter(d=>d.actual);
-  const seen = ev.filter(d=>d.actual.hammer_seen!==null);
-  const hits = seen.filter(d=>(d.predicted.size_num>=0.5)===!!d.actual.hammer_seen).length;
-  document.getElementById('month-summary').textContent =
-    `${curMonth}: 検証${ev.length}日 / 目撃的中 ${seen.length?Math.round(hits/seen.length*100)+'%':'—'} / 報告なし${days.length-ev.length}日`;
-
-  const rows = days.map(d=>{
-    const p = d.predicted;
-    const predPts = (p.points||[]).map(ptJa).join('・');
-    const predHtml = `
-      <div class="side-label">予測(前日時点)</div>
-      <span class="tierchip tier-${p.tier}">${p.tier}</span>
-      <span style="font-weight:700;font-size:12.5px;margin-left:6px">${p.size_label}</span>
-      <div class="meta">透明度 <b>${p.visibility_m}m</b> / 水温 <b>${p.water_temp}℃</b> (平年${p.avg_anomaly>=0?'+':''}${p.avg_anomaly}) / 流速 <b>${p.avg_current_kmh}km/h</b> / 波 <b>${p.max_wave}m</b> / 欠航確率 <b style="${p.cancel_flag?'color:var(--shu)':''}">${Math.round((p.cancel_prob||0)*100)}%</b>${p.cancel_flag?' <b style="color:var(--shu)">⚠欠航予想</b>':''}<br>📍予想: <b>${predPts}</b></div>`;
-
-    let cls='noreport', icon='', actHtml='';
-    if(d.actual){
-      const a = d.actual;
-      const hit = (p.size_num>=0.5) === !!a.hammer_seen;
-      cls = hit ? 'hit' : 'miss';
-      icon = hit ? '✅' : '❌';
-      const pts = (a.hammer_points||[]).map(ptJa).slice(0,3).join('・');
-      const ptHit = (a.hammer_points||[]).some(x=>(p.points||[]).includes(x));
-      actHtml = `
-        <div class="side-label">実測(ショップログ)</div>
-        <span class="tierchip tier-${a.tier}">${a.tier}</span>
-        <span class="actual-badge ${a.hammer_seen?'seen-yes':'seen-no'}">${a.hammer_seen?'◆ 目撃':'目撃なし'}${a.hammer_size?' — '+(sizeLabel[a.hammer_size]||a.hammer_size):''}</span>
-        <div class="meta">${a.visibility?`透明度 <b>${a.visibility}</b>`:''}${a.water_temp?` / 水温 <b>${a.water_temp}</b>`:''}${pts?` / <span class="pts">📍${pts}${ptHit?' <b style="color:var(--tier-b)">ポイント的中✓</b>':''}</span>`:''}${a.shops_reporting&&a.shops_reporting.length?` / 報告${a.shops_reporting.length}店`:''}</div>`;
-    } else {
-      const cHit = !!p.cancel_flag;
-      icon = cHit ? '✅' : '';
-      actHtml = `<div class="side-label">実測</div><div class="noreport-txt">ショップ報告なし(海況不良・クローズ等)${cHit?' — <b style="color:var(--tier-b)">欠航予測的中✓</b>':''}</div>`;
-    }
-
-    return `<div class="day ${cls}">
-      <div class="dcol"><div class="date">${d.date.slice(5)}</div><div class="wd">${d.weekday}曜</div></div>
-      <div>${predHtml}</div>
-      <div class="arrow">→${icon?`<span class="result-icon">${icon}</span>`:''}</div>
-      <div>${actHtml}</div>
-    </div>`;
-  });
-  document.getElementById('days').innerHTML = rows.join('') || '<div class="noreport-txt">この月のデータなし</div>';
-}
-
 function render(){
-  if(!DATA){ document.getElementById('days').textContent = 'データ未生成'; return; }
-  document.getElementById('gen').textContent =
-    `期間: ${DATA.period.start} 〜 ${DATA.period.end} (365日) / 生成: ${DATA.generated_at.slice(0,16).replace('T',' ')}`;
-  renderStats();
-  const ms = months();
-  curMonth = ms[ms.length-1];
-  renderNav();
-  renderDays();
+  const {issued,rows,summary:s} = state();
+  $('#lead-label').style.display = issued?'':'none';
+  $('#method').textContent = issued ? (DATA.issued?.method||'保存開始後、対象日の観測がそろうと採点します。') : DATA.method;
+  $('#bias').textContent = DATA.observation_bias_note;
+  $('#coverage').textContent = s ? `対象${s.n_days}件 / 目撃有無の既知ラベル${s.n_seen_days}件 / 不明${s.n_unknown_seen}件 / 報告なし${s.n_no_report}件` + (issued?'':` / 環境不足による除外${DATA.skipped_incomplete_dates?.length||0}日`) : 'まだ評価できる発表予報がありません。過去再計算は上の検証方法から確認できます。';
+  const cards = s ? [['目撃有無',pct(s.seen_hit_rate)],['大群の識別 AUC',num(s.large_metrics?.auc)+` (n=${s.large_metrics?.n??0})`],['大群 Brier',num(s.large_metrics?.brier)],['季節平均の大群 Brier',num(s.large_baseline?.brier)],['規模完全一致',pct(s.size_exact_rate)+` (n=${s.n_size_days})`],['ランク完全一致',pct(s.tier_exact_rate)+` (n=${s.n_tier_days})`],['透明度誤差',num(s.visibility_mae_m)+' m'],['目撃地点Top3',pct(s.point_top3_hit_rate)+` (n=${s.n_point_days})`]]:[];
+  $('#stats').innerHTML = cards.map(([k,v])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v.replace(/ \(n=(\d+)\)/, '<br><small>n=$1</small>')}</div></div>`).join('');
+  const b=s?.baselines||{};
+  $('#baselines').innerHTML = s ? metricsRow('モデル',s.seen_metrics)+metricsRow('毎日目撃あり',b.always_seen)+metricsRow('過去の同月平均',b.seasonal)+metricsRow('発表前日の実績を継続',b.persistence)+metricsRow('モデル（前日実績ありの日のみ）',b.model_on_persistence_days) : '';
+  $('#calibration').textContent=(s?.seen_metrics?.calibration||[]).map(c=>`予測平均${pct(c.predicted)} → 観測${pct(c.observed)} (n=${c.n})`).join(' / ')||'評価データなし';
+  const months=[...new Set(rows.map(r=>r.date.slice(0,7)))].sort();
+  if(!months.includes(month))month=months.at(-1)||'';
+  $('#monthnav').innerHTML=months.map(m=>`<button data-month="${m}" class="${m===month?'on':''}">${m}</button>`).join('');
+  $('#monthnav').querySelectorAll('button').forEach(b=>b.onclick=()=>{month=b.dataset.month;render();});
+  $('#days').innerHTML=rows.filter(r=>r.date.startsWith(month)).slice().reverse().map(r=>{
+    const p=r.predicted,a=r.actual;
+    const known=a?.hammer_seen!=null;
+    const hit=known?((p.seen_probability??(p.size_num>=.5?1:0))>=.5)===a.hammer_seen:null;
+    return `<div class="day ${hit==null?'noreport':hit?'hit':'miss'}"><div class="dcol">${r.date}</div><div><div class="side-label">${issued?'発表 '+esc(r.issued_at):'過去環境値で再計算'}</div><b>${esc(p.tier)} / ${esc(p.size_label)}</b><div>目撃 ${pct(p.seen_probability)} / 大群 ${pct(p.large_probability)}</div><div>波 ${p.max_wave}m / 風 ${p.max_wind}m/s</div><div>${esc(p.sea_status)}</div></div><div class="arrow">${hit==null?'—':hit?'一致':'不一致'}</div><div><div class="side-label">後日の観測</div>${a?`<b>${known?(a.hammer_seen?'目撃あり':'目撃なし'):'目撃有無は不明'}</b><div>規模 ${esc(a.size_num===0?'目撃なし':({large:'大群',medium:'中群',small:'小群',single:'単体'}[a.hammer_size]||'不明'))} / ランク ${esc(a.tier||'不明')}</div><div>透明度 ${esc(a.visibility||'不明')}</div><div>確定した目撃地点 ${esc(a.hammer_points?.join('・')||'不明')}</div>`:'報告なし（欠航かどうかは不明）'}</div></div>`;
+  }).join('');
 }
-render();
-</script>
-</body>
-</html>
+const leads=Object.keys(DATA.issued?.by_lead||{}).sort((a,b)=>+a-+b);
+$('#lead').innerHTML=leads.map(l=>`<option value="${l}">${l}日前</option>`).join('');
+if(leads.includes('1'))$('#lead').value='1';
+$('#mode').onchange=render;$('#lead').onchange=render;render();
+</script></body></html>

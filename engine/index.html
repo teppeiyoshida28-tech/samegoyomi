@@ -1458,7 +1458,7 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
   <div class="island-panel-outer">
   <div class="island-panel">
     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-      <div class="island-title">島の潮陰と回遊予測</div>
+      <div class="island-title">島の潮陰と回遊予測（局所流・座標は未校正）</div>
       <div class="map-day-tabs" id="map-day-tabs"></div>
       <div class="island-hour-controls" id="hour-controls"></div>
     </div>
@@ -1584,7 +1584,7 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
       </div>
       <div class="legend-item">
         <div class="legend-swatch" style="background:#04121f; border:1.5px solid #ff6b47; border-radius:50%; color:#ff6b47; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center;">1</div>
-        推奨 1〜3位 (番号バッジ)
+        選択時刻の推奨 1〜3位 (番号バッジ)
       </div>
       <div class="legend-item">
         <div class="legend-swatch" style="background:rgba(127,212,196,0.25); border:1.5px dashed #7fd4c4; border-radius:50%;"></div>
@@ -1663,7 +1663,7 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
 
 <section class="section-title hide-in-map" id="aim">
   <h2 id="lr-title">半年先 <em>狙い目カレンダー</em></h2>
-  <div class="subtitle" id="lr-subtitle">月齢×潮×季節×黒潮長期予測の合成スコア — 遠征日程の目安</div>
+  <div class="subtitle" id="lr-subtitle">◉ フル予報 / ◇ 月齢×潮×季節×黒潮の長期見込み — スコアは遭遇確率ではありません</div>
 </section>
 <div class="lr-wrap">
   <div class="lr-kuro" id="lr-kuro"></div>
@@ -1675,7 +1675,7 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
     昼ごろまで下げが続けば2・3本目まで期待。⤵＝8-9時で下げ止まり（低評価・午後の上げ待ち）。
     ミニグラフ = 6〜16時の予測潮位（網掛け帯がコアタイム 8-13時）、↓下げ/↑上げ/→動き小。
     潮位は調和分解（主要8分潮・検証MAE±0.09m）による天文潮。海流は長期予測困難のため含みません。
-    ★=月内Top3。黒潮予測の有効期限後は中立値。直近14日は上の短期予報を優先してください。
+    ★=長期見込みの月内Top3。黒潮予測の有効期限後は中立値。目撃記録には行先選択・透明度・記載頻度による観測バイアスがあります。◉フル予報のある日だけ短期予報を優先してください。欠損日は長期見込みです。
   </div>
 </div>
 
@@ -1800,14 +1800,14 @@ function renderHero(data) {
   if (tk && data.recent_track && data.recent_track.length) {
     const days = data.recent_track;
     const hits = days.filter(d => d.tier_within1).length;
-    tk.innerHTML = `<span class="tk-title">直近${days.length}日の答え合わせ<br>(ランク±1: ${hits}/${days.length})</span>` +
+    tk.innerHTML = `<span class="tk-title">保存した翌日予報の答え合わせ（${days.length}件）<br>(ランク±1: ${hits}/${days.length})</span>` +
       days.map(d => `
         <div class="track-day" title="${d.date} 予測${d.pred_tier}→実測${d.act_tier}">
           <div class="tk-d">${d.date.slice(5).replace('-','/')}</div>
           <div class="tk-r">${d.pred_tier}→${d.act_tier}</div>
           <div class="tk-i">${d.tier_within1 ? '✅' : '❌'}</div>
         </div>`).join('') +
-      `<span class="tk-link"><a href="history/">全365日の検証 →</a></span>`;
+      `<span class="tk-link"><a href="history/">発表予報と過去再計算の検証 →</a></span>`;
   } else if (tk) { tk.style.display = 'none'; }
 
   renderFactors(data);
@@ -1830,7 +1830,7 @@ function renderFactors(data) {
       key: '水温 偏差',
       val: (today.avg_anomaly > 0 ? '+' : '') + today.avg_anomaly.toFixed(1),
       unit: '℃',
-      detail: `実測 ${today.avg_sst.toFixed(1)}℃ / 平年 ${(today.avg_sst - today.avg_anomaly).toFixed(1)}℃`,
+      detail: `予測 ${today.avg_sst.toFixed(1)}℃ / 平年 ${(today.avg_sst - today.avg_anomaly).toFixed(1)}℃`,
       score: sigmoid(today.avg_anomaly / 1.5),
     },
     {
@@ -1844,7 +1844,7 @@ function renderFactors(data) {
       key: '海況',
       val: today.max_wave.toFixed(1),
       unit: 'm 波高',
-      detail: `風 ${today.max_wind.toFixed(0)} m/s · ${today.diveable ? '出航可能' : '欠航濃厚'}`,
+      detail: `風 ${today.max_wind.toFixed(0)} m/s · ${today.sea_status || '現地判断を確認'}`,
       score: today.max_wave > 2 ? 0 : today.max_wave > 1.5 ? 0.5 : today.max_wave > 1 ? 0.8 : 1.0,
     },
     {
@@ -1913,7 +1913,7 @@ function renderDayTabs(data) {
     const ml = d.ml || {};
     return `<button class="${i === selectedDayIdx ? 'on' : ''}" data-i="${i}">` +
       `${names[i]} ${dt.getMonth() + 1}/${dt.getDate()}(${DOW_JA[dt.getDay()]})<br>` +
-      `<span class="tb">${d.tier} ${Math.round(d.score)} · ${ml.size_label ? ml.size_label.replace(/\(.*\)/, '') : ''}${ml.cancel_flag ? ' ⚠' : ''}</span></button>`;
+      `<span class="tb">${d.tier} ${Math.round(d.score)} · ${ml.size_label ? ml.size_label.replace(/\(.*\)/, '') : ''}${d.diveable === false ? ' ⚠' : ''}</span></button>`;
   }).join('');
   el.querySelectorAll('button').forEach(b => {
     b.addEventListener('click', () => {
@@ -2340,17 +2340,17 @@ function renderTodayReco(data) {
       const lbl = ev.flow ? ({ up: '上げ潮', down: '下げ潮' }[ev.flow.flow] + '時') :
                   ev.tide_name ? ev.tide_name.name :
                   ev.month ? `${ev.month.month}月` : '全期間';
-      parts.push(`このポイントの過去出現率 ${Math.round(cell.rate * 100)}% (${lbl}・n=${cell.n})`);
+      parts.push(`この地点を訪問した記事の目撃率 ${Math.round(cell.rate * 100)}% (${lbl}・n=${cell.n})`);
     }
   }
-  parts.push('潮陰・潮目ジオメトリ計算');
+  parts.push('潮陰・潮目の仮説モデル / 記事率は選択・記載バイアスあり、地点での目撃確定率ではありません');
 
   const top3 = (day.top3_points || []).map((t, i) =>
     `${i + 1}. ${POINT_JA[t.point] || (POINTS[t.point] || {}).label || t.point} ${Math.round(t.score * 100)}`).join(' / ');
 
   el.style.display = 'flex';
   el.innerHTML = `
-    <span class="tr-badge">▶ 今日の推奨</span>
+    <span class="tr-badge">▶ この日の推奨（${day.best_hour}時）</span>
     <span class="tr-point">${ptName}</span>
     <span class="tr-score">スコア ${sc}</span>
     <span class="tr-why">${parts.join(' ／ ')}${top3 ? `<br>推奨順: ${top3}` : ''}</span>
@@ -2828,14 +2828,14 @@ function renderCalendar(data) {
             <span class="label">潮流</span>
             <span>${(d.avg_current_kmh/1.852).toFixed(1)} kt</span>
           </div>
-          ${d.ml ? `<div class="metric ${d.ml.cancel_flag?'warn':''}">
-            <span class="label">欠航確率</span>
-            <span>${Math.round(d.ml.cancel_prob*100)}%</span>
+          ${d.ml ? `<div class="metric ${d.diveable === false?'warn':''}">
+            <span class="label">海況基準</span>
+            <span>${d.diveable === false ? "超過" : "基準内"}</span>
           </div>` : ''}
         </div>
         ${d.ml && d.ml.points ? `<div style="font-size:9.5px;color:var(--pelagic);margin-top:3px">📍${d.ml.points.slice(0,2).map(p=>POINT_JA[p]||p).join('・')}</div>` : ''}
         <div class="cal-flag ${hasActual?'actual':(d.diveable?'':'no')}">
-          ${hasActual ? '実測' : (d.diveable ? '出航可' : '欠航リスク')}
+          ${hasActual ? '実測' : (d.diveable ? '海況基準内・現地確認' : '海況基準超過')}
         </div>
       </div>
     `;
@@ -2844,46 +2844,21 @@ function renderCalendar(data) {
 
 // === MODEL PANEL ===
 function renderModelPanel(data) {
-  const lw = data.learned_weights || {};
-  const w = lw.normalized_weights || lw.raw_weights || {};
-  const n = lw.n_records || 0;
-  const mae = lw.mae;
-  const meta = `Trained on ${n} days of shop observations${mae ? ' · MAE ' + mae.toFixed(3) : ''}`;
-  $('#model-subtitle').textContent = meta;
-
-  const WEIGHT_LABELS = {
-    f_sst_anomaly: '水温 偏差 (平年比)',
-    f_visibility:  '透明度 (現地実測)',
-    f_tropical:    '南方系魚類 (黒潮プロキシ)',
-    f_recent_actual: '直近3日 目撃連続',
-  };
-  // 重みバー (正規化ベース)
-  const total = Object.values(w).reduce((a,b) => a+b, 0);
-  const items = Object.entries(w).map(([k, v]) => ({
-    key: k, label: WEIGHT_LABELS[k] || k, w: v, pct: total > 0 ? v/total : 0
-  })).sort((a, b) => b.pct - a.pct);
-
-  const weightsHTML = items.map(it => `
-    <div class="weight-row">
-      <div class="weight-label">${it.label}</div>
-      <div class="weight-bar"><div class="weight-bar-fill" style="width:${Math.round(it.pct*100)}%"></div></div>
-      <div class="weight-val">${(it.pct*100).toFixed(1)}%</div>
-    </div>
-  `).join('');
-
+  $('#model-subtitle').textContent = `学習対象 ${data.ml_meta?.n_train || 0}日 / ${data.model_version || ''}`;
+  const weightsHTML = `<p>群れ規模・透明度は回帰、目撃・大群は既知ラベルのみで確率を学習しています。</p><p>ポイントは潮流・地形の仮説モデルと、条件別の記事目撃率で推薦します。</p><p>${data.observation_bias_note || ''}</p><p>${data.current_method || ''}</p>`;
   // 最近のショップログ (engine が recent_observations として出力)
   const recentObs = data.recent_observations || [];
   const past = recentObs.slice(0, 10);
   const recentHTML = past.length ? past.map(d => {
     const sz = d.hammer_size || (d.hammer_seen ? 'seen' : 'none');
     const szClass = ['large', 'medium', 'small'].includes(sz) ? sz : 'none';
-    const label = sz === 'large' ? '大群' : sz === 'medium' ? '群れ' : sz === 'small' ? '小群' : (d.hammer_seen ? '目撃' : 'なし');
+    const label = sz === 'large' ? '大群' : sz === 'medium' ? '群れ' : sz === 'small' ? '小群' : (d.hammer_seen === true ? '目撃' : d.hammer_seen === false ? 'なし' : '不明');
     const tropTag = d.tropical_count > 0 ? `<span class="log-trop">南方${d.tropical_count}種</span>` : '';
     return `
       <div class="recent-log-row">
         <div class="date">${d.date.substring(5)}</div>
         <div class="shops">${Array.isArray(d.shops_reporting) ? d.shops_reporting.length : (d.shops_reporting || 0)}社</div>
-        <div class="seen ${d.hammer_seen?'yes':'no'}">${d.hammer_seen?'●':'✕'}</div>
+        <div class="seen ${d.hammer_seen?'yes':'no'}">${d.hammer_seen===true?'●':d.hammer_seen===false?'✕':'?'}</div>
         <div class="meta">
           <span class="log-vis">${d.visibility || '-'}</span>
           <span class="log-sep">·</span>
@@ -2897,11 +2872,10 @@ function renderModelPanel(data) {
 
   $('#model-panel').innerHTML = `
     <div class="model-weights">
-      <h3>Feature Weights · 因子重み <span class="h3-sub">(合計100%)</span></h3>
+      <h3>モデルと根拠</h3>
       ${weightsHTML}
       <div style="margin-top: 14px; font-size: 10px; color: var(--pelagic); font-family:monospace; line-height:1.6;">
-        「ハンマー目撃×規模 (0-4)」を予測するリッジ回帰で学習。<br>
-        重みが高い因子ほど翌日の目撃に強く効いています。
+        スコアは遭遇確率ではありません。性能と単純予測との比較は検証ページで公開しています。
       </div>
     </div>
     <div class="model-recent">
@@ -2982,22 +2956,27 @@ function renderLrNav() {
 function renderLrCal() {
   const days = LONGRANGE.days.filter(d => d.date.slice(0, 7) === lrMonth);
   if (!days.length) { $('#lr-cal').innerHTML = ''; return; }
+  const fcMap = Object.fromEntries((FORECAST.daily || []).filter(d => d.forecast_kind === 'full').map(d => [d.date, d]));
   const cells = ['月', '火', '水', '木', '金', '土', '日'].map(d => `<div class="lr-dow">${d}</div>`);
   const pad = days[0].weekday; // 0=月
   for (let i = 0; i < pad; i++) cells.push('<div class="lr-day empty"></div>');
   for (const d of days) {
+    const fc = fcMap[d.date];
+    const score = fc ? fc.score : d.aim_score;
     const dt = parseInt(d.date.slice(8), 10);
     const wd = d.weekday;
     const dcls = wd === 5 ? 'sat' : wd === 6 ? 'sun' : '';
     cells.push(`
-      <div class="lr-day ${d.kuroshio_known ? '' : 'unknown-kuro'} ${d.aim_score >= 70 ? 'hot' : ''}"
+      <div class="lr-day ${d.kuroshio_known ? '' : 'unknown-kuro'} ${score >= 70 && fc?.diveable !== false ? 'hot' : ''}"
            title="月齢${d.moon_age} ${d.tide_name} / 朝→昼下げ${d.morning_ebb_m}m 未明→朝${d.predawn_ebb_m}m 下げ止まり${d.stop_h}時 / 季節${Math.round(d.f_month * 100)} 下げ${Math.round(d.f_ebb * 100)} 黒潮${Math.round(d.f_kuroshio * 100)} 月齢${Math.round(d.f_moon * 100)}">
-        ${d.is_top ? '<span class="star">⭐</span>' : ''}
+        ${!fc && d.is_top ? '<span class="star">⭐</span>' : ''}
         <div class="d"><span class="${dcls}">${dt}</span></div>
+        <div class="ld-badge ${fc ? 'full' : 'lrng'}">${fc ? '◉ フル予報' : '◇ 長期見込み'}</div>
         <div class="moon">${d.phase_icon}<span style="font-size:8.5px;color:var(--pelagic)"> ${d.tide_name}</span></div>
         ${lrSpark(d)}
         <div class="flow ${d.flow_type}">${d.flow_type==='ebb'?'↓':d.flow_type==='ebbstop'?'⤵':d.flow_type==='flood'?'↑':'→'} ${d.flow_label}</div>
-        <div class="sc" style="color:${lrColor(d.aim_score)}">${Math.round(d.aim_score)}</div>
+        <div class="sc" style="color:${lrColor(score)}">${Math.round(score)}</div>
+        ${fc ? `<div class="ld-tags">${fc.sea_status}</div>` : ''}
       </div>`);
   }
   $('#lr-cal').innerHTML = cells.join('');
@@ -3035,7 +3014,7 @@ function renderLrDigest() {
   const today = (FORECAST.daily && FORECAST.daily[0]) ? FORECAST.daily[0].date : LONGRANGE.days[0].date;
   const t0 = new Date(today + 'T00:00:00');
   const dstr = off => fmtD(new Date(t0.getTime() + off * 86400000));
-  const fcMap = {}; (FORECAST.daily || []).forEach(d => { fcMap[d.date] = d; });
+  const fcMap = {}; (FORECAST.daily || []).filter(d => d.forecast_kind === 'full').forEach(d => { fcMap[d.date] = d; });
   const lrMap = {}; (LONGRANGE.days || []).forEach(d => { lrMap[d.date] = d; });
 
   function digestCard(date) {
@@ -3045,15 +3024,15 @@ function renderLrDigest() {
     const wdCls = w === 6 ? 'sat' : w === 0 ? 'sun' : '';
     const dateHtml = `<div class="ld-date">${date.slice(5).replace('-', '/')}<span class="ld-wd ${wdCls}">(${wd[w]})</span></div>`;
     const tideLine = lr ? `${lr.phase_icon || ''}${lr.tide_name || ''}` : (fc ? (fc.tide_name || '') : '');
-    if (fc) {
-      // フル精度予報 (Open-Meteo 日次データあり)
+    if (fc && fc.forecast_kind === 'full') {
+      // 8〜14時の必須海況がすべて揃った予報 (Open-Meteo 日次データあり)
       const sc = Math.round(fc.score);
-      const cls = sc >= 70 ? 'lr-best' : sc >= 55 ? 'lr-good' : '';
+      const cls = fc.diveable === false ? '' : sc >= 70 ? 'lr-best' : sc >= 55 ? 'lr-good' : '';
       return `<a class="lr-digest-card ${cls}" href="aim/#${date.slice(0, 7)}">
         <div class="ld-badge full">◉ フル予報</div>
         ${dateHtml}
         <div class="ld-score">${sc}</div>
-        <div class="ld-tags">${tideLine}<br>${fc.tier_label || (lr && lr.flow_label) || ''}</div>
+        <div class="ld-tags">${tideLine}<br>${fc.tier_label || (lr && lr.flow_label) || ''}<br>${fc.sea_status || '海況判定なし'}</div>
       </a>`;
     }
     if (lr) {

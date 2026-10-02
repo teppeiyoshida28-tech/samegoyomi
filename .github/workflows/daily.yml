@@ -1,13 +1,22 @@
 name: daily-forecast
 
 on:
+  push:
+    branches: [main]
+    paths: ['engine/**', 'data/**', 'analysis/**', 'tests/**', 'requirements.txt', '.github/workflows/daily.yml']
   schedule:
     # UTC 21:30 = JST 6:30
     - cron: "30 21 * * *"
   workflow_dispatch: {}
 
+env:
+  TZ: Asia/Tokyo
+  PYTHONUTF8: "1"
+
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: daily-forecast
@@ -15,7 +24,11 @@ concurrency:
 
 jobs:
   update:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     timeout-minutes: 110
     steps:
       - uses: actions/checkout@v4
@@ -26,6 +39,9 @@ jobs:
 
       - name: Install dependencies
         run: pip install -r requirements.txt
+
+      - name: Regression checks
+        run: python3 -m unittest discover -s tests -v
 
       - name: Incremental scrape (shop blogs)
         working-directory: data
@@ -63,6 +79,9 @@ jobs:
           print(f'[cron] structured -> engine: {len(daily)} days')
           EOF
 
+      - name: Refresh point statistics
+        run: python3 analysis/point_stats.py
+
       - name: Retrain weights (full data)
         working-directory: data
         run: python3 learn_full.py || echo "::warning::learn_full failed, keeping old weights"
@@ -72,9 +91,10 @@ jobs:
         run: |
           DOW=$(TZ=Asia/Tokyo date +%u)
           WEEK=$(TZ=Asia/Tokyo date +%V)
-          if [ "$DOW" = "7" ] && [ $((10#$WEEK % 2)) -eq 0 ]; then
+          NEEDS_BACKTEST=$(python3 -c "from domain import MODEL_VERSION, read_json; from pathlib import Path; p=Path('backtest_data.json'); print(int(not p.exists() or read_json(p).get('model_version') != MODEL_VERSION))")
+          if [ "$NEEDS_BACKTEST" = "1" ] || { [ "$DOW" = "7" ] && [ $((10#$WEEK % 2)) -eq 0 ]; }; then
             echo "[cron] biweekly backtest run"
-            timeout 1800 python3 backtest.py || echo "::warning::backtest failed"
+            timeout 1800 python3 backtest.py
           else
             echo "[cron] backtest skipped (biweekly: even-week Sunday only)"
           fi
@@ -102,6 +122,7 @@ jobs:
         run: |
           cd engine
           python3 build_html.py
+          python3 forecast_archive.py
           python3 build_history_html.py
           cd ..
           mkdir -p docs/map docs/aim docs/history
@@ -125,18 +146,46 @@ jobs:
               print(f"[cron] kuroshio forecast ok ({days_left} days left)")
           EOF
 
+      - name: Validate before publishing
+        run: python3 engine/monitor.py
+
       - name: Commit & push updates
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A data engine docs
+          git add -A data engine docs analysis
           if git diff --cached --quiet; then
             echo "[cron] no changes to commit"
           else
             git commit -m "daily update $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')"
-            git pull --rebase origin main || true
             git push origin main
           fi
 
-      - name: Health check (monitor)
-        run: python3 engine/monitor.py
+      # GITHUB_TOKEN pushes do not trigger branch-based Pages builds.
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+
+      - name: Deploy validated site
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Preserve successfully published forecast
+        run: python3 engine/forecast_archive.py --save --published-at now
+
+      - name: Back up issuance records
+        uses: actions/upload-artifact@v4
+        with:
+          name: issued-forecast-${{ github.run_id }}-${{ github.run_attempt }}
+          path: engine/forecast_archive/
+          retention-days: 90
+
+      - name: Commit issuance records
+        run: |
+          git add engine/forecast_archive engine/issued_history.json
+          if ! git diff --cached --quiet; then
+            git commit -m "archive published forecast $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')"
+            git push origin main
+          fi

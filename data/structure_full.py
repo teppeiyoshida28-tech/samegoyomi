@@ -7,11 +7,14 @@ repo/blog_structure.py のロジックを改良:
 """
 import json
 import re
+import sys
 from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
 ROOT = Path(__file__).parent
+sys.path.insert(0, str(ROOT.parent / "engine"))
+from domain import now_jst, write_json, read_json, point_names, BIAS_NOTE
 
 # ---------------- ハンマー検出 ----------------
 HAMMER_KW = re.compile(r"(ハンマー|hammerhead|hammer|シュモクザメ|撞木)", re.I)
@@ -145,6 +148,22 @@ def detect_size(body, title=""):
     return None
 
 
+def points_in(text):
+    return point_names([key for name, key in POINT_MAP.items() if name in (text or "")])
+
+
+def sighting_points(body):
+    """保守的な帰属: 地点でのハンマー目撃を明記した一文だけ採用。"""
+    result = set()
+    for sent in split_sentences(body):
+        pts = points_in(sent)
+        if len(pts) != 1 or detect_hammer(sent)[0] is not True:
+            continue
+        if any(re.search(re.escape(name) + r"(?:で|にて|周辺で)", sent) for name in POINT_MAP):
+            result.update(pts)
+    return sorted(result)
+
+
 def structure():
     # 生記事 (dive_logs_raw_full.json) は著作権配慮のためリポジトリに含まない。
     # Actions 実行時は「新着分のみ」の生記事が一時生成されるので、
@@ -222,6 +241,10 @@ def structure():
             if jp in search_text:
                 pts.add(key)
         entry["points"] = sorted(pts)
+        entry["mentioned_points"] = point_names(sorted(pts))
+        entry["visited_points"] = points_in(str(entry.get("points_raw", "")))
+        entry["sighting_points"] = sighting_points(body) if seen is True else []
+        entry["label_version"] = 2
         trop = set()
         for jp, key in TROPICAL_SPECIES:
             if jp in body:
@@ -239,7 +262,7 @@ def structure():
     out_path = ROOT / "dive_logs_structured_full.json"
     if out_path.exists():
         try:
-            prev = json.load(open(out_path))
+            prev = read_json(out_path)
             merged = {l["url"]: l for l in prev.get("logs", []) if l.get("url")}
             n_prev = len(merged)
             for l in logs:
@@ -247,8 +270,13 @@ def structure():
             logs = list(merged.values())
             print(f"[structure] merged: {n_prev} existing + new -> {len(logs)} total")
         except Exception as e:
-            print(f"[structure] merge skipped ({e}) — using fresh logs only")
+            raise RuntimeError("既存ログのマージに失敗。履歴を保持して中止します") from e
     logs.sort(key=lambda x: (x["date"], x["shop"]))
+    for entry in logs:
+        entry.setdefault("mentioned_points", point_names(entry.get("points")))
+        entry.setdefault("visited_points", points_in(str(entry.get("points_raw", ""))))
+        entry.setdefault("sighting_points", [])  # 旧データから目撃地点を推測しない
+        entry.setdefault("label_version", 1)
 
     daily = {}
     for e in logs:
@@ -266,9 +294,13 @@ def structure():
         sizes = [r["hammer_size"] for r in reports if r.get("hammer_size")]
         best_size = max(sizes, key=lambda s: size_rank.get(s, -1)) if sizes else None
         pts = Counter()
+        visits = Counter()
+        mentions = Counter()
         for r in reports:
-            for p in r["points"]:
-                pts[p] += 1
+            mentions.update(point_names(r.get("mentioned_points")))
+            visits.update(point_names(r.get("visited_points")))
+            if r.get("hammer_seen") is True:
+                pts.update(point_names(r.get("sighting_points")))
         trop = set()
         for r in reports:
             trop.update(r["tropical_species"])
@@ -282,6 +314,10 @@ def structure():
             "hammer_votes": f"{sum(1 for v in votes if v)}/{len(votes)}",
             "hammer_size": best_size,
             "hammer_points": pts.most_common(5),
+            "sighting_points": sorted(pts),
+            "visited_points": sorted(visits),
+            "mentioned_points": sorted(mentions),
+            "label_version": 2,
             "water_temp_lo": min(wts_lo) if wts_lo else None,
             "water_temp_hi": max(wts_hi) if wts_hi else None,
             "visibility_lo": min(vis_lo) if vis_lo else None,
@@ -292,14 +328,16 @@ def structure():
         })
 
     out = {
-        "generated_at": datetime.now().isoformat(),
+        "generated_at": now_jst().isoformat(),
+        "observation_bias_note": BIAS_NOTE,
         "n_articles": len(logs),
         "n_days": len(daily),
         "logs": logs,
         "daily_summary": daily_summary,
     }
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(out, f, ensure_ascii=False)
+    if not logs:
+        raise RuntimeError("構造化ログが空。既存データを上書きせず中止")
+    write_json(out_path, out, indent=None)
     n_seen = sum(1 for s in daily_summary if s["hammer_seen"] is True)
     n_no = sum(1 for s in daily_summary if s["hammer_seen"] is False)
     n_amb = sum(1 for s in daily_summary if s["hammer_seen"] is None)

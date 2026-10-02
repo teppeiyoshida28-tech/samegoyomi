@@ -1,0 +1,545 @@
+{
+ "generated_at": "2026-10-02T20:10:19.397355+09:00",
+ "source": "https://open-meteo.com/en/docs/marine-weather-api",
+ "decision": "Use SMOC total current without re-adding tides; local cape-effect calibration remains unvalidated.",
+ "cases": [
+  {
+   "date": "2023-11-05",
+   "observation": "オーナー実測: 約2kt・北東流、300匹超。時刻別流速系列なし。",
+   "variants": {
+    "smoc": [
+     {
+      "hour": 8,
+      "speed_kt": 1.944,
+      "toward_deg": 70.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 9,
+      "speed_kt": 1.944,
+      "toward_deg": 70.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 10,
+      "speed_kt": 1.944,
+      "toward_deg": 70.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 11,
+      "speed_kt": 1.944,
+      "toward_deg": 70.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 12,
+      "speed_kt": 1.944,
+      "toward_deg": 70.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 13,
+      "speed_kt": 1.944,
+      "toward_deg": 70.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 14,
+      "speed_kt": 1.998,
+      "toward_deg": 67.0,
+      "extra_tide_kmh": 0.0
+     }
+    ],
+    "legacy": [
+     {
+      "hour": 8,
+      "speed_kt": 0.788,
+      "toward_deg": 32.4,
+      "extra_tide_kmh": -2.6
+     },
+     {
+      "hour": 9,
+      "speed_kt": 0.96,
+      "toward_deg": 46.2,
+      "extra_tide_kmh": -2.0999999999999996
+     },
+     {
+      "hour": 10,
+      "speed_kt": 1.26,
+      "toward_deg": 58.2,
+      "extra_tide_kmh": -1.4000000000000001
+     },
+     {
+      "hour": 11,
+      "speed_kt": 1.643,
+      "toward_deg": 66.1,
+      "extra_tide_kmh": -0.6000000000000005
+     },
+     {
+      "hour": 12,
+      "speed_kt": 1.995,
+      "toward_deg": 70.5,
+      "extra_tide_kmh": 0.10000000000000009
+     },
+     {
+      "hour": 13,
+      "speed_kt": 2.148,
+      "toward_deg": 72.0,
+      "extra_tide_kmh": 0.40000000000000036
+     },
+     {
+      "hour": 14,
+      "speed_kt": 2.249,
+      "toward_deg": 69.7,
+      "extra_tide_kmh": 0.5000000000000004
+     }
+    ]
+   }
+  },
+  {
+   "date": "2026-08-23",
+   "observation": "オーナー実測: 上げ潮ピークの南岸で東→西、1.5〜8kt。観測点・時刻系列なし。",
+   "variants": {
+    "smoc": [
+     {
+      "hour": 8,
+      "speed_kt": 0.648,
+      "toward_deg": 27.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 9,
+      "speed_kt": 0.594,
+      "toward_deg": 18.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 10,
+      "speed_kt": 0.594,
+      "toward_deg": 18.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 11,
+      "speed_kt": 0.702,
+      "toward_deg": 8.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 12,
+      "speed_kt": 0.702,
+      "toward_deg": 8.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 13,
+      "speed_kt": 0.702,
+      "toward_deg": 8.0,
+      "extra_tide_kmh": 0.0
+     },
+     {
+      "hour": 14,
+      "speed_kt": 0.81,
+      "toward_deg": 14.0,
+      "extra_tide_kmh": 0.0
+     }
+    ],
+    "legacy": [
+     {
+      "hour": 8,
+      "speed_kt": 0.583,
+      "toward_deg": 7.7,
+      "extra_tide_kmh": -0.4000000000000001
+     },
+     {
+      "hour": 9,
+      "speed_kt": 0.884,
+      "toward_deg": 309.7,
+      "extra_tide_kmh": -1.5999999999999996
+     },
+     {
+      "hour": 10,
+      "speed_kt": 1.394,
+      "toward_deg": 293.9,
+      "extra_tide_kmh": -2.7
+     },
+     {
+      "hour": 11,
+      "speed_kt": 1.772,
+      "toward_deg": 293.1,
+      "extra_tide_kmh": -3.2
+     },
+     {
+      "hour": 12,
+      "speed_kt": 1.772,
+      "toward_deg": 293.1,
+      "extra_tide_kmh": -3.2
+     },
+     {
+      "hour": 13,
+      "speed_kt": 1.576,
+      "toward_deg": 296.2,
+      "extra_tide_kmh": -2.8000000000000003
+     },
+     {
+      "hour": 14,
+      "speed_kt": 1.143,
+      "toward_deg": 313.4,
+      "extra_tide_kmh": -1.9
+     }
+    ]
+   }
+  }
+ ],
+ "retrospective": {
+  "smoc": {
+   "period": {
+    "start": "2025-10-02",
+    "end": "2026-10-01"
+   },
+   "summary": {
+    "n_days": 353,
+    "n_evaluated": 220,
+    "n_no_report": 133,
+    "n_seen_days": 178,
+    "n_unknown_seen": 42,
+    "n_size_days": 174,
+    "n_tier_days": 172,
+    "seen_hit_rate": 0.9326,
+    "seen_metrics": {
+     "n": 178,
+     "positive": 166,
+     "negative": 12,
+     "accuracy": 0.9326,
+     "balanced_accuracy": 0.5,
+     "brier": 0.0661,
+     "auc": 0.5211,
+     "recall": 1.0,
+     "specificity": 0.0,
+     "calibration": [
+      {
+       "n": 178,
+       "predicted": 0.99,
+       "observed": 0.933
+      }
+     ]
+    },
+    "baselines": {
+     "always_seen": {
+      "n": 178,
+      "positive": 166,
+      "negative": 12,
+      "accuracy": 0.9326,
+      "balanced_accuracy": 0.5,
+      "brier": 0.0674,
+      "auc": 0.5,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "calibration": [
+       {
+        "n": 178,
+        "predicted": 1.0,
+        "observed": 0.933
+       }
+      ]
+     },
+     "seasonal": {
+      "n": 178,
+      "positive": 166,
+      "negative": 12,
+      "accuracy": 0.9326,
+      "balanced_accuracy": 0.5,
+      "brier": 0.0633,
+      "auc": 0.6835,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "calibration": [
+       {
+        "n": 178,
+        "predicted": 0.971,
+        "observed": 0.933
+       }
+      ]
+     },
+     "persistence": {
+      "n": 116,
+      "positive": 111,
+      "negative": 5,
+      "accuracy": 0.9138,
+      "balanced_accuracy": 0.4775,
+      "brier": 0.0862,
+      "auc": 0.4775,
+      "recall": 0.955,
+      "specificity": 0.0,
+      "calibration": [
+       {
+        "n": 5,
+        "predicted": 0.0,
+        "observed": 1
+       },
+       {
+        "n": 111,
+        "predicted": 1.0,
+        "observed": 0.955
+       }
+      ]
+     },
+     "model_on_persistence_days": {
+      "n": 116,
+      "positive": 111,
+      "negative": 5,
+      "accuracy": 0.9569,
+      "balanced_accuracy": 0.5,
+      "brier": 0.0423,
+      "auc": 0.6532,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "calibration": [
+       {
+        "n": 116,
+        "predicted": 0.991,
+        "observed": 0.957
+       }
+      ]
+     }
+    },
+    "large_metrics": {
+     "n": 174,
+     "positive": 86,
+     "negative": 88,
+     "accuracy": 0.5,
+     "balanced_accuracy": 0.5052,
+     "brier": 0.2828,
+     "auc": 0.5537,
+     "recall": 0.9535,
+     "specificity": 0.0568,
+     "calibration": [
+      {
+       "n": 94,
+       "predicted": 0.551,
+       "observed": 0.468
+      },
+      {
+       "n": 57,
+       "predicted": 0.688,
+       "observed": 0.544
+      },
+      {
+       "n": 23,
+       "predicted": 0.893,
+       "observed": 0.478
+      }
+     ]
+    },
+    "large_baseline": {
+     "n": 174,
+     "positive": 86,
+     "negative": 88,
+     "accuracy": 0.4713,
+     "balanced_accuracy": 0.4664,
+     "brier": 0.2646,
+     "auc": 0.4103,
+     "recall": 0.0465,
+     "specificity": 0.8864,
+     "calibration": [
+      {
+       "n": 43,
+       "predicted": 0.38,
+       "observed": 0.581
+      },
+      {
+       "n": 131,
+       "predicted": 0.437,
+       "observed": 0.466
+      }
+     ]
+    },
+    "tier_exact_rate": 0.3779,
+    "tier_within1_rate": 0.5233,
+    "size_exact_rate": 0.4655,
+    "size_within1_rate": 0.9138,
+    "size_correlation": 0.1334,
+    "visibility_mae_m": 2.866,
+    "water_temp_mae_c": 1.0149,
+    "n_point_days": 0,
+    "point_top3_hit_rate": null,
+    "n_train_days": 782
+   }
+  },
+  "legacy": {
+   "period": {
+    "start": "2025-10-02",
+    "end": "2026-10-01"
+   },
+   "summary": {
+    "n_days": 353,
+    "n_evaluated": 220,
+    "n_no_report": 133,
+    "n_seen_days": 178,
+    "n_unknown_seen": 42,
+    "n_size_days": 174,
+    "n_tier_days": 172,
+    "seen_hit_rate": 0.9326,
+    "seen_metrics": {
+     "n": 178,
+     "positive": 166,
+     "negative": 12,
+     "accuracy": 0.9326,
+     "balanced_accuracy": 0.5,
+     "brier": 0.0661,
+     "auc": 0.5336,
+     "recall": 1.0,
+     "specificity": 0.0,
+     "calibration": [
+      {
+       "n": 178,
+       "predicted": 0.989,
+       "observed": 0.933
+      }
+     ]
+    },
+    "baselines": {
+     "always_seen": {
+      "n": 178,
+      "positive": 166,
+      "negative": 12,
+      "accuracy": 0.9326,
+      "balanced_accuracy": 0.5,
+      "brier": 0.0674,
+      "auc": 0.5,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "calibration": [
+       {
+        "n": 178,
+        "predicted": 1.0,
+        "observed": 0.933
+       }
+      ]
+     },
+     "seasonal": {
+      "n": 178,
+      "positive": 166,
+      "negative": 12,
+      "accuracy": 0.9326,
+      "balanced_accuracy": 0.5,
+      "brier": 0.0633,
+      "auc": 0.6835,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "calibration": [
+       {
+        "n": 178,
+        "predicted": 0.971,
+        "observed": 0.933
+       }
+      ]
+     },
+     "persistence": {
+      "n": 116,
+      "positive": 111,
+      "negative": 5,
+      "accuracy": 0.9138,
+      "balanced_accuracy": 0.4775,
+      "brier": 0.0862,
+      "auc": 0.4775,
+      "recall": 0.955,
+      "specificity": 0.0,
+      "calibration": [
+       {
+        "n": 5,
+        "predicted": 0.0,
+        "observed": 1
+       },
+       {
+        "n": 111,
+        "predicted": 1.0,
+        "observed": 0.955
+       }
+      ]
+     },
+     "model_on_persistence_days": {
+      "n": 116,
+      "positive": 111,
+      "negative": 5,
+      "accuracy": 0.9569,
+      "balanced_accuracy": 0.5,
+      "brier": 0.0422,
+      "auc": 0.7054,
+      "recall": 1.0,
+      "specificity": 0.0,
+      "calibration": [
+       {
+        "n": 116,
+        "predicted": 0.99,
+        "observed": 0.957
+       }
+      ]
+     }
+    },
+    "large_metrics": {
+     "n": 174,
+     "positive": 86,
+     "negative": 88,
+     "accuracy": 0.5575,
+     "balanced_accuracy": 0.562,
+     "brier": 0.2768,
+     "auc": 0.5671,
+     "recall": 0.9535,
+     "specificity": 0.1705,
+     "calibration": [
+      {
+       "n": 104,
+       "predicted": 0.538,
+       "observed": 0.462
+      },
+      {
+       "n": 50,
+       "predicted": 0.694,
+       "observed": 0.56
+      },
+      {
+       "n": 20,
+       "predicted": 0.898,
+       "observed": 0.5
+      }
+     ]
+    },
+    "large_baseline": {
+     "n": 174,
+     "positive": 86,
+     "negative": 88,
+     "accuracy": 0.4713,
+     "balanced_accuracy": 0.4664,
+     "brier": 0.2646,
+     "auc": 0.4103,
+     "recall": 0.0465,
+     "specificity": 0.8864,
+     "calibration": [
+      {
+       "n": 43,
+       "predicted": 0.38,
+       "observed": 0.581
+      },
+      {
+       "n": 131,
+       "predicted": 0.437,
+       "observed": 0.466
+      }
+     ]
+    },
+    "tier_exact_rate": 0.3721,
+    "tier_within1_rate": 0.5233,
+    "size_exact_rate": 0.4598,
+    "size_within1_rate": 0.9138,
+    "size_correlation": 0.1392,
+    "visibility_mae_m": 2.9176,
+    "water_temp_mae_c": 1.0149,
+    "n_point_days": 0,
+    "point_top3_hit_rate": null,
+    "n_train_days": 782
+   }
+  }
+ }
+}
