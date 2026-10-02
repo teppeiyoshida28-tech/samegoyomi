@@ -16,6 +16,7 @@ import json
 import statistics
 from datetime import date, timedelta
 from pathlib import Path
+from domain import today_jst, now_jst, size_target, BIAS_NOTE
 
 import tide_predict
 
@@ -34,20 +35,9 @@ def main():
 
     # ---- 黒潮長期予測 (手動更新設定) ----
     kfile = ROOT / "kuroshio_forecast.json"
-    if kfile.exists():
-        kuro = json.load(open(kfile))
-    else:
-        kuro = {
-            "updated": "2026-08-25",
-            "source": "JAMSTEC 黒潮親潮ウォッチ 長期予測 (2026-08-20発表, JCOPE3M)",
-            "source_url": "https://www.jamstec.go.jp/aplinfo/kowatch/",
-            "status": "nNLM",
-            "label": "接岸流路 (八丈島の北) 継続予測",
-            "valid_until": "2026-10-17",
-            "score": 1.0,
-            "note": "大蛇行は2025年に終息、非大蛇行接岸型が継続。毎週水曜更新をチェック。",
-        }
-        json.dump(kuro, open(kfile, "w"), ensure_ascii=False, indent=2)
+    if not kfile.exists():
+        raise FileNotFoundError("黒潮予測の設定がありません。古い仮定で自動生成せず停止します")
+    kuro = json.load(open(kfile))
 
     # ---- 潮汐調和モデル (なければフィット) ----
     tm_path = ROOT / "tide_model.json"
@@ -63,7 +53,9 @@ def main():
         seen = bool(s.get("hammer_seen"))
         if s.get("hammer_seen") is None:
             continue
-        size = SIZE_NUM.get(s.get("hammer_size"), 1 if seen else 0) if seen else 0
+        size = size_target(s)
+        if size is None:
+            continue
         m = int(d_str[5:7])
         month_sizes[m].append(size)
 
@@ -72,7 +64,7 @@ def main():
     f_month = {m: (v - mn) / (mx - mn) if mx > mn else 0.5 for m, v in month_avg.items()}
 
     # ---- 2. 月齢因子 (過去1年, 月齢1日ビン, 円環移動平均±1) ----
-    today = date.today()
+    today = today_jst()
     yr_start = today - timedelta(days=365)
     age_bins = {b: [] for b in range(30)}
     for d_str, s in obs.items():
@@ -85,7 +77,9 @@ def main():
         if not mo:
             continue
         seen = bool(s.get("hammer_seen"))
-        size = SIZE_NUM.get(s.get("hammer_size"), 1 if seen else 0) if seen else 0
+        size = size_target(s)
+        if size is None:
+            continue
         age_bins[min(29, int(mo["moon_age"]))].append(size)
     raw = {b: statistics.mean(v) if v else None for b, v in age_bins.items()}
     # 円環移動平均で欠損補完+平滑化
@@ -206,7 +200,8 @@ def main():
             x["is_top"] = True
 
     out = {
-        "generated_at": date.today().isoformat(),
+        "generated_at": now_jst().isoformat(),
+        "observation_bias_note": BIAS_NOTE,
         "kuroshio": kuro,
         "month_climatology": {str(m): round(month_avg[m], 2) for m in range(1, 13)},
         "moon_smooth": {str(b): round(smooth[b], 2) for b in range(30)},

@@ -15,6 +15,7 @@ import time
 from datetime import date, datetime, timedelta
 
 import requests
+from domain import current_vector, sea_safety, now_jst, MODEL_VERSION, BIAS_NOTE, write_json
 
 LAT, LON = 34.5717, 138.9433  # 神子元島
 TZ = "Asia/Tokyo"
@@ -381,7 +382,7 @@ POINTS = {
     "west_takane":   {"pos": (0, 520),    "label": "西の高根",     "depth": "10m",     "note": "真南"},
     "west_west_tk":  {"pos": (-50, 460),  "label": "西の西の高根", "depth": "12m",     "note": ""},
     "plate":         {"pos": (80, 570),   "label": "プレート",     "depth": "21m",     "note": "平坦大根"},
-    "hammers_rock":  {"pos": (180, 620),  "label": "ハンマーズロック","depth": "23m","note": "★ハンマー最有力"},
+    "hammers_rock":  {"pos": (180, 620),  "label": "ハンマーズロック","depth": "23m","note": "外洋南の孤根"},
     "eagleray_rock": {"pos": (310, 520),  "label": "トビエイロック","depth": "27m",    "note": "エイの群れ"},
     "third_takane":  {"pos": (240, 770),  "label": "三つ目の高根", "depth": "15-25m",  "note": "★最南端の巨根"},
 }
@@ -550,6 +551,7 @@ def compute_point_scores(current_dir_deg, current_speed_kmh, warm_water_dir_deg=
 
 # ---------- main pipeline ----------
 def run():
+    issued_at = now_jst().isoformat()
     print("Fetching marine data...")
     marine = fetch_marine()
     print("Fetching weather data...")
@@ -644,10 +646,7 @@ def run():
             fallback = clim["daily_climatology"].get(key, {}).get("mean", 22.0)
             ssts_filled.append(fallback)
 
-    # 潮汐流 u成分の推定: 神子元では潮汐流は東西方向支配
-    # 下げ潮 (sea_lvl 下降): E→W 流 (向かう先=W=270°), 潮汐 u < 0
-    # 上げ潮 (sea_lvl 上昇): W→E 流 (向かう先=E=90°), 潮汐 u > 0
-    # dh/dt (m/h) をスケール変換して kt に (経験式: 神子元大潮で最大1.5kt≈2.8km/h)
+    # 海面高度の変化は潮汐フェーズにのみ使用。SMOC海流への潮汐再加算はしない。
     def sea_level_derivative(i):
         def s(k):
             if 0 <= k < len(sea_lvl) and sea_lvl[k] is not None:
@@ -665,7 +664,15 @@ def run():
 
     # 時間別レコード
     hourly_records = []
+    missing_hours = {}
     for i, t in enumerate(times):
+        required = {"sst": ssts[i], "current_speed": cur_v[i], "current_direction": cur_d[i],
+                    "wave": waves[i], "sea_level": sea_lvl[i], "wind": winds[i],
+                    "wind_direction": wind_dir[i], "precipitation": precips[i]}
+        missing = [k for k, v in required.items() if v is None]
+        if missing:
+            missing_hours[t] = missing
+            continue  # 欠損をゼロや平年値でフル予報に見せない
         dt = datetime.fromisoformat(t)
         m, d, h = dt.month, dt.day, dt.hour
         sst_used = ssts_filled[i]
@@ -679,21 +686,11 @@ def run():
         base_u_east *= base_v
         base_v_north *= base_v
 
-        # 潮汐流を東西方向に加算 (神子元の潮汐流は東西支配的)
-        # 現地観測との校正 (2026-08-23 ユーザー実測: 上げ潮ピークで東→西 1.5-8kt = 2.8-14.8 km/h)
-        # ここで方向が「上げ潮で東→西」なのは、島南側では上げ潮の北からの流入が
-        # 島の東を回り込んで南岸で反時計回りに合成される（岬効果）ため。
-        # 実装: 上げ潮(dh>0)は「南岸で東→西」の流れを表すため tidal_u_east を負に
-        #       下げ潮(dh<0)は「南岸で西→東」に対応するため tidal_u_east を正に
-        dh = sea_level_derivative(i)  # m/hour, 正 = 上げ潮
-        # スケール: 大潮ピーク dh ≈ 0.4 m/h → tidal_u ≈ 8 km/h ≈ 4kt
-        # ユーザー実測 8kt はスプリングタイド極値なのでピーク時のみ到達
-        tidal_u_east = -dh * 20.0  # km/h, 上げ潮で東→西 (負)
-
-        combined_u = base_u_east + tidal_u_east
-        combined_v = base_v_north
-        combined_speed = math.hypot(combined_u, combined_v)
-        combined_dir = math.degrees(math.atan2(combined_u, combined_v)) % 360
+        # 2026-08-23現地観測: 上げ潮ピークの南岸で東→西、1.5〜8kt。
+        # 岬を回り込む局所流の仮説であり、沖合8km格子のSMOCとの一致は未校正。
+        # 旧実装は -dh*20 を加算したが、SMOCは潮汐込みなので二重加算を廃止。
+        # 係数20は analysis/current_validation.py の比較実験だけに残す。
+        combined_speed, combined_dir, tidal_u_east = current_vector(base_v, base_d)
         cur_s = score_current(combined_speed)
         wea_s, wea_note = score_weather(winds[i] or 0, waves[i] or 0, precips[i] or 0)
         tide = infer_tide_direction(sea_lvl, i)
@@ -774,6 +771,8 @@ def run():
 
     daily_records = []
     for d, rs in sorted(daily.items()):
+        if len(rs) != 7:
+            continue  # 8〜14時の全時刻が揃った日のみ。ほかの日は長期見込みへ。
         best = max(rs, key=lambda x: x["score"])
         avg_score = round(statistics.mean(x["score"] for x in rs), 1)
         avg_sst = round(statistics.mean(x["sst"] for x in rs), 2)
@@ -781,7 +780,7 @@ def run():
         avg_cur = round(statistics.mean(x["current_velocity_kmh"] for x in rs), 2)
         max_wave = round(max(x["wave_height"] for x in rs), 2)
         max_wind = round(max(x["wind_ms"] for x in rs), 1)
-        diveable = all(x["f_weather"] > 0 for x in rs)
+        diveable, sea_note = sea_safety(max_wind, max_wave)
         best_shadow = best["point_scores"]
         best_point = max(best_shadow.items(), key=lambda kv: kv[1])
         # 推奨根拠: best_point の実績事前確率の内訳
@@ -900,6 +899,8 @@ def run():
 
         daily_records.append({
             "date": d,
+            "forecast_kind": "full",
+            "sea_status": sea_note,
             "score": round(adjusted_score, 1),
             "base_score": avg_score,
             "learned_score": round(learned_score, 1),
@@ -964,7 +965,12 @@ def run():
             pass
 
     result = {
-        "generated_at": datetime.now().isoformat(),
+        "generated_at": issued_at,
+        "issued_at": issued_at,
+        "model_version": MODEL_VERSION,
+        "current_method": "smoc (潮汐込み・再加算なし、島周辺の局所流は未校正)",
+        "observation_bias_note": BIAS_NOTE,
+        "data_quality": {"missing_hours": missing_hours, "full_day_requires_hours": list(range(8, 15))},
         "location": {"lat": LAT, "lon": LON, "name": "神子元島"},
         "climatology_source": clim["source"],
         "climatology_years": clim["years_used"],
@@ -978,8 +984,9 @@ def run():
         "daily": daily_records,
         "hourly": hourly_records,
     }
-    with open(OUT_JSON, "w") as f:
-        json.dump(result, f, indent=2, ensure_ascii=False)
+    if not daily_records or daily_records[0]["date"] != issued_at[:10]:
+        raise RuntimeError("本日の海況が不足。既存予報を保持し公開更新を停止します。")
+    write_json(OUT_JSON, result)
     print(f"Wrote {OUT_JSON}")
     # print summary
     print("\n=== Daily forecast (8-14時ダイビング時間) ===")
@@ -1009,20 +1016,23 @@ def build_daily_note(anom, cur, wave, wind, best, actual_vis=None, actual_hammer
             parts.append(f"平年{anom:.1f}℃")
         else:
             parts.append(f"平年{anom:.1f}℃ 冷水")
-    if cur < 0.5:
+    # cur is km/h, consistent with score_current (1 kt = 1.852 km/h).
+    if cur < 0.9:
         parts.append("流れ穏やか")
-    elif cur < 1.5:
+    elif cur < 2.8:
+        parts.append("緩やかな流れ")
+    elif cur < 5.6:
         parts.append("適度な流れ◎")
-    elif cur < 3:
+    elif cur < 9.3:
         parts.append("やや強い流れ")
     else:
         parts.append("激流注意")
     if wave > 2:
-        parts.append("欠航濃厚")
+        parts.append("波高基準超過")
     elif wave > 1.5:
         parts.append("海況悪化")
     if wind > 12:
-        parts.append("強風欠航")
+        parts.append("風速基準超過")
     if actual_notes:
         if "cold_water_present" in actual_notes:
             parts.append("冷水塊あり")

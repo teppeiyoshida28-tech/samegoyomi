@@ -27,8 +27,8 @@ SITE_URL = "https://teppeiyoshida28-tech.github.io/samegoyomi/"
 
 
 def build(page_mode, fc, lr, title, outname):
-    h = tpl.replace("/*__FORECAST_JSON__*/ null", json.dumps(fc, ensure_ascii=False))
-    h = h.replace("/*__LONGRANGE_JSON__*/ null", lr)
+    h = tpl.replace("/*__FORECAST_JSON__*/ null", json.dumps(fc, ensure_ascii=False, allow_nan=False).replace("<", "\\u003c"))
+    h = h.replace("/*__LONGRANGE_JSON__*/ null", lr.replace("<", "\\u003c"))
     h = h.replace("/*__PAGE_MODE__*/ ''", f"'{page_mode}'")
     # 画像パス: ルートページは img/、サブディレクトリ配下は ../img/
     h = h.replace('content="/hammerhead/img/', f'content="{SITE_URL}img/')  # og:image は絶対URL

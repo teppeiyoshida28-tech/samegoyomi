@@ -19,13 +19,15 @@
 
 ## engine/ の主要ファイル
 
-- `forecast_engine.py` — 予測エンジン本体。Open-Meteo Marine/Weather 取得 → SST平年偏差・合成流（海流+潮汐）・海況・季節・実績事前確率でスコアリング → `forecast_data.json`
+- `forecast_engine.py` — 予測エンジン本体。Open-Meteo Marine/Weather 取得 → SST平年偏差・SMOC総流（潮汐を含み再加算なし）・海況・季節・実績事前確率でスコアリング → `forecast_data.json`
 - `models.py` / `weight_learner.py` / `backtest.py` — 学習・検証系
 - `enrich_forecast.py` — ML モデルの予測を forecast_data.json に追記
 - `build_html.py` — forecast_data.json をテンプレに埋め込み 3ページ生成
 - `build_longrange.py` / `build_history_html.py` — 長期狙い目カレンダー・検証履歴ページ
 - `index.html` / `history_index.html` — ページテンプレ（JS/CSSインライン）
-- `monitor.py` — パイプライン末尾の死活監視。異常時は `::error::` を出してジョブを fail させる
+- `monitor.py` / `validation.py` — 公開前の整合性・鮮度検査。異常時は公開を停止する
+- `forecast_archive.py` — Pages 公開成功後の予報を `forecast_archive/` に追記保存。生成日時・公開日時・モデル版・コード SHA・予報ハッシュ・予測日数を記録
+- `evaluation.py` / `domain.py` — 評価指標・教師ラベル・海況判定・JST の共通定義
 - `01_research_predictors.md` / `02_data_sources.md` — 学術知見まとめ・データソース仕様
 
 ## データソース（すべて無料・認証不要）
@@ -46,16 +48,27 @@ Actions 実行時に新着記事の生テキストが一時生成されるが、
 
 ## 自動更新パイプライン（daily.yml）
 
-1. ショップログ増分スクレイプ（新着のみ、timeout 1h、失敗しても続行）
-2. 構造化 → `engine/dive_logs_structured.json` へ反映
-3. 重み再学習（全量）
-4. バックテスト（隔週: 偶数ISO週の日曜 JST のみ）
-5. `forecast_engine.py` → `enrich_forecast.py`
-6. 潮汐ヒートマップ + 長期カレンダー
-7. HTML ビルド → `docs/` へ配置
-8. 黒潮予測の期限チェック（残り14日以下で `::warning::`）
-9. データ・docs/ をリポジトリにコミット & push
-10. `monitor.py` ヘルスチェック（異常なら job fail → 通知）
+1. 回帰テスト → ショップログ増分スクレイプ（2秒以上間隔、失敗URLは回数・期限付き再試行）
+2. 構造化済みデータへマージ → engine 同期 → ポイント統計を再集計（破損した既存データは上書きしない）
+3. 重み再学習 → 過去再計算（偶数ISO週の日曜JST、またはモデル版変更時）
+4. 海況取得 → 予報 → ML追記（海況判定・推奨地点と根拠は一貫させる）
+5. 潮汐ヒートマップ・長期カレンダー・公開予報の実績照合 → HTMLビルド
+6. 黒潮期限・データ鮮度・欠測・推奨整合性を **公開前** に検査
+7. 検査済みデータ・HTMLをcommit/push（競合時は停止）→ Pagesへ直接deploy
+8. **公開成功後だけ** 予報スナップショットを追記保存・commit/push。別途Actions artifactにも90日保管
+
+日次処理はGitHub上で動くためPC停止中も実行される。Codexのローカル開発作業にはPCの起動が必要。
+mainへの関連コードpush時にも同じパイプラインを実行する。
+
+## 検証と教師データの読み方
+
+- `history/` の初期表示は **公開済み予報**。予測日数別に評価し、同じ対象日・予測日数では最初の発表を採る。公開前の既存予報は遡って登録しない。
+- 「過去再計算」は固定した学習期間と過去の環境値による別評価。発表時点のAPI予報を再現した成績ではない。
+- 常時目撃あり・過去同月の目撃率・前日実績との比較、Brier/AUC・感度/特異度・確率帯別実測率を表示。各指標で有効件数を示す。
+- 目撃あり・なし・不明を区別。目撃ありでも規模不明なら規模学習/評価から除外する。記事の言及地点、訪問地点、明記された目撃地点を分離し、旧地点ラベルを確定目撃に転用しない。
+- ガイドの行先選択・透明度・記事の記載頻度による偏りは未解消。記事目撃率は自然界の出現確率ではない。スコアも遭遇確率ではない。
+- フル予報は8〜14時の必須値が全て揃う日だけ。欠測日は長期見込みとして区別。波/風の海況判定は運航判断を保証しない。
+- `data/recent_environment.json` は取得できた過去環境値の補助キャッシュ。hindcastとの隙間は無理に埋めず評価対象から除外する。
 
 ## セットアップ（新しい環境に clone した場合）
 
@@ -66,11 +79,16 @@ python3 forecast_engine.py   # 予報生成
 python3 enrich_forecast.py   # ML enrich
 python3 build_longrange.py
 python3 build_html.py        # HTML 生成
+python3 forecast_archive.py  # 既存の公開記録と実績を照合（保存はしない）
+python3 build_history_html.py
 ```
 
 ### GitHub Pages 設定（手動で行う場合）
 
-Settings → Pages → Source: **Deploy from a branch** → Branch: `main` / フォルダ: `/docs` → Save
+Settings → Pages → Source: **GitHub Actions** に設定する。daily.yml が検査済み `docs/` を直接デプロイする。
+
+`GITHUB_TOKEN` によるpushはブランチ方式のPagesビルドを起動しないため、旧 `main /docs` 設定から切り替える。
+参考: [GitHub公式の公開設定](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)。
 
 ### 失敗通知
 
@@ -87,14 +105,16 @@ Actions のジョブが失敗すると GitHub から自動でメール通知が�
 ## ドメイン知識の要点
 
 - ランク S〜E（おみくじ併記）。教師データはショップブログの目撃記録（観測バイアスあり、analysis/ に注記）
-- 実績ベースの知見: Aポイント×下げ潮=出現率88%(n=201) / 下げ潮>上げ潮 / 黒潮大蛇行期>離岸期(▲20-30pt) / 潮名の影響は小
+- 旧集計のAポイント×下げ潮88%(n=201)等は、未知を非目撃に含めていた旧ラベル定義の参考値。現行の率・分母は `analysis/point_stats.md` を参照し、異なる定義の率を直接比較しない
 - ユーザー実測の確定ラベル: 2023-11-05 に300匹超の大群（SST24.9°C・流速2kt・北東流が1週間安定継続）
 - 「強い流れ×同方向の暖流が安定継続」が大群条件という仮説を採用
-- 潮汐は Open-Meteo の海流に含まれる（自前潮汐項との二重加算に注意 — 既知の課題）
+- 潮汐は Open-Meteo の海流に含まれる。運用は追加加算なし。旧方式との比較と未解決の局所流校正は `analysis/REPORT_current_validation.md` を参照
 
-## 未完了タスク（優先順）
+## 未完了タスク（新しい観測・蓄積が必要）
 
-1. マップの実地図化（地理院タイル航空写真+等深線、カメ根エリアのラベル密集解消）
-2. 観測バイアス補正（出現と発見の分離）
-3. 潮汐二重加算問題の検証・解消（Copernicus SMOC で分離検証）
-4. 検証指標の常設表示（Brier/AUC、ベースライン比較）
+1. 公開予報のサンプルを蓄積し、ベースラインを超える識別力・確率校正を検証する
+2. 観測バイアス補正（潜在的な出現と発見の分離。非目撃・透明度・潜水地点の系統的ログが必要）
+3. 島周辺の局所流を地点・時刻・深度別観測で校正する。SMOC総流だけで岬効果を再現できるとは限らない
+4. ポイント座標の現地校正・実地図化（今回の信頼性修正の対象外）
+
+回帰テスト: `python -m unittest discover -s tests -v`。構文検査: `python -m compileall -q engine data analysis`。

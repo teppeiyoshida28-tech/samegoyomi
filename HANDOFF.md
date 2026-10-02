@@ -17,12 +17,12 @@ GitHub Actions + GitHub Pages へ完全移行済み。外部サーバーは一�
 | `/var/www/html/hammerhead/img/` | `docs/img/` |
 | `daily_update.sh`（cron 6:30 JST） | `.github/workflows/daily.yml`（cron UTC 21:30 = JST 6:30） |
 | `monitor.py`（異常時メール送信） | `engine/monitor.py`（Actions の job fail → GitHub 通知） |
-| Caddy 配信（旧ドメイン） | GitHub Pages（main ブランチ `/docs`） |
+| Caddy 配信（旧ドメイン） | GitHub Pages（Actionsが `docs/` を直接deploy） |
 
 ## 運用（全部 GitHub 内で完結）
 
-- **自動**: 毎朝 JST 6:30 に daily.yml 実行。スクレイプ→構造化→再学習→予報→ビルド→commit & push。
-  Pages は push を検知して自動再デプロイ（数分ラグあり）
+- **自動**: 毎朝 JST 6:30 に daily.yml 実行。スクレイプ→構造化→統計更新→再学習→予報→ビルド→公開前検査→commit/push→Pages直接deploy→公開記録保存。
+  PagesのSourceは **GitHub Actions** に切り替える。標準トークンのpushでは旧ブランチ式ビルドは起動しない。
 - **手動実行**: Actions タブ → daily-forecast → Run workflow
 - **失敗監視**: ジョブ失敗時は GitHub からメール通知。`monitor.py` がデータ鮮度・ビルド結果・黒潮期限を検査して異常なら fail させる
 - **黒潮予測の更新**（手動・2〜8週に1回程度）:
@@ -44,6 +44,13 @@ GitHub Actions + GitHub Pages へ完全移行済み。外部サーバーは一�
 - GitHub Actions の IP はブロックされる可能性がゼロではない。scrape ステップは `continue-on-error` で、
   失敗しても既存データで予報生成は続行する設計
 - スクレイプが4日以上止まると monitor が error を出す（ブログ構造変更の疑い → `full_scraper.py` のパーサを確認）
+
+## 整合性修正（2026-10）
+
+海況判定・欠測・推薦根拠の不一致を修正。教師ラベルの未知を陰性にしない。
+`history/` は公開済み予報を予測日数別に評価し、過去再計算と区別する。
+`forecast_archive.py --save --published-at now` は公開成功後だけ実行する。記録保存のpushに失敗した場合は、該当Actions runの `issued-forecast-*` artifactから回収する。
+最新の統計定義・検証限界・ローカル手順はREADME.mdとIMPLEMENTATION_STATUS.mdを参照。
 
 ## 詳細
 

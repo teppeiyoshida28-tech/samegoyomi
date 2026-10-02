@@ -12,6 +12,7 @@ REPO = ROOT.parent / "engine"
 sys.path.insert(0, str(REPO))
 
 import weight_learner as wl  # noqa: E402
+from domain import now_jst
 
 
 def load_data_full():
@@ -63,7 +64,7 @@ def main():
 
     names = ["f_sst_anomaly", "f_visibility", "f_tropical", "f_recent_actual"]
     result = {
-        "trained_at": datetime.now().isoformat(),
+        "trained_at": now_jst().isoformat(),
         "n_records": len(records),
         "source": "phase1 full logs (hammers+ms+290 partial)",
         "bias": bias,

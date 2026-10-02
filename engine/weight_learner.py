@@ -19,6 +19,7 @@ import math
 import statistics
 from datetime import date, datetime, timedelta
 from pathlib import Path
+from domain import size_target, now_jst
 
 ROOT = Path(__file__).parent
 
@@ -53,6 +54,8 @@ def build_training_data(daily_summary, clim):
     dates_sorted = sorted(daily_by_date.keys())
     for i, d in enumerate(dates_sorted):
         s = daily_by_date[d]
+        if size_target(s) is None:
+            continue
         if s.get("water_temp_lo") is None:
             continue
 
@@ -178,7 +181,7 @@ def learn_weights():
     normalized = [w / total for w in clipped]
 
     result = {
-        "trained_at": datetime.now().isoformat(),
+        "trained_at": now_jst().isoformat(),
         "n_records": len(records),
         "bias": bias,
         "raw_weights": {
