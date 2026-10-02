@@ -1,19 +1,8 @@
 {
-  "generated_at": "2026-10-01T08:11:53.677966",
+  "generated_at": "2026-10-02T00:58:42.981503",
   "n_days": 189,
   "window_days": 365,
   "entries": [
-    {
-      "date": "2026-09-02",
-      "moon_age": 19.7,
-      "phase": "中潮",
-      "seen": true,
-      "size": "large",
-      "size_num": 4,
-      "vis_hi": 15.0,
-      "wt_hi": 26.0,
-      "tropical_count": 1
-    },
     {
       "date": "2026-09-03",
       "moon_age": 20.7,
@@ -178,6 +167,17 @@
       "vis_hi": 15.0,
       "wt_hi": 25.0,
       "tropical_count": 4
+    },
+    {
+      "date": "2026-10-01",
+      "moon_age": 19.1,
+      "phase": "中潮",
+      "seen": false,
+      "size": null,
+      "size_num": 0,
+      "vis_hi": 8.0,
+      "wt_hi": 24.0,
+      "tropical_count": 0
     }
   ],
   "phase_summary": [
@@ -193,13 +193,13 @@
     },
     {
       "phase": "長潮",
-      "days": 25,
-      "seen_days": 23,
-      "encounter_rate": 0.92,
-      "avg_size": 3.28,
-      "weighted_size": 3.04,
-      "large_days": 15,
-      "large_rate": 0.6
+      "days": 24,
+      "seen_days": 22,
+      "encounter_rate": 0.9166666666666666,
+      "avg_size": 3.25,
+      "weighted_size": 3.0,
+      "large_days": 14,
+      "large_rate": 0.583
     },
     {
       "phase": "小潮",
@@ -213,13 +213,13 @@
     },
     {
       "phase": "中潮",
-      "days": 58,
+      "days": 59,
       "seen_days": 56,
-      "encounter_rate": 0.9655172413793104,
-      "avg_size": 3.293103448275862,
-      "weighted_size": 2.92,
+      "encounter_rate": 0.9491525423728814,
+      "avg_size": 3.23728813559322,
+      "weighted_size": 2.87,
       "large_days": 27,
-      "large_rate": 0.466
+      "large_rate": 0.458
     },
     {
       "phase": "新月大潮",
