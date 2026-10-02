@@ -1,0 +1,554 @@
+{
+ "issued_at": "2026-10-03T00:06:09.259326+09:00",
+ "generated_at": "2026-10-03T00:05:54.073944+09:00",
+ "model_version": "2026-10-integrity-v1",
+ "git_commit": "c132a370f841ea9f2e452bf5a7b3fe38da12ef87",
+ "forecast_sha256": "81dfd3c610a6105d1b8995bd38abb77e81d79aa3b1cd7b734145a39d9de2c48b",
+ "current_method": "smoc (潮汐込み・再加算なし、島周辺の局所流は未校正)",
+ "days": [
+  {
+   "date": "2026-10-03",
+   "lead_days": 0,
+   "predicted": {
+    "seen_probability": 0.95,
+    "large_probability": 0.4281,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.11,
+    "size_label": "中群(50前後)",
+    "count_est": 70,
+    "visibility_m": 12.0,
+    "water_temp": 23.4,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "kado_ne",
+     "jab_ne",
+     "zabu_ne"
+    ],
+    "avg_anomaly": -3.44,
+    "avg_current_kmh": 2.03,
+    "max_wave": 2.16,
+    "max_wind": 14.3,
+    "diveable": false,
+    "score": 48.2
+   },
+   "recommendation": {
+    "best_point": "kado_ne",
+    "best_point_score": 0.449,
+    "best_point_evidence": {
+     "stats_key": "kado_ne",
+     "overall_fallback": {
+      "rate": 0.9375,
+      "n": 16
+     }
+    },
+    "top3_points": [
+     {
+      "point": "kado_ne",
+      "score": 0.449
+     },
+     {
+      "point": "jab_ne",
+      "score": 0.438
+     },
+     {
+      "point": "zabu_ne",
+      "score": 0.432
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   }
+  },
+  {
+   "date": "2026-10-04",
+   "lead_days": 1,
+   "predicted": {
+    "seen_probability": 0.9576,
+    "large_probability": 0.457,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.17,
+    "size_label": "中群(50前後)",
+    "count_est": 75,
+    "visibility_m": 12.5,
+    "water_temp": 23.0,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "kado_ne",
+     "jab_ne",
+     "zabu_ne"
+    ],
+    "avg_anomaly": -3.86,
+    "avg_current_kmh": 2.59,
+    "max_wave": 2.34,
+    "max_wind": 14.4,
+    "diveable": false,
+    "score": 48.4
+   },
+   "recommendation": {
+    "best_point": "kado_ne",
+    "best_point_score": 0.449,
+    "best_point_evidence": {
+     "stats_key": "kado_ne",
+     "overall_fallback": {
+      "rate": 0.9375,
+      "n": 16
+     }
+    },
+    "top3_points": [
+     {
+      "point": "kado_ne",
+      "score": 0.449
+     },
+     {
+      "point": "jab_ne",
+      "score": 0.445
+     },
+     {
+      "point": "zabu_ne",
+      "score": 0.44
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   }
+  },
+  {
+   "date": "2026-10-05",
+   "lead_days": 2,
+   "predicted": {
+    "seen_probability": 0.9581,
+    "large_probability": 0.4577,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.19,
+    "size_label": "中群(50前後)",
+    "count_est": 77,
+    "visibility_m": 12.7,
+    "water_temp": 22.9,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "zabu_ne",
+     "kado_ne",
+     "jab_ne"
+    ],
+    "avg_anomaly": -3.79,
+    "avg_current_kmh": 2.61,
+    "max_wave": 2.66,
+    "max_wind": 16.4,
+    "diveable": false,
+    "score": 48.5
+   },
+   "recommendation": {
+    "best_point": "zabu_ne",
+    "best_point_score": 0.455,
+    "best_point_evidence": {
+     "stats_key": "zabu_ne",
+     "tide_name": {
+      "name": "長潮",
+      "rate": 1.0,
+      "n": 10
+     }
+    },
+    "top3_points": [
+     {
+      "point": "zabu_ne",
+      "score": 0.455
+     },
+     {
+      "point": "kado_ne",
+      "score": 0.449
+     },
+     {
+      "point": "jab_ne",
+      "score": 0.442
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   }
+  },
+  {
+   "date": "2026-10-06",
+   "lead_days": 3,
+   "predicted": {
+    "seen_probability": 0.9481,
+    "large_probability": 0.4704,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.22,
+    "size_label": "中群(50前後)",
+    "count_est": 80,
+    "visibility_m": 12.9,
+    "water_temp": 22.7,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "kado_ne",
+     "zabu_ne",
+     "jab_ne"
+    ],
+    "avg_anomaly": -3.7,
+    "avg_current_kmh": 2.14,
+    "max_wave": 2.66,
+    "max_wind": 8.7,
+    "diveable": false,
+    "score": 48.6
+   },
+   "recommendation": {
+    "best_point": "kado_ne",
+    "best_point_score": 0.446,
+    "best_point_evidence": {
+     "stats_key": "kado_ne",
+     "overall_fallback": {
+      "rate": 0.9375,
+      "n": 16
+     }
+    },
+    "top3_points": [
+     {
+      "point": "kado_ne",
+      "score": 0.446
+     },
+     {
+      "point": "zabu_ne",
+      "score": 0.442
+     },
+     {
+      "point": "jab_ne",
+      "score": 0.434
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   }
+  },
+  {
+   "date": "2026-10-07",
+   "lead_days": 4,
+   "predicted": {
+    "seen_probability": 0.9286,
+    "large_probability": 0.4212,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.13,
+    "size_label": "中群(50前後)",
+    "count_est": 72,
+    "visibility_m": 12.8,
+    "water_temp": 22.5,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "mitsu_ne",
+     "A_point",
+     "kita_ne"
+    ],
+    "avg_anomaly": -3.58,
+    "avg_current_kmh": 1.09,
+    "max_wave": 3.04,
+    "max_wind": 6.6,
+    "diveable": false,
+    "score": 48.4
+   },
+   "recommendation": {
+    "best_point": "mitsu_ne",
+    "best_point_score": 0.446,
+    "best_point_evidence": {
+     "stats_key": "mitsu_ne",
+     "tide_name": {
+      "name": "中潮",
+      "rate": 1.0,
+      "n": 32
+     }
+    },
+    "top3_points": [
+     {
+      "point": "mitsu_ne",
+      "score": 0.446
+     },
+     {
+      "point": "A_point",
+      "score": 0.443
+     },
+     {
+      "point": "kita_ne",
+      "score": 0.436
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   }
+  },
+  {
+   "date": "2026-10-08",
+   "lead_days": 5,
+   "predicted": {
+    "seen_probability": 0.9444,
+    "large_probability": 0.4648,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.23,
+    "size_label": "中群(50前後)",
+    "count_est": 81,
+    "visibility_m": 12.7,
+    "water_temp": 23.0,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "mitsu_ne",
+     "kado_ne",
+     "A_point"
+    ],
+    "avg_anomaly": -3.03,
+    "avg_current_kmh": 2.1,
+    "max_wave": 2.22,
+    "max_wind": 12.8,
+    "diveable": false,
+    "score": 48.6
+   },
+   "recommendation": {
+    "best_point": "mitsu_ne",
+    "best_point_score": 0.453,
+    "best_point_evidence": {
+     "stats_key": "mitsu_ne",
+     "tide_name": {
+      "name": "中潮",
+      "rate": 1.0,
+      "n": 32
+     }
+    },
+    "top3_points": [
+     {
+      "point": "mitsu_ne",
+      "score": 0.453
+     },
+     {
+      "point": "kado_ne",
+      "score": 0.444
+     },
+     {
+      "point": "A_point",
+      "score": 0.435
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   }
+  },
+  {
+   "date": "2026-10-09",
+   "lead_days": 6,
+   "predicted": {
+    "seen_probability": 0.9415,
+    "large_probability": 0.5797,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.36,
+    "size_label": "中群(50前後)",
+    "count_est": 93,
+    "visibility_m": 12.9,
+    "water_temp": 23.0,
+    "weather_risk": 0.5,
+    "sea_status": "海況注意・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "mitsu_ne",
+     "kado_ne",
+     "zabu_ne"
+    ],
+    "avg_anomaly": -2.76,
+    "avg_current_kmh": 2.13,
+    "max_wave": 1.58,
+    "max_wind": 9.5,
+    "diveable": true,
+    "score": 49.9
+   },
+   "recommendation": {
+    "best_point": "mitsu_ne",
+    "best_point_score": 0.454,
+    "best_point_evidence": {
+     "stats_key": "mitsu_ne",
+     "tide_name": {
+      "name": "中潮",
+      "rate": 1.0,
+      "n": 32
+     }
+    },
+    "top3_points": [
+     {
+      "point": "mitsu_ne",
+      "score": 0.454
+     },
+     {
+      "point": "kado_ne",
+      "score": 0.448
+     },
+     {
+      "point": "zabu_ne",
+      "score": 0.438
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   }
+  },
+  {
+   "date": "2026-10-10",
+   "lead_days": 7,
+   "predicted": {
+    "seen_probability": 0.9349,
+    "large_probability": 0.4486,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.21,
+    "size_label": "中群(50前後)",
+    "count_est": 79,
+    "visibility_m": 13.1,
+    "water_temp": 23.3,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "kado_ne",
+     "zabu_ne",
+     "jab_ne"
+    ],
+    "avg_anomaly": -2.42,
+    "avg_current_kmh": 1.84,
+    "max_wave": 2.28,
+    "max_wind": 11.1,
+    "diveable": false,
+    "score": 48.6
+   },
+   "recommendation": {
+    "best_point": "kado_ne",
+    "best_point_score": 0.448,
+    "best_point_evidence": {
+     "stats_key": "kado_ne",
+     "overall_fallback": {
+      "rate": 0.9375,
+      "n": 16
+     }
+    },
+    "top3_points": [
+     {
+      "point": "kado_ne",
+      "score": 0.448
+     },
+     {
+      "point": "zabu_ne",
+      "score": 0.445
+     },
+     {
+      "point": "jab_ne",
+      "score": 0.434
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   }
+  },
+  {
+   "date": "2026-10-11",
+   "lead_days": 8,
+   "predicted": {
+    "seen_probability": 0.9199,
+    "large_probability": 0.5625,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.28,
+    "size_label": "中群(50前後)",
+    "count_est": 85,
+    "visibility_m": 13.0,
+    "water_temp": 22.8,
+    "weather_risk": 0.5,
+    "sea_status": "海況注意・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "kado_ne",
+     "A_point",
+     "zabu_ne"
+    ],
+    "avg_anomaly": -2.97,
+    "avg_current_kmh": 1.56,
+    "max_wave": 1.84,
+    "max_wind": 6.0,
+    "diveable": true,
+    "score": 49.8
+   },
+   "recommendation": {
+    "best_point": "kado_ne",
+    "best_point_score": 0.44,
+    "best_point_evidence": {
+     "stats_key": "kado_ne",
+     "overall_fallback": {
+      "rate": 0.9375,
+      "n": 16
+     }
+    },
+    "top3_points": [
+     {
+      "point": "kado_ne",
+      "score": 0.44
+     },
+     {
+      "point": "A_point",
+      "score": 0.439
+     },
+     {
+      "point": "zabu_ne",
+      "score": 0.435
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   }
+  }
+ ]
+}
