@@ -1,20 +1,9 @@
 {
-  "generated_at": "2026-10-02T20:10:20.846452+09:00",
+  "generated_at": "2026-10-03T00:05:57.710855+09:00",
   "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
   "n_days": 189,
   "window_days": 365,
   "entries": [
-    {
-      "date": "2026-09-03",
-      "moon_age": 20.7,
-      "phase": "中潮",
-      "seen": true,
-      "size": "large",
-      "size_num": 4,
-      "vis_hi": 15.0,
-      "wt_hi": 26.0,
-      "tropical_count": 1
-    },
     {
       "date": "2026-09-04",
       "moon_age": 21.7,
@@ -179,6 +168,17 @@
       "vis_hi": 8.0,
       "wt_hi": 24.0,
       "tropical_count": 0
+    },
+    {
+      "date": "2026-10-02",
+      "moon_age": 20.1,
+      "phase": "中潮",
+      "seen": true,
+      "size": "medium",
+      "size_num": 3,
+      "vis_hi": 10.0,
+      "wt_hi": 24.0,
+      "tropical_count": 0
     }
   ],
   "phase_summary": [
@@ -195,14 +195,14 @@
     },
     {
       "phase": "長潮",
-      "days": 24,
-      "seen_days": 22,
-      "encounter_rate": 0.9166666666666666,
-      "avg_size": 3.347826086956522,
-      "n_known_size": 23,
-      "weighted_size": 3.12,
-      "large_days": 14,
-      "large_rate": 0.609
+      "days": 23,
+      "seen_days": 21,
+      "encounter_rate": 0.9130434782608695,
+      "avg_size": 3.3181818181818183,
+      "n_known_size": 22,
+      "weighted_size": 3.08,
+      "large_days": 13,
+      "large_rate": 0.591
     },
     {
       "phase": "小潮",
@@ -217,14 +217,14 @@
     },
     {
       "phase": "中潮",
-      "days": 59,
-      "seen_days": 56,
-      "encounter_rate": 0.9491525423728814,
-      "avg_size": 3.2758620689655173,
-      "n_known_size": 58,
-      "weighted_size": 2.91,
+      "days": 60,
+      "seen_days": 57,
+      "encounter_rate": 0.95,
+      "avg_size": 3.2711864406779663,
+      "n_known_size": 59,
+      "weighted_size": 2.9,
       "large_days": 27,
-      "large_rate": 0.466
+      "large_rate": 0.458
     },
     {
       "phase": "新月大潮",
