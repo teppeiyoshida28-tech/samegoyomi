@@ -52,6 +52,11 @@ GitHub Actions + GitHub Pages へ完全移行済み。外部サーバーは一�
 `forecast_archive.py --save --published-at now` は公開成功後だけ実行する。記録保存のpushに失敗した場合は、該当Actions runの `issued-forecast-*` artifactから回収する。
 最新の統計定義・検証限界・ローカル手順はREADME.mdとIMPLEMENTATION_STATUS.mdを参照。
 
+2026-10-04の地図改善では、地点座標を`map_points.json`へ一元化し、表示都合で予想域を動かす処理を廃止。
+スマホの月間カレンダー、地図の拡大・移動・地点詳細と、海況を先に読むトップを実装。
+北側はオーナー指定により予測対象外。実測していない等深線・局所水温分布は表示しない。
+地点のGPS校正・海底地形と局所流の実測検証は残る。詳細はAGENTS.mdのマップ節を参照。
+
 ## 詳細
 
 セットアップ手順・パイプライン構成・ドメイン知識・未完了タスクは README.md を参照。

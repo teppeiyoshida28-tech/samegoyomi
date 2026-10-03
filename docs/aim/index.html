@@ -1390,6 +1390,174 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
 .shadow-arc {
   transition: all 0.6s ease;
 }
+/* Shared usability layer; keep the existing navy, gold and Japanese typography. */
+button, select { font: inherit; }
+.nav-short { display:none; }
+button:focus-visible, a:focus-visible, select:focus-visible, summary:focus-visible, svg:focus-visible {
+  outline: 3px solid #8bd1bf; outline-offset: 3px;
+}
+.decision-summary { grid-column:1/-1; display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.decision-sea,.decision-point { padding:20px 24px; border:1px solid var(--line-strong); background:rgba(9,25,43,.92); border-radius:16px; }
+.decision-summary small { display:block; color:var(--surface); font-size:12px; margin-bottom:7px; }
+.decision-summary strong { display:block; font-size:22px; line-height:1.5; }
+.decision-summary p { color:#bacada; font-size:13px; margin-top:7px; line-height:1.6; }
+.decision-sea.is-danger { border-color:#e69579; background:rgba(72,37,35,.94); }
+.decision-sea.is-danger strong { color:#ffbea1; }
+.decision-point strong { color:var(--gold); }
+.hero-brand-title { padding-bottom:0; }
+.hero h1 { font-size:clamp(34px,4vw,64px); }
+.today-headline { gap:28px; }
+.today-score { font-size:100px; }
+.today-tier { font-size:64px; flex-shrink:0; }
+.today-tier .tier-omikuji { white-space:nowrap; font-size:22px; }
+.today-note { font-size:13px; line-height:1.7; }
+.factor-detail { font-size:12px; line-height:1.6; }
+.factor-bar { display:none; }
+.top-meta > .coordinates { color:var(--pelagic); }
+.map-workbench { max-width:1360px; margin:0 auto; padding:24px; border:1px solid var(--line-strong); border-radius:20px; background:#102337; }
+.map-heading { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:18px; }
+.map-heading h3 { font-family:'Shippori Mincho',serif; font-size:27px; margin:5px 0 10px; }
+.map-eyebrow { color:var(--gold); letter-spacing:.15em; font-size:11px; }
+.map-day-tabs { display:flex; flex-wrap:wrap; gap:6px; }
+.map-day-tabs button { min-height:46px; font-size:13px; }
+.map-day-tabs button .tb { font-size:11px; }
+.map-sea-status { margin:16px 0; padding:12px 16px; font-size:14px; line-height:1.7; border-left:3px solid #8fb0d4; background:#1b3349; }
+.map-sea-status.is-danger { border-color:#f7a98d; color:#ffd0b9; background:#422e30; }
+.today-reco { margin:14px 0; padding:16px; }
+.today-reco .tr-why { font-size:12px; line-height:1.75; }
+.island-hour-controls { margin:16px 0; display:flex; flex-wrap:nowrap; gap:6px; overflow-x:auto; }
+.hour-btn { min-width:58px; min-height:42px; font-size:13px; flex-shrink:0; }
+.map-conditions { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:10px; margin:16px 0; }
+.map-conditions > div { padding:14px; border-radius:10px; background:#192f46; }
+.map-conditions span,.map-conditions small { display:block; font-size:12px; line-height:1.6; color:#b3c5d6; }
+.map-conditions b { display:block; font-size:17px; line-height:1.6; }
+.flow-bearing { display:inline-block; font-style:normal; color:#8bd1bf; margin-right:7px; }
+.map-layout { display:grid; grid-template-columns:minmax(0,1fr) 275px; gap:24px; }
+.map-main { min-width:0; }
+.map-toolbar { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:10px; }
+.map-toolbar button,.map-layers button { min-height:40px; padding:6px 12px; border:1px solid #526a7d; background:#1c344b; border-radius:8px; color:var(--foam); cursor:pointer; font-size:13px; }
+.map-toolbar button:first-child,.map-toolbar button:nth-child(2) { font-size:22px; min-width:42px; }
+.map-canvas { position:relative; height:640px; width:100%; overflow:hidden; border:1px solid #405b6b; border-radius:12px; background:#081b2b; }
+#forecast-map { display:block; width:100%; height:100%; touch-action:none; cursor:grab; }
+#forecast-map:active { cursor:grabbing; }
+.map-island { fill:#344d5d; stroke:#a6bac7; stroke-width:2; vector-effect:non-scaling-stroke; }
+.map-label { font-family:'Zen Kaku Gothic New',sans-serif; font-weight:600; paint-order:stroke; stroke:#081b2b; stroke-width:3px; stroke-linejoin:round; vector-effect:non-scaling-stroke; pointer-events:none; }
+.map-point { cursor:pointer; }
+.map-point:focus circle { stroke:#fff; }
+.hypothesis-lee { fill:rgba(139,172,197,.10); stroke:#8baec5; stroke-width:1.5px; stroke-dasharray:6 6; vector-effect:non-scaling-stroke; }
+.hypothesis-zone { fill:rgba(127,212,196,.12); stroke:#8bd1bf; stroke-width:2px; stroke-dasharray:6 6; vector-effect:non-scaling-stroke; }
+.map-north,.map-scale,.map-schematic { position:absolute; pointer-events:none; color:#d2e1ea; background:rgba(8,27,43,.88); font-size:11px; padding:5px 8px; border-radius:4px; }
+.map-north { left:12px; top:12px; font-size:15px; text-align:center; line-height:1.2; }
+.map-scale { left:12px; bottom:12px; }
+#map-scale-line { border:1px solid #bdd1df; border-top:0; height:6px; margin-bottom:4px; }
+.map-schematic { right:12px; top:12px; }
+.map-help { color:#b4c7d7; font-size:12px; line-height:1.75; margin-top:10px; }
+.map-layers { display:flex; flex-wrap:wrap; align-items:center; gap:14px; margin-top:12px; }
+.map-layers label { display:flex; gap:6px; align-items:center; font-size:13px; min-height:38px; cursor:pointer; }
+.map-layers input { width:18px; height:18px; accent-color:var(--gold); }
+.map-sidebar h4 { font-size:17px; margin:4px 0 14px; }
+#map-ranked { display:grid; gap:8px; }
+#map-ranked button { display:flex; align-items:center; text-align:left; gap:8px; padding:12px 10px; color:var(--foam); border:1px solid #455e70; border-radius:9px; background:#193047; cursor:pointer; font-size:13px; }
+#map-ranked button[aria-pressed=true] { border-color:var(--gold); background:#343c3b; }
+#map-ranked b { margin-left:auto; font-size:18px; }
+.map-rank { color:var(--gold); font-weight:700; }
+.point-select-label { display:block; font-size:12px; margin:22px 0 8px; color:#b4c7d7; }
+#point-select { width:100%; min-height:44px; color:var(--foam); background:#172d44; border:1px solid #607587; border-radius:8px; padding:8px; font-size:14px; }
+#map-point-detail { padding:18px 0; border-bottom:1px solid var(--line-strong); }
+#map-point-detail strong,#map-point-detail span { display:block; line-height:1.6; }
+#map-point-detail span { color:var(--gold); font-size:14px; }
+#map-point-detail p { margin-top:10px; font-size:12px; color:#b4c7d7; line-height:1.7; }
+.map-score-legend { margin-top:20px; font-size:11px; }
+.map-score-legend > span { display:block; height:7px; border-radius:5px; background:linear-gradient(90deg,rgb(143,163,176),rgb(111,174,158),rgb(201,165,78)); }
+.map-score-legend > div { display:flex; justify-content:space-between; margin-top:5px; }
+.map-provenance { margin-top:20px; padding:18px 0 0; border-top:1px solid var(--line-strong); font-size:13px; line-height:1.85; }
+.map-provenance summary { cursor:pointer; font-weight:700; color:#d2e1ea; }
+.map-provenance p { margin:12px 0; color:#b4c7d7; max-width:85ch; }
+.map-provenance a { display:inline-block; margin:8px 18px 0 0; color:#b9d4e8; }
+.map-workbench:fullscreen { border-radius:0; width:100%; height:100%; overflow-y:auto; }
+.map-workbench:fullscreen .map-canvas { height:72vh; }
+.map-workbench:fullscreen .today-reco { display:none; }
+.lr-cal { grid-template-columns:repeat(7,minmax(0,1fr)); align-items:stretch; }
+.lr-day { min-width:0; color:var(--foam); font:inherit; cursor:pointer; }
+.lr-day[aria-pressed=true] { outline:2px solid var(--gold); outline-offset:-2px; background:#293d46; }
+.lr-day .cal-kind { display:block; font-size:11px; color:var(--gold); margin:5px 0; }
+.lr-day .cal-score { display:block; font-size:23px; margin:6px 0; font-variant-numeric:tabular-nums; }
+.lr-day .cal-sea { display:block; font-size:11px; color:#a9bfd1; }
+.lr-day .cal-sea.danger { color:#ffb49a; }
+.lr-day.empty { min-height:0; pointer-events:none; }
+.lr-day-detail { background:#193047; border:1px solid var(--line-strong); border-radius:14px; padding:22px; margin:20px 0; line-height:1.8; }
+.lr-day-detail h3 { font-size:20px; margin-bottom:8px; }
+.lr-day-detail .detail-score { font-size:28px; color:var(--gold); }
+.lr-day-detail p { font-size:14px; color:#c0d1df; margin:6px 0; }
+.lr-day-detail .is-danger { color:#ffb49a; }
+.lr-day-detail .spark { width:168px; height:48px; max-width:100%; }
+.lr-calendar-hint { font-size:12px; line-height:1.6; color:#b4c7d7; margin:8px 0 14px; }
+@media(max-width:1000px) {
+  .map-layout { grid-template-columns:minmax(0,1fr) 235px; gap:16px; }
+}
+@media(max-width:700px) {
+  .nav-long { display:none; }
+  .nav-short { display:inline; }
+  .top { padding:10px 14px; gap:8px; align-items:center; }
+  .brand { gap:7px; }
+  .brand-kamon { width:30px; height:30px; }
+  .brand-glyph { font-size:21px; }
+  .brand-sub { display:none; }
+  .top-meta { flex:1; justify-content:flex-end; gap:6px 10px; font-size:10px; }
+  .top-meta .coordinates { display:none; }
+  .site-nav { flex:0 0 100%; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:5px; width:100%; margin:4px 0 0; }
+  .site-nav a { padding:8px 2px; font-size:11px; justify-content:center; text-align:center; white-space:nowrap; letter-spacing:0; }
+  .top { display:grid; grid-template-columns:auto 1fr; }
+  .top .site-nav { grid-column:1/-1; }
+  .hero { padding:18px 16px 28px; gap:16px; }
+  .hero-brand-title { display:none; }
+  .decision-summary { grid-template-columns:1fr; gap:10px; }
+  .decision-sea,.decision-point { padding:14px 16px; }
+  .decision-summary strong { font-size:19px; }
+  .decision-summary p { font-size:12px; margin-top:4px; }
+  .today-headline { display:block; }
+  .today-left { margin:10px 0 18px; }
+  .today-eyebrow { font-size:19px; }
+  .today-score-block { gap:14px; }
+  .today-score { font-size:72px; }
+  .today-score .score-max { font-size:23px; }
+  .today-tier { font-size:48px; }
+  .today-tier .tier-omikuji { font-size:19px; white-space:nowrap; }
+  .factor-grid { gap:10px; }
+  .factor { padding:14px; }
+  .factor-val { font-size:26px; }
+  .section-title { padding:26px 16px 14px; }
+  .island-fullwidth { padding:0 10px 24px; }
+  .map-workbench { padding:14px 10px; border-radius:14px; }
+  .map-heading h3 { font-size:23px; }
+  .map-day-tabs { flex-wrap:nowrap; width:100%; overflow-x:auto; padding-bottom:5px; }
+  .map-day-tabs button { flex-shrink:0; }
+  .map-sea-status { font-size:12px; padding:10px 12px; }
+  .today-reco { padding:12px; }
+  .map-conditions { grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; }
+  .map-conditions > div:first-child { grid-column:1/-1; display:flex; align-items:center; justify-content:space-between; }
+  .map-conditions > div { padding:10px; }
+  .map-conditions b { font-size:15px; }
+  .map-conditions small { font-size:11px; }
+  .map-layout { display:flex; flex-direction:column; gap:18px; }
+  .map-canvas { height:460px; }
+  .map-toolbar { gap:5px; }
+  .map-toolbar button { padding:5px 9px; font-size:12px; }
+  .map-sidebar { padding:0 4px; }
+  #map-ranked { gap:6px; }
+  .map-provenance { padding-left:4px; padding-right:4px; }
+  .lr-cal { gap:3px; }
+  .lr-day { min-height:96px; padding:6px 1px; border-radius:6px; }
+  .lr-day .cal-kind { font-size:11px; }
+  .lr-day .cal-kind .kind-text { display:none; }
+  .lr-day .cal-score { font-size:19px; margin:4px 0; }
+  .lr-day .cal-sea { font-size:10px; }
+  .lr-day-detail { padding:16px; }
+  .lr-day-detail h3 { font-size:18px; }
+  .lr-kuro { font-size:12px; padding:12px; }
+}
+@media(prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }
+
 </style>
 </head>
 <body>
@@ -1404,14 +1572,15 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
   </div>
   <div class="top-meta">
     <div><span class="pulse-dot"></span><strong id="today-date">—</strong></div>
-    <div>34.57°N 138.94°E</div>
+    <div class="coordinates">神子元島・南側</div>
     <div id="updated-at">—</div>
-    <nav class="site-nav" id="site-nav"></nav>
   </div>
+  <nav class="site-nav" id="site-nav"></nav>
 </header>
 
 <!-- HERO: TODAY -->
 <section class="hero">
+  <div class="decision-summary" id="decision-summary"></div>
   <div class="hero-brand-title">
     <h1>鮫暦<span class="ai">AI</span></h1>
     <div class="tagline">潮を読み、鮫に会う。</div>
@@ -1449,151 +1618,66 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
   </div>
 </div>
 
-<!-- ISLAND MAP (fullwidth) -->
+<!-- ISLAND MAP: schematic positions shared with the scoring engine -->
 <section class="section-title">
-  <h2>神子元島 <em>回遊マップ</em></h2>
-  <div class="subtitle">島の潮陰・潮目・回遊予測 · 時間帯選択で動的に更新</div>
+  <h2>神子元島 <em>ポイント予報</em></h2>
+  <div class="subtitle">南側の予測対象ポイント · 位置と地形は概略</div>
 </section>
 <div class="island-fullwidth">
-  <div class="island-panel-outer">
-  <div class="island-panel">
-    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-      <div class="island-title">島の潮陰と回遊予測（局所流・座標は未校正）</div>
-      <div class="map-day-tabs" id="map-day-tabs"></div>
-      <div class="island-hour-controls" id="hour-controls"></div>
+  <div class="map-workbench" id="map-workbench">
+    <div class="map-heading">
+      <div><p class="map-eyebrow">MIKOMOTO / SOUTH AREA</p><h3>潮と、今日の狙い目。</h3></div>
+      <div class="map-day-tabs" id="map-day-tabs" aria-label="予報日"></div>
     </div>
-
-    <div id="today-reco" class="today-reco" style="display:none;"></div>
-
-    <div class="island-svg-wrap">
-      <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <radialGradient id="depthGrad" cx="50%" cy="50%" r="55%">
-            <stop offset="0%" stop-color="#1c4568" stop-opacity="0.42"/>
-            <stop offset="60%" stop-color="#0a1e30" stop-opacity="0.15"/>
-            <stop offset="100%" stop-color="#04121f" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="shadowGrad" cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stop-color="#ff6b47" stop-opacity="0.55"/>
-            <stop offset="50%" stop-color="#ff6b47" stop-opacity="0.2"/>
-            <stop offset="100%" stop-color="#ff6b47" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="impactGrad" cx="50%" cy="50%" r="55%">
-            <stop offset="0%" stop-color="#ffd66b" stop-opacity="0.35"/>
-            <stop offset="100%" stop-color="#ffd66b" stop-opacity="0"/>
-          </radialGradient>
-          <radialGradient id="hammerGrad" cx="50%" cy="50%" r="60%">
-            <stop offset="0%" stop-color="#7fd4c4" stop-opacity="0.30"/>
-            <stop offset="55%" stop-color="#7fd4c4" stop-opacity="0.14"/>
-            <stop offset="100%" stop-color="#7fd4c4" stop-opacity="0"/>
-          </radialGradient>
-          <pattern id="noDivePattern" x="0" y="0" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <line x1="0" y1="0" x2="0" y2="8" stroke="#8a2f2f" stroke-width="1.5" opacity="0.35"/>
-          </pattern>
-          <marker id="flowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-            <polygon points="0 0, 6 3, 0 6" fill="#7fc9c4" opacity="0.9"/>
-          </marker>
-          <marker id="flowhead-strong" markerWidth="10" markerHeight="10" refX="7" refY="3.5" orient="auto">
-            <polygon points="0 0, 7 3.5, 0 7" fill="#ff8552"/>
-          </marker>
-          <!-- ラベル可読性用: 薄い暗色ハロー -->
-          <filter id="textHalo" x="-10%" y="-30%" width="120%" height="160%">
-            <feMorphology in="SourceAlpha" operator="dilate" radius="1.2"/>
-            <feGaussianBlur stdDeviation="1"/>
-            <feColorMatrix values="0 0 0 0 0.02  0 0 0 0 0.07  0 0 0 0 0.12  0 0 0 0.85 0"/>
-            <feComposite in="SourceGraphic" operator="over"/>
-          </filter>
-        </defs>
-
-        <!-- 座標系: 島中心=(300,200), 1m=0.55 SVG unit -->
-
-        <!-- 深海背景 (深いほど暗く) -->
-        <rect x="0" y="0" width="600" height="800" fill="#04121f"/>
-        <path id="bath_50" d="" fill="rgba(15,42,68,0.55)"/>
-        <path id="bath_40" d="" fill="rgba(22,55,85,0.55)"/>
-        <path id="bath_25" d="" fill="rgba(28,69,104,0.55)"/>
-        <path id="bath_15" d="" fill="rgba(38,82,120,0.55)"/>
-
-        <!-- 等深線 (dynamic, 神子元は南に強く落ち込む非対称) -->
-        <g id="bathy-fills"></g>
-        <g id="bathy-lines" opacity="0.7"></g>
-
-        <!-- コンパス -->
-        <g id="compass" transform="translate(46, 50)">
-          <circle cx="0" cy="0" r="26" fill="rgba(4,18,31,0.9)" stroke="#78a5c8" stroke-width="1.4"/>
-          <polygon points="0,-16 4,4 0,0 -4,4" fill="#ff6b47"/>
-          <polygon points="0,16 4,-4 0,0 -4,-4" fill="#4e8faf"/>
-          <text x="0" y="-30" text-anchor="middle" class="point-label" fill="#ff6b47" style="font-weight:700; font-size:14px;">N</text>
-          <text x="34" y="5" text-anchor="middle" class="point-label" fill="#a3c4dc" style="font-size:13px;">E</text>
-          <text x="0" y="40" text-anchor="middle" class="point-label" fill="#a3c4dc" style="font-size:13px;">S</text>
-          <text x="-34" y="5" text-anchor="middle" class="point-label" fill="#a3c4dc" style="font-size:13px;">W</text>
-        </g>
-
-        <!-- 潜水可能エリア (島の南側) 淡ハイライト -->
-        <path d="M 70 195 Q 70 380, 220 550 Q 290 640, 300 645 Q 310 640, 380 550 Q 530 380, 530 195"
-              fill="rgba(127,201,196,0.03)" stroke="rgba(127,201,196,0.12)" stroke-width="0.6" stroke-dasharray="5 4"/>
-
-        <!-- streamlines (dynamic) -->
-        <g id="streamlines" opacity="0.9"></g>
-
-        <!-- 根 (SVG palette) -->
-        <g id="rocks-base"></g>
-
-        <!-- 島本体 (精密ポリゴン, dynamic 描画) -->
-        <g id="island-group"></g>
-
-        <!-- shadow zone -->
-        <g id="shadow-arcs"></g>
-        <!-- impact zone -->
-        <g id="impact-arcs"></g>
-        <!-- hammer expected zone (潮陰と潮目の間) -->
-        <g id="hammer-zone"></g>
-        <!-- front line (潮目) -->
-        <g id="front-lines"></g>
-
-        <!-- ポイントマーカー (dynamic) -->
-        <g id="dive-points"></g>
-        <!-- ハンマー予想域ラベル (最前面) -->
-        <g id="hammer-zone-label"></g>
-
-        <!-- 北側注記 (マップ最上部) -->
-        <text x="300" y="30" text-anchor="middle" class="point-label" style="fill:rgba(190,214,230,0.55); font-size:10.5px; letter-spacing:0.2em; stroke-width:2px;">北側 (白根・ブダイ根) は潜水不可のため非表示</text>
-
-        <!-- スケールバー (1m=0.60 unit, 200m=120px) -->
-        <g transform="translate(38, 758)">
-          <line x1="0" y1="0" x2="120" y2="0" stroke="#78a5c8" stroke-width="2.2"/>
-          <line x1="0" y1="-5" x2="0" y2="5" stroke="#78a5c8" stroke-width="2.2"/>
-          <line x1="60" y1="-3.5" x2="60" y2="3.5" stroke="#78a5c8" stroke-width="1.4"/>
-          <line x1="120" y1="-5" x2="120" y2="5" stroke="#78a5c8" stroke-width="2.2"/>
-          <text x="60" y="17" text-anchor="middle" class="point-label" style="fill:#a3c4dc; font-size:10px;">200 m</text>
-          <text x="0" y="17" text-anchor="middle" class="point-label" style="fill:#78a5c8; font-size:9px;">0</text>
-          <text x="120" y="17" text-anchor="middle" class="point-label" style="fill:#78a5c8; font-size:9px;">200</text>
-        </g>
-
-        <!-- 情報カード (dynamic) -->
-        <g id="info-card"></g>
-        <!-- 温度層レジェンド (dynamic) -->
-        <g id="temp-legend"></g>
-      </svg>
+    <div id="map-sea-status" class="map-sea-status"></div>
+    <div id="today-reco" class="today-reco"></div>
+    <div class="island-hour-controls" id="hour-controls" aria-label="予報時刻"></div>
+    <div class="map-conditions" id="map-conditions"></div>
+    <div class="map-layout">
+      <div class="map-main">
+        <div class="map-toolbar" role="group" aria-label="地図操作">
+          <button type="button" id="map-zoom-in" aria-label="地図を拡大">＋</button>
+          <button type="button" id="map-zoom-out" aria-label="地図を縮小">−</button>
+          <button type="button" id="map-reset">対象地点に戻す</button>
+          <button type="button" id="map-fullscreen">全画面</button>
+        </div>
+        <div class="map-canvas" id="map-canvas">
+          <svg id="forecast-map" tabindex="0" role="group" aria-label="神子元島南側の概略地図。地点を選択、矢印キーで移動できます。" aria-describedby="map-help" viewBox="-500 -200 1000 1200"></svg>
+          <div class="map-north" aria-hidden="true">↑<br>N</div>
+          <div class="map-scale"><div id="map-scale-line"></div><span id="map-scale-label"></span></div>
+          <span class="map-schematic">概略図・位置未校正</span>
+        </div>
+        <p class="map-help" id="map-help">ドラッグで移動 · ＋/−で拡大縮小 · 地点を選ぶと詳細表示</p>
+        <div class="map-layers">
+          <label><input type="checkbox" id="map-labels"> 全地点の名前</label>
+          <label><input type="checkbox" id="map-hypothesis"> 潮陰・予想域の仮説</label>
+          <button type="button" id="map-fit-zone">予想域まで表示</button>
+        </div>
+        <p id="map-zone-status" class="map-help" role="status"></p>
+      </div>
+      <aside class="map-sidebar" aria-label="地点の詳細">
+        <h4 id="map-ranked-title">選択時刻の推奨</h4>
+        <div id="map-ranked"></div>
+        <label class="point-select-label" for="point-select">全26地点から選ぶ</label>
+        <select id="point-select"></select>
+        <div id="map-point-detail" aria-live="polite"></div>
+        <div class="map-score-legend"><span></span><div>0 <b>地点スコア</b> 100</div></div>
+        <p class="map-help">色の目盛りは全日・全地点で共通です。番号は選択時刻の上位3地点。スコアは遭遇確率ではありません。</p>
+      </aside>
     </div>
-
-    <div class="island-legend">
-      <div class="legend-item">
-        <div class="legend-swatch" style="background:linear-gradient(90deg,#8fa3b0,#ffb14e,#ff4d3d);"></div>
-        予測スコア (低グレー → 高オレンジ・赤)
-      </div>
-      <div class="legend-item">
-        <div class="legend-swatch" style="background:#04121f; border:1.5px solid #ff6b47; border-radius:50%; color:#ff6b47; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center;">1</div>
-        選択時刻の推奨 1〜3位 (番号バッジ)
-      </div>
-      <div class="legend-item">
-        <div class="legend-swatch" style="background:rgba(127,212,196,0.25); border:1.5px dashed #7fd4c4; border-radius:50%;"></div>
-        ハンマー予想域 — 潮陰と潮目の間。流速3kt以下は潮目の外側にも分散
-      </div>
-    </div>
+    <details class="map-provenance">
+      <summary>地図と予測の根拠・限界</summary>
+      <p>島・根の形状と位置は公式ポイント案内を参考にした概略です。GPS座標・測深による校正は未完了で、航行や潜水経路の判断には使えません。実測に基づかない等深線は表示していません。</p>
+      <p>広域海流はOpen-MeteoのSMOC（約8km格子、潮汐を含む）。島周辺の局所流や水深ごとの流れを実測したものではありません。海面水温も海中の水温分布とは異なります。</p>
+      <p>潮陰とハンマー予想域は現地知見をもとにした未検証の仮説です。地点順位は潮流・地形の仮説と訪問記事の統計に基づき、行先選択・記載・透明度による観測バイアスがあります。</p>
+      <p>オーナー指定により南側のみを予測・推奨の対象にしています。北側の潜水可否を判定する表示ではありません。</p>
+      <a href="https://maps.gsi.go.jp/#16/34.5717/138.9433/&amp;base=std&amp;ls=std&amp;disp=1" target="_blank" rel="noopener">島の位置を地理院地図で確認 ↗</a>
+      <a href="https://www.mikomoto.com/about/location.html" target="_blank" rel="noopener">公式ポイント案内 ↗</a>
+      <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener">海流データの仕様 ↗</a>
+    </details>
   </div>
-  </div>
-</div><!-- /island-fullwidth -->
+</div>
+
 
 <!-- HOURLY STRIP -->
 <section class="section-title">
@@ -1668,7 +1752,9 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
 <div class="lr-wrap">
   <div class="lr-kuro" id="lr-kuro"></div>
   <div class="lr-monthnav" id="lr-monthnav"></div>
+  <p class="lr-calendar-hint">◉ フル予報 / ◇ 長期見込み · 日付を選ぶと海況と推薦の詳細を表示します。</p>
   <div class="lr-cal" id="lr-cal"></div>
+  <div id="lr-day-detail" class="lr-day-detail" aria-live="polite"></div>
   <div class="lr-legend">
     スコア = 季節35% + <b>午前下げ潮25%</b> + 黒潮20% + 月齢20%。
     午前下げ潮 = 朝(8時)→昼(12時)の下げ幅＋未明からの下げ加点。下げ幅が大きい＝流れが強いほど高スコア。
@@ -8227,57 +8313,77 @@ const $$ = (s) => document.querySelectorAll(s);
 const DOW_JA = ['日','月','火','水','木','金','土'];
 // おみくじ風ランク併記 (鮫暦AI)
 const OMIKUJI = {S:'大吉', A:'吉', B:'中吉', C:'小吉', D:'末吉', E:'凶'};
-const POINT_JA = {kame_ne:'カメ根', A_point:'Aポイント', ao_ne:'青根', jab_ne:'ジャブ根', zabu_ne:'ザブ根',
-  mitsu_ne:'三ツ根', kado_ne:'カド根', eno_kuchi:'江の口', andoro:'アンドロ', hammers_rock:'ハンマーズロック',
-  plate:'プレート', third_takane:'三つ目の高根', eagleray_rock:'トビエイロック', west_takane:'西の高根',
-  twin_peaks:'ツインピークス', view_point:'ビューポイント', kabe_ne:'カベ根', kita_ne:'北の根',
-  higashi_ne:'東の根', karito:'カリトの鼻', shirane:'白根', hashigodan:'はしご段', oota_ne:'オオタ根'};
-// 神子元ハンマーズ 2003-2023 公式詳細マップに基づく南側ポイント配置
-// 座標: 島中心を原点(0,0), +x=東, +y=南 (メートル)
-// 各点は形状情報 (半径 or 楕円軸)を持つ
-const POINTS = {
-  // 沿岸ポイント群
-  'A_point':      { pos: [160, 135],   label: 'Aポイント',        depth: '13-26m',  note: '湾状 着底ハンマー', tier: 'primary',   shape: [22, 18, -35] },
-  'karito':       { pos: [110, 165],   label: 'カリトの鼻',       depth: '10m',     note: 'A→南下ルート',        tier: 'secondary', shape: [12, 10, 0] },
-  'eno_kuchi':    { pos: [-130, 90],   label: '江の口',            depth: '10-15m',  note: '穏やかな湾',           tier: 'secondary', shape: [18, 14, 45] },
-  'andoro':       { pos: [-190, 20],   label: 'アンドロ',         depth: '16-23m',  note: '西側浅根群',           tier: 'secondary', shape: [15, 12, 0] },
-  // === カメ根エリア (南北スリット状の集合体, 実マップ画像認識より精密配置) ===
-  'kita_ne':      { pos: [235, 175],   label: '北の根',            depth: '-18m',    note: 'カメ根北端',           tier: 'secondary', shape: [10, 10, 0] },
-  'higashi_ne':   { pos: [345, 185],   label: '東の根',            depth: '-22m',    note: '外海側 深場',          tier: 'secondary', shape: [10, 10, 0] },
-  'cliff_rock':   { pos: [122, 275],   label: '絶壁の根',         depth: '-10m',    note: 'エリア西の長大な壁',  tier: 'primary',   shape: [15, 42, 0] },
-  'namb_ne':      { pos: [190, 270],   label: '南北の根',         depth: '-18m',    note: '細長スリット',         tier: 'secondary', shape: [12, 25, 0] },
-  'most_south':   { pos: [190, 315],   label: '最南端の根',       depth: '-',       note: '南北の根 南隣',        tier: 'tertiary',  shape: [10, 10, 0] },
-  'twin_peaks':   { pos: [235, 245],   label: 'ツインピークス',   depth: '-18/19m', note: '2つの峰スリット',      tier: 'secondary', shape: [10, 20, 0] },
-  'view_point':   { pos: [235, 290],   label: 'ビューポイント',   depth: '-10/19m', note: 'パノラマ大根',         tier: 'primary',   shape: [12, 32, 0] },
-  'kabe_ne':      { pos: [280, 280],   label: 'カベ根',            depth: '-17m',    note: '東寄り垂直壁',         tier: 'secondary', shape: [10, 28, 0] },
-  // カメ根エリア全体を示す破線ボックス (座標: 中心 y=245付近, 東西100m x 南北200m)
-  '_kame_ne_area':{ pos: [230, 245],   label: 'カメ根エリア',      depth: '',        note: '',                    tier: 'area',      shape: [130, 100, 0] },
-  // 西側〜南西
-  'jab_ne':       { pos: [-70, 220],   label: '青根/ジャブ根',    depth: '20m',     note: '下げ潮に強い',         tier: 'primary',   shape: [28, 45, -30] },
-  'zabu_ne':      { pos: [-155, 210],  label: 'ザブ根',            depth: '18-22m',  note: '南西',                 tier: 'secondary', shape: [18, 25, 0] },
-  'kado_ne':      { pos: [-320, 30],   label: 'カド根',            depth: '20-25m',  note: '西端 -50m落込み',      tier: 'secondary', shape: [22, 32, 0] },
-  'mitsu_ne':     { pos: [-220, -25],  label: '三ツ根',            depth: '25m',     note: '孤立礁',               tier: 'primary',   shape: [20, 20, 0] },
-  // 外洋南ポイント群 (ハンマー爆流ゾーン)
-  'seven_rock':   { pos: [100, 465],   label: 'セブンロック',     depth: '-',       note: '小岩礁群',             tier: 'tertiary',  shape: [22, 14, 0] },
-  'west_west':    { pos: [-30, 445],   label: '西の西の根',       depth: '10-17m',  note: '',                     tier: 'tertiary',  shape: [14, 18, 0] },
-  'west_rock':    { pos: [30, 460],    label: '西の根',            depth: '10-21m',  note: '',                     tier: 'tertiary',  shape: [15, 20, 0] },
-  'tall_rock':    { pos: [70, 455],    label: '高根',              depth: '-',       note: '',                     tier: 'tertiary',  shape: [12, 14, 0] },
-  'west_takane':  { pos: [0, 525],     label: '西の高根',         depth: '10m',     note: '真南',                 tier: 'tertiary',  shape: [16, 20, 0] },
-  'west_west_tk': { pos: [-70, 465],   label: '西の西の高根',     depth: '12m',     note: '',                     tier: 'tertiary',  shape: [12, 16, 0] },
-  'plate':        { pos: [80, 555],    label: 'プレート',         depth: '21m',     note: '平坦大根',             tier: 'primary',   shape: [75, 60, 0] },
-  'hammers_rock': { pos: [180, 615],   label: 'ハンマーズロック', depth: '23m',     note: '外洋南の孤根',          tier: 'primary',   shape: [16, 16, 0] },
-  'eagleray_rock':{ pos: [310, 520],   label: 'トビエイロック',   depth: '27m',     note: 'エイの群れ',           tier: 'primary',   shape: [15, 15, 0] },
-  'third_takane': { pos: [240, 750],   label: '三つ目の高根',     depth: '15-25m',  note: '最南端の巨根',           tier: 'primary',   shape: [125, 75, 0] },
-};
+const MAP_CATALOG = {"version": "2026-10-schematic-v1", "coordinate_system": "島中心の概略相対座標。東+x、南+y、単位m。GPS・実測水深による校正前。", "source": "既存の予測計算座標を維持。公式ポイント案内を参考にした概略配置であり測量成果ではない。", "source_url": "https://www.mikomoto.com/about/location.html", "coverage": "オーナー指定により南側のみを予測・推奨の対象とする。北側の潜水可否は判定しない。", "points": {"A_point": {"pos": [145, 125], "label": "Aポイント", "depth": "13-26m", "note": "湾状 着底ハンマー", "shape": [22, 18, -35], "tier": "primary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "karito": {"pos": [110, 165], "label": "カリトの鼻", "depth": "10m", "note": "Aから南下ルート", "shape": [12, 10, 0], "tier": "secondary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "eno_kuchi": {"pos": [-100, 100], "label": "江の口", "depth": "10-15m", "note": "穏やかな湾", "shape": [18, 14, 45], "tier": "secondary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "andoro": {"pos": [-180, 20], "label": "アンドロ", "depth": "16-23m", "note": "西側浅根群", "shape": [15, 12, 0], "tier": "secondary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "kita_ne": {"pos": [235, 175], "label": "北の根", "depth": "-18m", "note": "カメ根北端", "shape": [10, 10, 0], "tier": "secondary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "higashi_ne": {"pos": [345, 185], "label": "東の根", "depth": "-22m", "note": "外海側 深場", "shape": [10, 10, 0], "tier": "secondary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "cliff_rock": {"pos": [122, 275], "label": "絶壁の根", "depth": "-10m", "note": "エリア西の壁", "shape": [15, 42, 0], "tier": "primary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "namb_ne": {"pos": [190, 270], "label": "南北の根", "depth": "-18m", "note": "細長スリット", "shape": [12, 25, 0], "tier": "secondary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "most_south": {"pos": [190, 315], "label": "最南端の根", "depth": "-", "note": "", "shape": [10, 10, 0], "tier": "tertiary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "twin_peaks": {"pos": [235, 245], "label": "ツインピークス", "depth": "-18/19m", "note": "2つの峰", "shape": [10, 20, 0], "tier": "secondary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "view_point": {"pos": [235, 290], "label": "ビューポイント", "depth": "-10/19m", "note": "パノラマ大根", "shape": [12, 32, 0], "tier": "primary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "kabe_ne": {"pos": [280, 280], "label": "カベ根", "depth": "-17m", "note": "東寄り垂直壁", "shape": [10, 28, 0], "tier": "secondary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "jab_ne": {"pos": [-80, 240], "label": "ジャブ根（青根）", "depth": "20m", "note": "下げ潮に強い", "shape": [28, 45, -30], "tier": "primary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "zabu_ne": {"pos": [-140, 220], "label": "ザブ根", "depth": "18-22m", "note": "南西", "shape": [18, 25, 0], "tier": "secondary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "kado_ne": {"pos": [-320, 30], "label": "カド根", "depth": "20-25m", "note": "西端 -50m落込み", "shape": [22, 32, 0], "tier": "secondary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "mitsu_ne": {"pos": [-220, -20], "label": "三ツ根", "depth": "25m", "note": "北西ドロップオフ", "shape": [20, 20, 0], "tier": "primary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "seven_rock": {"pos": [110, 470], "label": "セブンロック", "depth": "-", "note": "小岩礁群", "shape": [22, 14, 0], "tier": "tertiary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "west_west": {"pos": [150, 450], "label": "西の西の根", "depth": "10-17m", "note": "", "shape": [14, 18, 0], "tier": "tertiary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "west_rock": {"pos": [170, 470], "label": "西の根", "depth": "10-21m", "note": "", "shape": [15, 20, 0], "tier": "tertiary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "tall_rock": {"pos": [200, 470], "label": "高根", "depth": "-", "note": "", "shape": [12, 14, 0], "tier": "tertiary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "west_takane": {"pos": [0, 520], "label": "西の高根", "depth": "10m", "note": "真南", "shape": [16, 20, 0], "tier": "tertiary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "west_west_tk": {"pos": [-50, 460], "label": "西の西の高根", "depth": "12m", "note": "", "shape": [12, 16, 0], "tier": "tertiary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "plate": {"pos": [80, 570], "label": "プレート", "depth": "21m", "note": "平坦大根", "shape": [75, 60, 0], "tier": "primary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "hammers_rock": {"pos": [180, 620], "label": "ハンマーズロック", "depth": "23m", "note": "外洋南の孤根", "shape": [16, 16, 0], "tier": "primary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "eagleray_rock": {"pos": [310, 520], "label": "トビエイロック", "depth": "27m", "note": "エイの群れ", "shape": [15, 15, 0], "tier": "primary", "coordinate_status": "schematic_unverified", "lat_lon": null}, "third_takane": {"pos": [240, 770], "label": "三つ目の高根", "depth": "15-25m", "note": "★最南端の巨根", "shape": [125, 75, 0], "tier": "primary", "coordinate_status": "schematic_unverified", "lat_lon": null}}, "island_outline_m": [[-40, -150], [0, -120], [30, -110], [60, -100], [80, -80], [75, -40], [95, 0], [120, 30], [160, 80], [191, 110], [160, 130], [110, 120], [90, 110], [60, 100], [20, 90], [9, 150], [-20, 130], [-50, 110], [-100, 80], [-120, 60], [-150, 9], [-170, -20], [-130, -30], [-100, -40], [-90, -70], [-120, -95], [-150, -100], [-170, -75], [-200, -60], [-130, -120], [-80, -140]], "shelf_radii_m": {"0": 900, "30": 900, "60": 475, "90": 300, "120": 250, "150": 225, "180": 250, "210": 350, "240": 725, "270": 900, "300": 900, "330": 900}, "shelf_note": "旧モデル由来の方位別仮説パラメータ。表示用の実測等深線ではない。", "reference_map_url": "https://maps.gsi.go.jp/#16/34.5717/138.9433/&base=std&ls=std&disp=1"};
+const POINTS = MAP_CATALOG.points;
+const POINT_JA = {kame_ne:'カメ根エリア', ...Object.fromEntries(Object.entries(POINTS).map(([k,p])=>[k,p.label]))};
+/* Pure schematic geometry, in model metres. No viewport clamping of features. */
+const MapGeometry = (() => {
+  function shelfRadius(radii, bearing) {
+    const b = ((bearing % 360) + 360) % 360;
+    const lo = Math.floor(b / 30) * 30, t = (b - lo) / 30;
+    return radii[lo] * (1 - t) + radii[(lo + 30) % 360] * t;
+  }
+  function hypothesis(radii, direction, speedKmh) {
+    const r = direction * Math.PI / 180, ux = Math.sin(r), uy = -Math.cos(r);
+    const kt = speedKmh / 1.852;
+    const down = shelfRadius(radii, direction);
+    const half = (shelfRadius(radii, direction + 90) + shelfRadius(radii, direction - 90)) / 2;
+    const front = (down + .55 * half) * (.8 + .4 * Math.min(1, kt / 3));
+    const t = Math.max(0, Math.min(1, (kt - 2) / 2.5));
+    const distance = front * (.92 - .28 * t);
+    const side = ux >= 0 ? 1 : -1, flank = half * (.85 + .15 * t);
+    const zone = {
+      x: ux * distance - side * uy * flank,
+      y: uy * distance + side * ux * flank,
+      rx: Math.min(150 / .55, front * (.42 - .12 * t)),
+      ry: Math.max(70 / .55, Math.min(120 / .55, half * (.55 - .15 * t))),
+      rotation: direction + 90,
+    };
+    return {ux, uy, kt, front, half, zone,
+      lee: {x: ux * (down * .5 + front * .45), y: uy * (down * .5 + front * .45),
+            rx: front * .42, ry: Math.max(70 / .55, half * .8), rotation: direction + 90}};
+  }
+  function ellipseBounds(e) {
+    const r = e.rotation * Math.PI / 180;
+    const dx = Math.hypot(e.rx * Math.cos(r), e.ry * Math.sin(r));
+    const dy = Math.hypot(e.rx * Math.sin(r), e.ry * Math.cos(r));
+    return {left: e.x - dx, right: e.x + dx, top: e.y - dy, bottom: e.y + dy};
+  }
+  function union(boxes) {
+    return {left: Math.min(...boxes.map(b => b.left)), right: Math.max(...boxes.map(b => b.right)),
+      top: Math.min(...boxes.map(b => b.top)), bottom: Math.max(...boxes.map(b => b.bottom))};
+  }
+  function fit(bounds, width, height) {
+    const aspect = width / height;
+    let w = (bounds.right - bounds.left) * 1.2, h = (bounds.bottom - bounds.top) * 1.2;
+    if (w / h < aspect) w = h * aspect; else h = w / aspect;
+    return {x: (bounds.left + bounds.right - w) / 2, y: (bounds.top + bounds.bottom - h) / 2, w, h};
+  }
+  function zoom(view, factor) {
+    const w = Math.max(180, Math.min(6000, view.w * factor));
+    const h = view.h * w / view.w;
+    return {x: view.x + (view.w - w) / 2, y: view.y + (view.h - h) / 2, w, h};
+  }
+  function contains(view, bounds) {
+    return bounds.left >= view.x && bounds.right <= view.x + view.w &&
+      bounds.top >= view.y && bounds.bottom <= view.y + view.h;
+  }
+  function scoreColor(score) {
+    const s = Math.max(0, Math.min(1, score));
+    const stops = [[143,163,176], [111,174,158], [201,165,78]];
+    const i = s < .5 ? 0 : 1, t = (s - i * .5) * 2;
+    return `rgb(${stops[i].map((v,j) => Math.round(v + (stops[i+1][j] - v) * t)).join(',')})`;
+  }
+  function scaleBar(viewWidth, pixelWidth) {
+    const metresPerPixel = viewWidth / pixelWidth;
+    const max = viewWidth * .22;
+    const metres = [10,20,50,100,200,500,1000].filter(n => n <= max).pop() || 10;
+    return {metres, pixels: metres / metresPerPixel};
+  }
+  return {shelfRadius, hypothesis, ellipseBounds, union, fit, zoom, contains, scoreColor, scaleBar};
+})();
+if (typeof module !== 'undefined') module.exports = MapGeometry;
 
-// 神子元島の輪郭 (31頂点, +x=東, +y=南 meters, 実マップ画像認識より)
-const ISLAND_POLY_M = [
-  [-40,-150],[0,-120],[30,-110],[60,-100],[80,-80],[75,-40],[95,0],[120,30],
-  [160,80],[191,110],[160,130],[110,120],[90,110],[60,100],[20,90],[9,150],
-  [-20,130],[-50,110],[-100,80],[-120,60],[-150,9],[-170,-20],[-130,-30],
-  [-100,-40],[-90,-70],[-120,-95],[-150,-100],[-170,-75],[-200,-60],
-  [-130,-120],[-80,-140]
-];
 
 function fmtDate(iso) {
   const d = new Date(iso);
@@ -8292,6 +8398,14 @@ function fmtFullDate(iso) {
 function renderHero(data) {
   const today = data.daily[0];
   const now = new Date(data.generated_at);
+  const best = POINT_JA[today.best_point] || today.best_point;
+  $('#decision-summary').innerHTML = `
+    <div class="decision-sea ${today.diveable === false ? 'is-danger' : ''}">
+      <small>まず海況を確認</small><strong>${today.sea_status.split('・')[0]}</strong>
+      <p>波 ${today.max_wave.toFixed(1)}m / 風 ${today.max_wind.toFixed(1)}m/s（8〜14時の最大）<br>出航・潜水は現地ショップの判断に従ってください。</p>
+    </div>
+    <div class="decision-point"><small>今日の推奨 · ${today.best_hour}:00</small>
+      <strong>${best}</strong><p>地点スコア ${Math.round(today.best_point_score*100)} / 100 · 根拠は下のポイント予報へ<br>スコアは遭遇確率ではありません。</p></div>`;
 
   $('#today-date').textContent = fmtFullDate(now);
   $('#updated-at').textContent = `Updated ${now.getHours()}:${now.getMinutes().toString().padStart(2,'0')} JST`;
@@ -8321,7 +8435,7 @@ function renderHero(data) {
 }
 
 function renderFactors(data) {
-  const today = data.daily[0];
+  const today = data.daily[selectedDayIdx];
   const hrs = todayHourly(data);
   const h = hrs[selectedHourIdx] || hrs[0];
 
@@ -8342,9 +8456,9 @@ function renderFactors(data) {
     },
     {
       key: `${h.hour}:00の 潮流`,
-      val: h.current_velocity_kmh.toFixed(1),
-      unit: 'km/h',
-      detail: `${(h.current_velocity_kmh/1.852).toFixed(1)} kt · ${h.tide==='up'?'上げ潮':h.tide==='down'?'下げ潮':'止'}`,
+      val: (h.current_velocity_kmh/1.852).toFixed(1),
+      unit: 'kt',
+      detail: `広域予報 ${h.current_velocity_kmh.toFixed(1)} km/h · ${h.tide==='up'?'上げ潮':h.tide==='down'?'下げ潮':'止'}`,
       score: scoreCurrent(h.current_velocity_kmh),
     },
     {
@@ -8356,7 +8470,7 @@ function renderFactors(data) {
     },
     {
       key: `${h.hour}:00の 狙い`,
-      val: (POINTS[hourBestPt]?.label || hourBestPt).split('/')[0].trim(),
+      val: POINT_JA[hourBestPt] || hourBestPt,
       unit: '',
       detail: `スコア ${(hourBestSc*100).toFixed(0)} · ${POINTS[hourBestPt]?.note||''}`,
       score: hourBestSc,
@@ -8418,9 +8532,9 @@ function renderDayTabs(data) {
   el.innerHTML = days.map((d, i) => {
     const dt = new Date(d.date);
     const ml = d.ml || {};
-    return `<button class="${i === selectedDayIdx ? 'on' : ''}" data-i="${i}">` +
+    return `<button class="${i === selectedDayIdx ? 'on' : ''}" aria-pressed="${i === selectedDayIdx}" data-i="${i}">` +
       `${names[i]} ${dt.getMonth() + 1}/${dt.getDate()}(${DOW_JA[dt.getDay()]})<br>` +
-      `<span class="tb">${d.tier} ${Math.round(d.score)} · ${ml.size_label ? ml.size_label.replace(/\(.*\)/, '') : ''}${d.diveable === false ? ' ⚠' : ''}</span></button>`;
+      `<span class="tb">${d.tier} ${Math.round(d.score)} · ${d.diveable === false ? '海況超過' : '海況を確認'}${d.diveable === false ? ' ⚠' : ''}</span></button>`;
   }).join('');
   el.querySelectorAll('button').forEach(b => {
     b.addEventListener('click', () => {
@@ -8439,7 +8553,7 @@ function renderHourControls(data) {
   const hrs = todayHourly(data);
   const el = $('#hour-controls');
   el.innerHTML = hrs.map((h, i) => `
-    <button class="hour-btn ${i===selectedHourIdx?'active':''}" data-i="${i}">${h.hour.toString().padStart(2,'0')}:00</button>
+    <button class="hour-btn ${i===selectedHourIdx?'active':''}" aria-pressed="${i===selectedHourIdx}" data-i="${i}">${h.hour.toString().padStart(2,'0')}:00</button>
   `).join('');
   el.querySelectorAll('button').forEach(b => {
     b.addEventListener('click', () => {
@@ -8452,377 +8566,6 @@ function renderHourControls(data) {
   });
 }
 
-// --- 座標変換ヘルパー ---
-const MAP_ORIGIN_X = 300, MAP_ORIGIN_Y = 200;
-const MAP_SCALE = 0.55;
-
-function m2svg(mx, my) {
-  return [MAP_ORIGIN_X + mx * MAP_SCALE, MAP_ORIGIN_Y + my * MAP_SCALE];
-}
-
-// 島輪郭をSVG座標に変換
-const ISLAND_POLY = ISLAND_POLY_M.map(([mx, my]) => m2svg(mx, my));
-
-// 島中心 (SVG) + 有効半径 (潮陰/インパクトゾーン描画用)
-const ISLAND = {
-  cx: MAP_ORIGIN_X, cy: MAP_ORIGIN_Y,
-  a: 150, b: 95,
-};
-
-// === 浅棚モデル (GMRT実測海底地形 2026-08) ===
-// 方位別の30m等深線距離(m)。流れの実効障害物は海面上の島でなく浅い台地全体。
-// 北〜北西は1km級の20m台地 (描画上500mにキャップ)、南〜南東は急深。
-// 40m等深線ベース (GMRT実測): 海底40m付近から潮が曲がり始める
-const SHELF_RADII_M = {
-  0: 900, 30: 900, 60: 475, 90: 300, 120: 250, 150: 225,
-  180: 250, 210: 350, 240: 725, 270: 900, 300: 900, 330: 900,
-};
-function shelfRadiusM(bearingDeg) {
-  const b = ((bearingDeg % 360) + 360) % 360;
-  const lo = Math.floor(b / 30) * 30;
-  const hi = (lo + 30) % 360;
-  const t = (b - lo) / 30;
-  return SHELF_RADII_M[lo] * (1 - t) + SHELF_RADII_M[hi] * t;
-}
-// SVG座標系 (px=東+, py=南+ を MAP_SCALE 倍) での棚半径
-function shelfRadiusSvg(dx, dy) {
-  // dx,dy = SVG上の島中心からのオフセット。方位角 = atan2(東, 北) = atan2(dx, -dy)
-  const bearing = Math.atan2(dx, -dy) * 180 / Math.PI;
-  return shelfRadiusM(bearing) * MAP_SCALE;
-}
-// wake幾何 (エンジンと同一ロジック): 潮目距離・実効半幅
-function wakeGeometry(dirDeg, speedKmh) {
-  const kt = speedKmh / 1.852;
-  const rad = (dirDeg - 90) * Math.PI / 180;
-  const ux = Math.cos(rad), uy = Math.sin(rad);
-  const bearingDown = Math.atan2(ux, -uy) * 180 / Math.PI;
-  const rDown = shelfRadiusM(bearingDown);
-  const rUp = shelfRadiusM(bearingDown + 180);
-  const wHalf = 0.5 * (shelfRadiusM(bearingDown + 90) + shelfRadiusM(bearingDown - 90));
-  const stretch = 0.8 + 0.4 * Math.min(1, kt / 3);
-  const dFront = (rDown + 0.55 * wHalf) * stretch;  // 40m棚幅対応係数
-  return { ux, uy, kt, rDownSvg: rDown * MAP_SCALE, rUpSvg: rUp * MAP_SCALE,
-           wHalfSvg: wHalf * MAP_SCALE, dFrontSvg: dFront * MAP_SCALE };
-}
-
-// point-in-polygon (ray casting)
-function pointInPolygon(x, y, poly) {
-  let inside = false;
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const xi = poly[i][0], yi = poly[i][1];
-    const xj = poly[j][0], yj = poly[j][1];
-    const intersect = ((yi > y) !== (yj > y)) &&
-                      (x < (xj - xi) * (y - yi) / ((yj - yi) || 1e-9) + xi);
-    if (intersect) inside = !inside;
-  }
-  return inside;
-}
-
-// 点からポリゴンへの最短距離 (符号付き, 内側なら負)
-function distToPolygon(x, y, poly) {
-  let minDist = Infinity;
-  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
-    const x1 = poly[i][0], y1 = poly[i][1];
-    const x2 = poly[j][0], y2 = poly[j][1];
-    const dx = x2 - x1, dy = y2 - y1;
-    const len2 = dx*dx + dy*dy;
-    let t = len2 > 0 ? ((x - x1)*dx + (y - y1)*dy) / len2 : 0;
-    t = Math.max(0, Math.min(1, t));
-    const px = x1 + t*dx, py = y1 + t*dy;
-    const d = Math.hypot(x - px, y - py);
-    if (d < minDist) minDist = d;
-  }
-  return pointInPolygon(x, y, poly) ? -minDist : minDist;
-}
-
-function isInsideIsland(x, y, margin = 0) {
-  const d = distToPolygon(x, y, ISLAND_POLY);
-  return d < margin;
-}
-
-function islandEdgePoint(fromX, fromY, dirX, dirY) {
-  let x = fromX, y = fromY;
-  for (let i = 0; i < 250; i++) {
-    x += dirX * 1.5;
-    y += dirY * 1.5;
-    if (!isInsideIsland(x, y, 4)) return { x, y };
-  }
-  return { x, y };
-}
-
-// 根の楕円 (SVG座標系) — area tier は除外
-const ROCK_ELLIPSES = Object.entries(POINTS).filter(([k, pt]) => pt.tier !== 'area').map(([k, pt]) => {
-  const [sx, sy] = m2svg(pt.pos[0], pt.pos[1]);
-  const [rxM, ryM, rot] = pt.shape;
-  return {
-    key: k,
-    cx: sx, cy: sy,
-    rx: rxM * MAP_SCALE,
-    ry: ryM * MAP_SCALE,
-    rot: rot,
-  };
-});
-// エリア (グループラベル用)
-const AREA_LABELS = Object.entries(POINTS).filter(([k, pt]) => pt.tier === 'area').map(([k, pt]) => {
-  const [sx, sy] = m2svg(pt.pos[0], pt.pos[1]);
-  const [rxM, ryM, rot] = pt.shape;
-  return {
-    key: k, label: pt.label,
-    cx: sx, cy: sy,
-    rx: rxM * MAP_SCALE,
-    ry: ryM * MAP_SCALE,
-    rot: rot,
-  };
-});
-
-// 点が根のいずれかの中にあるか (回避判定用, marginあり)
-function nearestRockDistance(x, y) {
-  let minDist = Infinity;
-  for (const r of ROCK_ELLIPSES) {
-    const t = -r.rot * Math.PI / 180;
-    const dx = x - r.cx, dy = y - r.cy;
-    const rx = dx * Math.cos(t) - dy * Math.sin(t);
-    const ry = dx * Math.sin(t) + dy * Math.cos(t);
-    // 楕円までの距離 (簡易, 内側なら負)
-    const norm = Math.sqrt((rx/r.rx)**2 + (ry/r.ry)**2);
-    // 実距離換算
-    const scale = Math.hypot(rx, ry) || 1;
-    const d = (norm - 1) * scale / Math.max(norm, 1e-6);
-    if (d < minDist) minDist = d;
-  }
-  return minDist;
-}
-
-// 任意点での局所流速係数 (wake座標系: 上流よどみ=遅い, 側面絞り=増速, 棚上=減速)
-function localSpeedAt(x, y, flowUx, flowUy) {
-  const dx = x - ISLAND.cx, dy = y - ISLAND.cy;
-  const r = Math.hypot(dx, dy) || 1;
-  const rShelf = shelfRadiusSvg(dx, dy);
-  // wake座標: sFl=流下方向距離(+が下流), cFl=横方向距離
-  const sFl = dx * flowUx + dy * flowUy;
-  const cFl = Math.abs(dx * -flowUy + dy * flowUx);
-  // 流れに直交する実効障害物半幅 (方位別棚半径から)
-  const bearingDown = Math.atan2(flowUx, -flowUy) * 180 / Math.PI;
-  const wHalfSvg = 0.5 * (shelfRadiusM(bearingDown + 90) + shelfRadiusM(bearingDown - 90)) * MAP_SCALE;
-  const rUpSvg = shelfRadiusM(bearingDown + 180) * MAP_SCALE;
-  let f = 1.0;
-  // === 上流よどみ: 障害物の風上, 横幅内 ===
-  if (sFl < 0 && cFl < wHalfSvg * 1.3) {
-    const along = Math.max(0, 1 - (-sFl) / (rUpSvg + wHalfSvg * 1.5));
-    const across = 1 - cFl / (wHalfSvg * 1.3);
-    f -= 0.8 * along * across;
-  }
-  // === 側面ベンチュリ増速: 障害物の横 (cFl ≈ 1.0〜2.2×wHalf) で最大 ===
-  {
-    // 流下方向: 障害物中心付近〜やや下流までが増速ゾーン
-    const sBand = Math.exp(-0.5 * Math.pow((sFl - wHalfSvg * 0.3) / (wHalfSvg * 1.6 + 40), 2));
-    // 横方向: wHalf*1.0 でピークのガウス (絞り込み帯, 40m棚幅対応)
-    const cBand = Math.exp(-0.5 * Math.pow((cFl - wHalfSvg * 1.0) / (wHalfSvg * 0.5), 2));
-    f += 1.15 * sBand * cBand;
-  }
-  // === 棚の真上 (浅い): 摩擦減速 ===
-  if (r < rShelf) f *= 0.55;
-  return Math.max(0.12, Math.min(2.4, f));
-}
-
-// 任意点での「偏向後」単位流ベクトル (浅棚+島+根の斥力込み)
-function flowVectorAt(x, y, flowUx, flowUy) {
-  let ux = flowUx, uy = flowUy;
-
-  // === 浅棚からの斥力 (海底地形: 島の手前から流れが変形) ===
-  const dx = x - ISLAND.cx, dy = y - ISLAND.cy;
-  const distC = Math.hypot(dx, dy) || 1;
-  const rShelf = shelfRadiusSvg(dx, dy);
-  const influence = rShelf * 1.5;
-  if (distC < influence) {
-    const outX = dx / distC, outY = dy / distC;
-    // 上流側(流れに向かう側)だけ強く効かせ、逆流しない強度に制限
-    const upDot = -(outX * flowUx + outY * flowUy);  // 1=真上流, -1=真下流
-    const upFactor = 0.55 + 0.45 * Math.max(0, upDot);
-    let strength;
-    if (distC < rShelf) {
-      // 40m棚の上: 大胆に偏向 (浅いほど強く)
-      strength = (0.65 + (1 - distC / rShelf) * 0.75) * upFactor;
-    } else {
-      strength = (1 - (distC - rShelf) / (influence - rShelf)) * 0.65 * upFactor;
-    }
-    ux += outX * strength;
-    uy += outY * strength;
-    // 接線成分 (回り込み): 流向に近い側の接線へ大きく曲げる
-    const tX = -outY, tY = outX;
-    const side = (tX * flowUx + tY * flowUy) >= 0 ? 1 : -1;
-    ux += tX * side * strength * 0.85;
-    uy += tY * side * strength * 0.85;
-  }
-  // === 島本体ポリゴンの強い斥力 (最終ガード) ===
-  const islandDist = distToPolygon(x, y, ISLAND_POLY);
-  if (islandDist < 25) {
-    const outX = dx / distC, outY = dy / distC;
-    const strength = islandDist < 0 ? 3.0 : (25 - islandDist) / 25 * 1.8;
-    ux += outX * strength;
-    uy += outY * strength;
-  }
-
-  // === 根からの斥力 (小さめ) ===
-  for (const r of ROCK_ELLIPSES) {
-    const t = -r.rot * Math.PI / 180;
-    const rdx = x - r.cx, rdy = y - r.cy;
-    const rxL = rdx * Math.cos(t) - rdy * Math.sin(t);
-    const ryL = rdx * Math.sin(t) + rdy * Math.cos(t);
-    const norm = Math.sqrt((rxL/r.rx)**2 + (ryL/r.ry)**2);
-    if (norm < 2.0) {
-      const distMag = Math.hypot(rdx, rdy) || 1;
-      const outX = rdx / distMag, outY = rdy / distMag;
-      const strength = Math.max(0, (2.0 - norm) / 2.0) * 0.7;
-      ux += outX * strength;
-      uy += outY * strength;
-    }
-  }
-
-  const m = Math.hypot(ux, uy);
-  if (m > 0) { ux /= m; uy /= m; }
-  return [ux, uy];
-}
-
-// 島 + 根を回避する流線トレース (flowVectorAt を積分)
-function traceStreamline(startX, startY, flowUx, flowUy, steps=180, stepLen=3) {
-  const pts = [[startX, startY]];
-  let x = startX, y = startY;
-  for (let i = 0; i < steps; i++) {
-    const [ux, uy] = flowVectorAt(x, y, flowUx, flowUy);
-    x += ux * stepLen;
-    y += uy * stepLen;
-    if (isInsideIsland(x, y, -2)) {
-      const dx = x - ISLAND.cx, dy = y - ISLAND.cy;
-      const m2 = Math.hypot(dx, dy) || 1;
-      x += (dx/m2) * 6;
-      y += (dy/m2) * 6;
-    }
-    if (x < -50 || x > 650 || y < -50 || y > 850) break;
-    pts.push([x, y]);
-  }
-  return pts;
-}
-
-function ptsToPath(pts) {
-  if (pts.length < 2) return '';
-  let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
-  for (let i = 1; i < pts.length; i++) {
-    d += ` L ${pts[i][0].toFixed(1)} ${pts[i][1].toFixed(1)}`;
-  }
-  return d;
-}
-
-// 静的描画: 島輪郭・等深線・根のベース (1度だけ)
-function renderStaticGeography() {
-  // 島ポリゴン (深海背景に対して明るく差別化)
-  const poly = ISLAND_POLY.map(p => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).join(' ');
-  $('#island-group').innerHTML = `
-    <polygon points="${poly}" fill="#5a7186" stroke="#c4dceb" stroke-width="2.4" stroke-linejoin="round"/>
-    <polygon points="${poly}" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="0.5"
-             stroke-dasharray="1 3" transform="translate(1.5, 1.5)"/>
-    <!-- 岩肌テクスチャ簡易 (ドット) -->
-    <polygon points="${poly}" fill="rgba(0,0,0,0.15)" stroke="none" filter="url(#roughness)"/>
-    <!-- 灯台 -->
-    <circle cx="${MAP_ORIGIN_X}" cy="${MAP_ORIGIN_Y - 8}" r="5.5" fill="#ffd66b" stroke="#04121f" stroke-width="1.2"/>
-    <text x="${MAP_ORIGIN_X}" y="${MAP_ORIGIN_Y - 20}" text-anchor="middle" class="point-label"
-          style="fill:#ffd66b; font-size:11px; font-weight:700;">◊灯台</text>
-    <!-- 島名 (白抜き, 島本体上) -->
-    <text x="${MAP_ORIGIN_X}" y="${MAP_ORIGIN_Y + 12}" text-anchor="middle"
-          style="font-family: 'Shippori Mincho', serif; font-size:18px; font-style:italic; font-weight:700;
-                 fill:#fefdfa; stroke:#1a2530; stroke-width:3; paint-order:stroke;">神子元島</text>
-    <text x="${MAP_ORIGIN_X}" y="${MAP_ORIGIN_Y + 28}" text-anchor="middle"
-          style="font-family:'JetBrains Mono', monospace; font-size:10px; letter-spacing:0.22em; font-weight:700;
-                 fill:#cfdae4; stroke:#1a2530; stroke-width:2.4; paint-order:stroke;">MIKOMOTO IS. 400 m</text>
-  `;
-
-  // 等深線: 島輪郭を基準に、南方向に強く外側へオフセットした閉曲線
-  // 各深度は「島輪郭ポリゴンを外側にどれだけ膨張させるか」で表現
-  // 南 (y>0) は北 (y<0) より 2〜3倍膨張, つまり非対称
-  function offsetIsland(offsetNorthM, offsetSouthM, offsetSideM) {
-    // 島の重心
-    const cx = MAP_ORIGIN_X, cy = MAP_ORIGIN_Y;
-    return ISLAND_POLY.map(([x, y]) => {
-      const dx = x - cx, dy = y - cy;
-      const m = Math.hypot(dx, dy) || 1;
-      // 方向別のオフセット距離を選択
-      let offM;
-      if (dy > 0) {
-        // 南側: 傾きに応じて南〜東西のブレンド
-        const bias = dy / m;  // 1.0=真南, 0=真東西
-        offM = offsetSideM + (offsetSouthM - offsetSideM) * bias;
-      } else {
-        const bias = -dy / m;
-        offM = offsetSideM + (offsetNorthM - offsetSideM) * bias;
-      }
-      const offSVG = offM * MAP_SCALE;
-      return [x + (dx/m) * offSVG, y + (dy/m) * offSVG];
-    });
-  }
-  // 15m等深線: 島の外+30-80m (南方向は大きく)
-  const b15 = offsetIsland(20, 60, 30);
-  const b25 = offsetIsland(45, 180, 75);
-  const b40 = offsetIsland(90, 400, 150);
-  const b50 = offsetIsland(140, 600, 220);
-  function pathFromPoly(pts) {
-    return "M " + pts.map((p,i) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" L ") + " Z";
-  }
-  // 塗り (深いほど暗い): 50m→40m→25m→15m→島 の順に上書き
-  $('#bathy-fills').innerHTML = `
-    <path d="${pathFromPoly(b50)}" fill="#08172a"/>
-    <path d="${pathFromPoly(b40)}" fill="#0e2540"/>
-    <path d="${pathFromPoly(b25)}" fill="#153052"/>
-    <path d="${pathFromPoly(b15)}" fill="#1c3d68"/>
-  `;
-  // 等深線ライン
-  $('#bathy-lines').innerHTML = `
-    <path d="${pathFromPoly(b50)}" fill="none" stroke="rgba(146,187,220,0.30)" stroke-width="0.9" stroke-dasharray="2 4"/>
-    <path d="${pathFromPoly(b40)}" fill="none" stroke="rgba(146,187,220,0.38)" stroke-width="0.9" stroke-dasharray="2 4"/>
-    <path d="${pathFromPoly(b25)}" fill="none" stroke="rgba(146,187,220,0.48)" stroke-width="1" stroke-dasharray="3 4"/>
-    <path d="${pathFromPoly(b15)}" fill="none" stroke="rgba(146,187,220,0.60)" stroke-width="1.1" stroke-dasharray="3 4"/>
-    <text x="${b50[Math.floor(b50.length*0.55)][0]}" y="${b50[Math.floor(b50.length*0.55)][1] + 3}"
-          class="point-label" style="fill:#78a5c8; font-size:9.5px; opacity:0.75;">−50m</text>
-    <text x="${b40[Math.floor(b40.length*0.55)][0]}" y="${b40[Math.floor(b40.length*0.55)][1] + 3}"
-          class="point-label" style="fill:#78a5c8; font-size:9.5px; opacity:0.85;">−40m</text>
-    <text x="${b25[Math.floor(b25.length*0.55)][0]}" y="${b25[Math.floor(b25.length*0.55)][1] + 3}"
-          class="point-label" style="fill:#78a5c8; font-size:9.5px; opacity:0.9;">−25m</text>
-  `;
-
-  // 根 (base render, 潮スコアはdynamic側で上書き)
-  const rocksHTML = ROCK_ELLIPSES.map((r, idx) => {
-    const pt = POINTS[r.key];
-    const isPrimary = pt.tier === 'primary';
-    const baseColor = isPrimary ? 'rgba(255,177,78,0.15)' : 'rgba(127,201,196,0.10)';
-    const outline = isPrimary ? 'rgba(255,177,78,0.45)' : 'rgba(127,201,196,0.35)';
-    return `
-      <ellipse cx="${r.cx.toFixed(1)}" cy="${r.cy.toFixed(1)}"
-               rx="${r.rx.toFixed(1)}" ry="${r.ry.toFixed(1)}"
-               transform="rotate(${r.rot} ${r.cx.toFixed(1)} ${r.cy.toFixed(1)})"
-               fill="${baseColor}" stroke="${outline}" stroke-width="0.6"/>
-    `;
-  }).join('');
-
-  // エリア (破線ボックス+ラベル, 右上に配置)
-  const areasHTML = AREA_LABELS.map(a => `
-    <g class="area-group" opacity="0.75">
-      <rect x="${(a.cx - a.rx).toFixed(1)}" y="${(a.cy - a.ry).toFixed(1)}"
-            width="${(a.rx * 2).toFixed(1)}" height="${(a.ry * 2).toFixed(1)}"
-            fill="none" stroke="rgba(255,177,78,0.35)" stroke-width="0.8"
-            stroke-dasharray="4 3" rx="4"/>
-      <text x="${(a.cx + a.rx - 6).toFixed(1)}" y="${(a.cy - a.ry - 4).toFixed(1)}"
-            text-anchor="end"
-            style="font-family: 'Shippori Mincho', serif; font-size:11px; font-style:italic; font-weight:600;
-                   letter-spacing:0.05em; fill:#ffb14e;
-                   paint-order:stroke; stroke:rgba(4,18,31,0.9); stroke-width:2.5;">
-        ${a.label}
-      </text>
-    </g>
-  `).join('');
-
-  $('#rocks-base').innerHTML = areasHTML + rocksHTML;
-}
-
-let _geoRendered = false;
 // === 今日の推奨バナー: best_point + 実績根拠 ===
 function renderTodayReco(data) {
   const el = $('#today-reco');
@@ -8860,413 +8603,165 @@ function renderTodayReco(data) {
     <span class="tr-badge">▶ この日の推奨（${day.best_hour}時）</span>
     <span class="tr-point">${ptName}</span>
     <span class="tr-score">スコア ${sc}</span>
-    <span class="tr-why">${parts.join(' ／ ')}${top3 ? `<br>推奨順: ${top3}` : ''}</span>
+    <details class="tr-why"><summary>この日の推薦根拠を見る</summary>${parts.join(' ／ ')}${top3 ? `<br>推奨順: ${top3}` : ''}</details>
   `;
 }
 
+/* Schematic forecast map. The source registry is shared with Python scoring. */
+let mapController;
 function renderIsland(data) {
-  if (!_geoRendered) {
-    renderStaticGeography();
-    _geoRendered = true;
-  }
-
   renderTodayReco(data);
-
-  const hrs = todayHourly(data);
-  const h = hrs[selectedHourIdx] || hrs[0];
-  if (!h) return;
-
-  const cx = ISLAND.cx, cy = ISLAND.cy;
-  const dir = h.current_direction;
-  const rad = (dir - 90) * Math.PI / 180;
-  const ux = Math.cos(rad);
-  const uy = Math.sin(rad);
-  const perpX = -uy, perpY = ux;
-
-  const kt = (h.current_velocity_kmh / 1.852).toFixed(1);
-  const tideJa = { up:'上げ潮', down:'下げ潮', slack:'止まり', unknown:'—' }[h.tide] || '—';
-
-  // --- STREAMLINES: 温度層モデル(暖水赤/冷水青)で色分け ---
-  const numLines = 27;
-  const spread = 640;
-  const upstreamDist = 420;
-  const upstreamCx = cx - ux * upstreamDist;
-  const upstreamCy = cy - uy * upstreamDist;
-  const speedFactor = Math.min(1.4, Math.max(0.35, h.current_velocity_kmh / 3.5));
-
-  // === 温度層モデル ===
-  // 今日/選択時刻のSST偏差, 冷水塊の有無, 暖水方向 から
-  // 各流線に暖/冷温度スコア (-1=冷水, 0=中立, +1=強暖水) を割り当てる
-  const today = data.daily[0];
-  const anom = today ? today.avg_anomaly : 0;
-  const hasColdMass = today && (today.actual_notes || []).includes('cold_water_present');
-  const hasTropical = today && (today.actual_notes || []).includes('tropical_species');
-  const hasBlue = today && (today.actual_notes || []).includes('blue_water');
-
-  // 暖水はどこから来るか: warm_water_dir があればそちら、なければ流れ方向(下流側=暖水)
-  const warmDir = h.warm_water_dir !== null && h.warm_water_dir !== undefined
-    ? h.warm_water_dir
-    : ((dir + 180) % 360);  // 流れの来る方向
-  const warmRad = (warmDir - 90) * Math.PI / 180;
-  const warmVecX = Math.cos(warmRad);
-  const warmVecY = Math.sin(warmRad);
-
-  // 温度色マップ: score [-1..1] → 色
-  function tempColor(score) {
-    // -1: #4a9eff (冷水青), 0: #8fdcd6 (中立薄緑), +1: #ff8552 (暖水オレンジ)
-    if (score < 0) {
-      const t = Math.max(-1, score) + 1;  // 0..1
-      // #4a9eff → #8fdcd6
-      const r = Math.round(74 + (143 - 74) * t);
-      const g = Math.round(158 + (220 - 158) * t);
-      const b = Math.round(255 + (214 - 255) * t);
-      return `rgb(${r},${g},${b})`;
-    } else {
-      const t = Math.min(1, score);
-      // #8fdcd6 → #ff8552
-      const r = Math.round(143 + (255 - 143) * t);
-      const g = Math.round(220 + (133 - 220) * t);
-      const b = Math.round(214 + (82 - 214) * t);
-      return `rgb(${r},${g},${b})`;
-    }
-  }
-
-  // 各流線の中央位置における温度スコア
-  //  ベース: anom (SST偏差) を [-2..+2] にクリップし /2 → [-1..1]
-  function streamTempScore(streamCenterX, streamCenterY) {
-    let score = Math.max(-1, Math.min(1, anom / 2));
-    const relX = streamCenterX - cx, relY = streamCenterY - cy;
-    const relLen = Math.hypot(relX, relY) || 1;
-    // warm 方向補正: warm 方向にある流線は暖水偏向, 反対側は冷水偏向
-    const warmDot = (relX * warmVecX + relY * warmVecY) / relLen;
-    score += warmDot * 0.6;  // 0.4→0.6 強化
-    // 冷水塊: 島に近い流線は強く冷水寄り
-    if (hasColdMass) {
-      const distMag = Math.hypot(relX, relY);
-      if (distMag < 250) {
-        score -= (1 - distMag / 250) * 0.8;  // 0.5→0.8 強化
-      }
-    }
-    // 南方系魚類確認された日は暖水偏向
-    if (hasTropical) score += 0.20;
-    if (hasBlue) score += 0.20;
-    return Math.max(-1, Math.min(1, score));
-  }
-
-  // === Windy風 矢印フィールド: マップ全面の等間隔グリッドに局所流向矢印 ===
-  // 各グリッド点で「浅棚・島による偏向後」の流向を計算し、曲がったしっぽ+矢じりを描く。
-  // 島の周りで矢印が回り込む様子がひと目でわかる。
-  // --- WAKE幾何 (浅棚考慮) ---
-  const wk = wakeGeometry(dir, h.current_velocity_kmh);
-
-  let streamHTML = '';
-  const tempSummary = { warm: 0, mid: 0, cold: 0 };
-  const GRID = 62;                       // グリッド間隔(px) — 疎らにして潮目を見やすく
-  const TAIL_STEPS = 5, TAIL_LEN = 5.2;  // しっぽの積分ステップ
-  let row = 0;
-  for (let gy = 24; gy < 800; gy += GRID, row++) {
-    const xOff = (row % 2) * GRID * 0.5;  // 千鳥配置
-    for (let gx = 20 + xOff; gx < 600; gx += GRID) {
-      if (isInsideIsland(gx, gy, 10)) continue;
-      // === wake(潮陰)域の矢印は消す: 潮陰・潮目をクリアに見せる ===
-      // wake座標系: sWk=流下方向距離, cWk=横方向距離
-      const relX = gx - cx, relY = gy - cy;
-      const sWk = relX * ux + relY * uy;
-      const cWk = Math.abs(relX * perpX + relY * perpY);
-      const inWake = sWk > -20 && sWk < wk.dFrontSvg * 1.05 && cWk < wk.wHalfSvg * 0.95;
-      if (inWake) continue;
-      // 潮目帯 (dFront±40px) は矢印を強調
-      const nearFront = Math.abs(sWk - wk.dFrontSvg) < 42 && cWk < wk.wHalfSvg * 1.6;
-      // 局所流速 (よどみ=小さく薄く, 増速帯=大きく濃く)
-      const lsp = localSpeedAt(gx, gy, ux, uy);
-      // しっぽ: 現在点から上流へ遡って積分 → 曲率が見える
-      const tail = [[gx, gy]];
-      let bx = gx, by = gy;
-      const tailLen = TAIL_LEN * (0.55 + 0.75 * lsp);  // 速いほど長いしっぽ
-      for (let s = 0; s < TAIL_STEPS; s++) {
-        const v = flowVectorAt(bx, by, ux, uy);
-        bx -= v[0] * tailLen; by -= v[1] * tailLen;
-        tail.unshift([bx, by]);
-      }
-      // 先端方向 (現在点での偏向後ベクトル)
-      const vHead = flowVectorAt(gx, gy, ux, uy);
-      const ang = Math.atan2(vHead[1], vHead[0]) * 180 / Math.PI;
-      const tScore = streamTempScore(gx, gy);
-      const color = tempColor(tScore);
-      if (tScore > 0.2) tempSummary.warm++;
-      else if (tScore < -0.2) tempSummary.cold++;
-      else tempSummary.mid++;
-      // 流速グラデーション: 遅い=細く薄く小さい / 速い=太く濃く大きい
-      const spd = speedFactor * lsp;
-      let op = Math.max(0.15, Math.min(1, 0.08 + 0.72 * spd));
-      let sw = 0.6 + 1.9 * spd;
-      let ah = 1.6 + 3.4 * spd;
-      if (nearFront) { op = Math.min(1, op * 1.25); sw *= 1.35; ah *= 1.25; }
-      streamHTML += `<path d="${ptsToPath(tail)}" fill="none" stroke="${color}"
-        stroke-width="${sw.toFixed(2)}" opacity="${(op * 0.8).toFixed(2)}" stroke-linecap="round"/>`;
-      streamHTML += `<polygon points="0,${(-ah*0.6).toFixed(1)} ${(ah*1.7).toFixed(1)},0 0,${(ah*0.6).toFixed(1)}"
-        transform="translate(${gx.toFixed(1)},${gy.toFixed(1)}) rotate(${ang.toFixed(0)})"
-        fill="${color}" opacity="${op.toFixed(2)}"/>`;
-    }
-  }
-  $('#streamlines').innerHTML = streamHTML;
-
-  // 温度層レジェンド (マップ右下)
-  $('#temp-legend').innerHTML = `
-    <g transform="translate(30, 690)">
-      <rect x="0" y="0" width="210" height="72" fill="rgba(4,18,31,0.9)" stroke="rgba(216,230,236,0.22)" stroke-width="1" rx="6"/>
-      <text x="12" y="17" style="font-family:'JetBrains Mono',monospace; font-size:10.5px; fill:#c4d6e2; letter-spacing:0.15em; font-weight:600;">STREAM · TEMPERATURE</text>
-      <!-- グラデーションバー -->
-      <defs>
-        <linearGradient id="tempBar" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stop-color="#4a9eff"/>
-          <stop offset="0.5" stop-color="#8fdcd6"/>
-          <stop offset="1" stop-color="#ff8552"/>
-        </linearGradient>
-      </defs>
-      <rect x="12" y="26" width="186" height="8" fill="url(#tempBar)" rx="1.5"/>
-      <text x="12" y="49" style="font-family:'JetBrains Mono',monospace; font-size:10px; fill:#4a9eff; font-weight:600;">冷水 ${tempSummary.cold}</text>
-      <text x="105" y="49" text-anchor="middle" style="font-family:'JetBrains Mono',monospace; font-size:10px; fill:#8fdcd6; font-weight:600;">中立 ${tempSummary.mid}</text>
-      <text x="198" y="49" text-anchor="end" style="font-family:'JetBrains Mono',monospace; font-size:10px; fill:#ff8552; font-weight:600;">暖水 ${tempSummary.warm}</text>
-      <text x="12" y="63" style="font-family:'JetBrains Mono',monospace; font-size:10px; fill:#a3c4dc;">
-        SST偏差 ${anom>0?'+':''}${anom.toFixed(1)}℃${hasColdMass?' · 冷水塊あり':''}${hasBlue?' · 青潮':''}
-      </text>
-    </g>
-  `;
-
-
-  // --- IMPACT ZONE (上流側: 上流棚端) ---
-  const impactCx = cx - ux * (wk.rUpSvg * 0.85);
-  const impactCy = cy - uy * (wk.rUpSvg * 0.85);
-  $('#impact-arcs').innerHTML = `
-    <ellipse cx="${impactCx.toFixed(1)}" cy="${impactCy.toFixed(1)}"
-             rx="${Math.max(70, wk.wHalfSvg * 0.75).toFixed(0)}" ry="50" fill="url(#impactGrad)"
-             transform="rotate(${(dir + 90).toFixed(0)} ${impactCx.toFixed(1)} ${impactCy.toFixed(1)})"/>
-    <text x="${impactCx.toFixed(1)}" y="${(impactCy - 8).toFixed(1)}"
-          text-anchor="middle" class="point-label"
-          style="fill:#ffd66b; font-size:12.5px; letter-spacing:0.22em; opacity:0.95; font-weight:700;">
-      IMPACT
-    </text>
-  `;
-
-  // --- SHADOW ZONE (下流側 潮陰: 棚端〜潮目の中間) ---
-  const leeDist = wk.rDownSvg * 0.5 + wk.dFrontSvg * 0.45;
-  const shadowCx = Math.max(70, Math.min(530, cx + ux * leeDist));
-  const shadowCy = Math.max(60, Math.min(740, cy + uy * leeDist));
-  $('#shadow-arcs').innerHTML = `
-    <ellipse cx="${shadowCx.toFixed(1)}" cy="${shadowCy.toFixed(1)}"
-             rx="${(wk.dFrontSvg * 0.42).toFixed(0)}" ry="${Math.max(70, wk.wHalfSvg * 0.8).toFixed(0)}" fill="url(#shadowGrad)"
-             transform="rotate(${(dir + 90).toFixed(0)} ${shadowCx.toFixed(1)} ${shadowCy.toFixed(1)})"/>
-    <text x="${shadowCx.toFixed(1)}" y="${(shadowCy - 16).toFixed(1)}"
-          text-anchor="middle" class="point-label"
-          style="fill:#ff6b47; font-size:14px; letter-spacing:0.22em; font-weight:700;">
-      LEE · 潮陰
-    </text>
-  `;
-
-  // --- FRONT LINES (潮目): 棚脇から潮目収束点 (dFront) へ ---
-  const frontHalfW = Math.max(80, wk.wHalfSvg);
-  const frontStartL_x = cx + perpX * frontHalfW;
-  const frontStartL_y = cy + perpY * frontHalfW;
-  const frontStartR_x = cx - perpX * frontHalfW;
-  const frontStartR_y = cy - perpY * frontHalfW;
-  const frontLen = wk.dFrontSvg;
-  $('#front-lines').innerHTML = `
-    <path d="M ${frontStartL_x.toFixed(1)} ${frontStartL_y.toFixed(1)}
-             Q ${(cx + ux*frontLen*0.5 + perpX*frontHalfW*0.55).toFixed(1)} ${(cy + uy*frontLen*0.5 + perpY*frontHalfW*0.55).toFixed(1)},
-               ${(cx + ux*frontLen + perpX*15).toFixed(1)} ${(cy + uy*frontLen + perpY*15).toFixed(1)}"
-          fill="none" stroke="#ffb14e" stroke-width="2.2" opacity="0.75"
-          stroke-dasharray="8 5"/>
-    <path d="M ${frontStartR_x.toFixed(1)} ${frontStartR_y.toFixed(1)}
-             Q ${(cx + ux*frontLen*0.5 - perpX*frontHalfW*0.55).toFixed(1)} ${(cy + uy*frontLen*0.5 - perpY*frontHalfW*0.55).toFixed(1)},
-               ${(cx + ux*frontLen - perpX*15).toFixed(1)} ${(cy + uy*frontLen - perpY*15).toFixed(1)}"
-          fill="none" stroke="#ffb14e" stroke-width="2.2" opacity="0.75"
-          stroke-dasharray="8 5"/>
-    <text x="${(cx + ux*frontLen*0.92 + perpX*80).toFixed(1)}" y="${(cy + uy*frontLen*0.92 + perpY*80).toFixed(1)}"
-          text-anchor="middle" class="point-label"
-          style="fill:#ffb14e; font-size:11.5px; opacity:0.95; letter-spacing:0.22em; font-weight:700;">
-      FRONT · 潮目
-    </text>
-    ${wk.kt >= 3.0 ? `<text x="${(shadowCx).toFixed(1)}" y="${(shadowCy + 24).toFixed(1)}"
-          text-anchor="middle" class="point-label"
-          style="fill:#ffb09a; font-size:10.5px; opacity:1; letter-spacing:0.1em;">
-      激流 ${wk.kt.toFixed(1)}kt — 群れは潮陰側へ
-    </text>` : ''}
-  `;
-
-  // --- HAMMER ZONE (ハンマー予想域) ---
-  // 現地知見: ハンマーは潮陰(LEE)と潮目(FRONT)の間の空間につく。
-  // 流速が速い(≥3kt目安)ほど潮陰寄り、ゆ3kt以下だと潮目の内側だけでなく外側にも分散。
-  {
-    const t = Math.max(0, Math.min(1, (wk.kt - 2.0) / 2.5)); // 2kt→0, 4.5kt→1
-    // 流下距離: 速い→潮陰寄り, 遅い→潮目付近まで
-    const hzDist = wk.dFrontSvg * (0.92 - 0.28 * t);
-    // 潜水可能な南側フランクへ寄せる (潮陰と潮流の間の空間 = wake境界の南縁)
-    const sSouth = perpY >= 0 ? 1 : -1;  // 南(+y)を向く側の法線
-    const flank = wk.wHalfSvg * (0.85 + 0.15 * t);  // 速いほどやや外(潮陰境界)寄り
-    // サイズ: 遅いほど潮目の内外に広がる
-    let hzRx = Math.min(150, wk.dFrontSvg * (0.42 - 0.12 * t));
-    let hzRy = Math.max(70, Math.min(120, wk.wHalfSvg * (0.55 - 0.15 * t)));
-    // 回転後の実効バウンディングボックスで viewBox(600x800) 内に全体を収める
-    const thRad = (dir + 90) * Math.PI / 180;
-    const cosT = Math.cos(thRad), sinT = Math.sin(thRad);
-    let extX = Math.sqrt((hzRx * cosT) ** 2 + (hzRy * sinT) ** 2);
-    let extY = Math.sqrt((hzRx * sinT) ** 2 + (hzRy * cosT) ** 2);
-    const shrink = Math.min(1, (300 - 16) / extX, (400 - 16) / extY);
-    hzRx *= shrink; hzRy *= shrink; extX *= shrink; extY *= shrink;
-    const rawX = cx + ux * hzDist + sSouth * perpX * flank;
-    const rawY = cy + uy * hzDist + sSouth * perpY * flank;
-    const hzCx = Math.max(16 + extX, Math.min(584 - extX, rawX));
-    const hzCy = Math.max(16 + extY, Math.min(784 - extY, rawY));
-    const note = wk.kt < 3.0
-      ? `緩流 ${wk.kt.toFixed(1)}kt — 潮目の内外に分散`
-      : `潮陰と潮目の間に集中`;
-    $('#hammer-zone').innerHTML = `
-      <ellipse cx="${hzCx.toFixed(1)}" cy="${hzCy.toFixed(1)}"
-               rx="${hzRx.toFixed(0)}" ry="${hzRy.toFixed(0)}" fill="url(#hammerGrad)"
-               stroke="#7fd4c4" stroke-width="1.4" stroke-dasharray="3 5" stroke-opacity="0.65"
-               transform="rotate(${(dir + 90).toFixed(0)} ${hzCx.toFixed(1)} ${hzCy.toFixed(1)})"/>
-    `;
-    const lblY = Math.min(756, hzCy + extY + 20);
-    $('#hammer-zone-label').innerHTML = `
-      <rect x="${(hzCx - 100).toFixed(1)}" y="${(lblY - 15).toFixed(1)}" width="200" height="40"
-            fill="rgba(4,18,31,0.78)" stroke="rgba(127,212,196,0.35)" stroke-width="0.8" rx="7"/>
-      <text x="${hzCx.toFixed(1)}" y="${lblY.toFixed(1)}"
-            text-anchor="middle" class="point-label"
-            style="fill:#a5e8da; font-size:13.5px; letter-spacing:0.18em; font-weight:700;">
-        ハンマー予想域
-      </text>
-      <text x="${hzCx.toFixed(1)}" y="${(lblY + 17).toFixed(1)}"
-            text-anchor="middle" class="point-label"
-            style="fill:#8fd0c2; font-size:9.5px; letter-spacing:0.08em; opacity:0.95;">
-        ${note}
-      </text>
-    `;
-  }
-
-  // --- DIVE POINTS: 全ポイントを実座標で描画 ---
-  const dpGroup = $('#dive-points');
-  const scores = h.point_scores || {};
-  const bestScore = Math.max(...Object.values(scores));
-  // 上位3ポイント (番号バッジ用)
-  const rankedPts = Object.entries(scores).sort((a, b) => b[1] - a[1]).slice(0, 3).map(e => e[0]);
-  // スコア連続グラデーション: 低=グレー → 中=オレンジ → 高=赤
-  function scoreColor(sc) {
-    // 当日のスコアレンジで正規化 (レンジが狭い日でも差が見えるように)
-    const lo = Math.min(...Object.values(scores));
-    const t = bestScore > lo ? (sc - lo) / (bestScore - lo) : 0;
-    // gray(#8fa3b0) -> orange(#ffb14e) -> red(#ff4d3d)
-    const stops = [[143,163,176],[255,177,78],[255,77,61]];
-    const seg = t < 0.5 ? 0 : 1;
-    const u = (t - seg * 0.5) / 0.5;
-    const c0 = stops[seg], c1 = stops[seg + 1];
-    const rgb = c0.map((v, i) => Math.round(v + (c1[i] - v) * u));
-    return `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
-  }
-
-  // ラベル位置の衝突回避用に上下振り分け (area tierは除外)
-  const pointList = Object.entries(POINTS).filter(([k, pt]) => pt.tier !== 'area');
-
-  // ラベル位置を事前計算 → 全ポイントで衝突チェック
-  const placed = [];  // {x,y,w,h}
-  function labelOverlap(x, y, w, h) {
-    for (const p of placed) {
-      if (Math.abs(x - p.x) < (w + p.w) / 2 && Math.abs(y - p.y) < (h + p.h) / 2) return true;
-    }
-    return false;
-  }
-
-  // 根の楕円中心を使う
-  const rockByKey = Object.fromEntries(ROCK_ELLIPSES.map(r => [r.key, r]));
-
-  dpGroup.innerHTML = pointList.map(([k, pt]) => {
-    const r = rockByKey[k];
-    const sx = r.cx, sy = r.cy;
-    const sc = scores[k] || 0;
-    const rank = rankedPts.indexOf(k) + 1;  // 1..3, 0=圈外
-    const isBest = rank === 1 && sc > 0.35;
-    const isPrimary = pt.tier === 'primary';
-
-    // マーカーサイズ: 上位は大きく
-    const size = rank === 1 ? 7.5 : (rank ? 6.5 : (isPrimary ? 5.5 : 4.5));
-    const markerColor = scoreColor(sc);
-
-    // ハイライト根 (スコア>0.5): 根本体を強調
-    const showHighlight = sc > 0.5 || isBest;
-    const highlightFill = isBest ? 'rgba(255,107,71,0.30)' : 'rgba(255,177,78,0.22)';
-    const highlightStroke = isBest ? '#ff6b47' : '#ffb14e';
-
-    // ラベル配置
-    const angFromCenter = Math.atan2(pt.pos[1], pt.pos[0] || 0.01);
-    const label = pt.label.split('/')[0].trim();
-    const labelW = label.length * 6 + 4;
-    const labelH = 20;
-    const rockRadius = Math.max(r.rx, r.ry);
-
-    let labelX, labelY, found = false;
-    const angleTries = [0, 0.35, -0.35, 0.7, -0.7, 1.05, -1.05, 1.4, -1.4, Math.PI, Math.PI/2, -Math.PI/2];
-    for (const dt of angleTries) {
-      const ang = angFromCenter + dt;
-      const rad = rockRadius + 14;
-      const cx1 = sx + Math.cos(ang) * rad;
-      const cy1 = sy + Math.sin(ang) * rad + 2;
-      if (cx1 < 25 || cx1 > 575 || cy1 < 20 || cy1 > 775) continue;
-      if (!labelOverlap(cx1, cy1, labelW, labelH)) {
-        labelX = cx1; labelY = cy1; found = true;
-        placed.push({ x: cx1, y: cy1, w: labelW, h: labelH });
-        break;
-      }
-    }
-    if (!found) {
-      labelX = sx + Math.cos(angFromCenter) * (rockRadius + 14);
-      labelY = sy + Math.sin(angFromCenter) * (rockRadius + 14) + 2;
-    }
-
-    return `
-      <g class="point-marker">
-        ${showHighlight ? `<ellipse cx="${r.cx.toFixed(1)}" cy="${r.cy.toFixed(1)}"
-                                    rx="${r.rx.toFixed(1)}" ry="${r.ry.toFixed(1)}"
-                                    transform="rotate(${r.rot} ${r.cx.toFixed(1)} ${r.cy.toFixed(1)})"
-                                    fill="${highlightFill}" stroke="${highlightStroke}" stroke-width="1.3"/>` : ''}
-        <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${size}" fill="${markerColor}" opacity="0.95"/>
-        <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${(size*0.3).toFixed(1)}" fill="#fff"/>
-        ${isBest ? `<circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="${size + 6}"
-                             fill="none" stroke="${markerColor}" stroke-width="1.4" opacity="0.7"/>` : ''}
-        ${rank ? `<g>
-          <circle cx="${(sx + size + 7).toFixed(1)}" cy="${(sy - size - 5).toFixed(1)}" r="7.5"
-                  fill="#04121f" stroke="${rank === 1 ? '#ff6b47' : '#ffb14e'}" stroke-width="1.5"/>
-          <text x="${(sx + size + 7).toFixed(1)}" y="${(sy - size - 1.6).toFixed(1)}"
-                text-anchor="middle" class="point-label"
-                style="fill:${rank === 1 ? '#ff6b47' : '#ffb14e'}; font-size:10px; font-weight:700;">${rank}</text>
-        </g>` : ''}
-        <line x1="${sx.toFixed(1)}" y1="${sy.toFixed(1)}"
-              x2="${labelX.toFixed(1)}" y2="${(labelY - 4).toFixed(1)}"
-              stroke="${markerColor}" stroke-width="0.6" opacity="0.55"/>
-        <text x="${labelX.toFixed(1)}" y="${labelY.toFixed(1)}"
-              text-anchor="middle" class="point-label"
-              style="font-size:${isPrimary ? 12 : 10.5}px; ${rank?'font-weight:700;':''}">${label}</text>
-        <text x="${labelX.toFixed(1)}" y="${(labelY + 10).toFixed(1)}"
-              text-anchor="middle" class="point-label"
-              style="fill:${rank ? markerColor : '#7a9ab0'}; font-size:9.5px; font-weight:700;">
-          ${(sc*100).toFixed(0)}
-        </text>
-      </g>
-    `;
-  }).join('');
-
-  // --- 情報カード ---
-  const labelXi = 425, labelYi = 785;
-  $('#info-card').innerHTML = `
-    <rect x="${labelXi}" y="${labelYi - 40}" width="152" height="50"
-          fill="rgba(4,18,31,0.9)" stroke="rgba(255,133,82,0.5)" stroke-width="0.8" rx="4"/>
-    <text x="${labelXi + 10}" y="${labelYi - 22}" class="point-label" style="fill:#ff8552; font-size:12px; font-weight:600;">
-      ${h.current_velocity_kmh.toFixed(1)} km/h · ${kt} kt
-    </text>
-    <text x="${labelXi + 10}" y="${labelYi - 9}" class="point-label" style="fill:#7fa5c0; font-size:9px;">
-      ${tideJa} · ${dir.toFixed(0)}° へ流れる
-    </text>
-  `;
+  const hours = todayHourly(data), hour = hours[selectedHourIdx] || hours[0];
+  if (!hour) return;
+  if (!mapController) mapController = createMapController();
+  mapController.update(hour, data.daily[selectedDayIdx]);
 }
+
+function createMapController() {
+  const svg = $('#forecast-map'), canvas = $('#map-canvas');
+  const points = Object.entries(POINTS);
+  const baseBounds = MapGeometry.union([
+    ...points.map(([,p]) => ({left:p.pos[0]-40,right:p.pos[0]+40,top:p.pos[1]-40,bottom:p.pos[1]+40})),
+    ...MAP_CATALOG.island_outline_m.map(([x,y]) => ({left:x,right:x,top:y,bottom:y}))
+  ]);
+  let view, hour, day, selected = null, drag = null, suppressClick = false;
+  const escape = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const size = () => ({w:canvas.clientWidth || 320,h:canvas.clientHeight || 480});
+  function fit(includeHypothesis = false) {
+    const s = size();
+    let bounds = baseBounds;
+    if (includeHypothesis && hour) {
+      const h = MapGeometry.hypothesis(MAP_CATALOG.shelf_radii_m, hour.current_direction, hour.current_velocity_kmh);
+      bounds = MapGeometry.union([bounds,MapGeometry.ellipseBounds(h.zone),MapGeometry.ellipseBounds(h.lee)]);
+    }
+    view = MapGeometry.fit(bounds,s.w,s.h);
+    draw();
+  }
+  function choose(key, center = false) {
+    selected = key;
+    $('#point-select').value = key;
+    if (center) {
+      const p = POINTS[key].pos;
+      view = MapGeometry.zoom(view, Math.min(1,700/view.w));
+      view.x = p[0]-view.w/2; view.y = p[1]-view.h/2;
+    }
+    draw();
+  }
+  function draw() {
+    if (!hour || !view) return;
+    const s = size(), unit = view.w / s.w;
+    const scores = hour.point_scores;
+    const ranked = Object.keys(scores).filter(k => POINTS[k]).sort((a,b)=>scores[b]-scores[a]);
+    const top = ranked.slice(0,3);
+    const h = MapGeometry.hypothesis(MAP_CATALOG.shelf_radii_m,hour.current_direction,hour.current_velocity_kmh);
+    const hypothesisOn = $('#map-hypothesis').checked;
+    const allNames = $('#map-labels').checked;
+    const ellipse = (e,cls) => `<ellipse class="${cls}" cx="${e.x}" cy="${e.y}" rx="${e.rx}" ry="${e.ry}" transform="rotate(${e.rotation} ${e.x} ${e.y})"/>`;
+    const text = (x,y,label,color='#f2ead8',font=12) => `<text x="${x}" y="${y}" text-anchor="middle" fill="${color}" font-size="${font*unit}" class="map-label">${escape(label)}</text>`;
+    let content = `<path class="map-island" d="M ${MAP_CATALOG.island_outline_m.map(p=>p.join(',')).join(' L ')} Z"/>`;
+    content += text(0,15,'神子元島','#f2ead8',13);
+    if (hypothesisOn) {
+      content = ellipse(h.lee,'hypothesis-lee') + ellipse(h.zone,'hypothesis-zone') + content;
+      content += text(h.zone.x,h.zone.y,'ハンマー予想域（仮説）','#8bd1bf',12);
+      content += text(h.lee.x,h.lee.y,'潮陰（仮説）','#abc4d8',12);
+    }
+    const placed = [];
+    const order = [...new Set([selected,...top,...ranked].filter(Boolean))];
+    for (const key of order) {
+      const p = POINTS[key], [x,y] = p.pos, rank = top.indexOf(key)+1;
+      const visible = x>=view.x && x<=view.x+view.w && y>=view.y && y<=view.y+view.h;
+      if (!visible) continue;
+      const active = selected===key, radius = (active?9:rank?8:5)*unit;
+      const color = MapGeometry.scoreColor(scores[key] || 0);
+      const label = `${p.label} ${Math.round((scores[key]||0)*100)}`;
+      content += `<g class="map-point" role="button" tabindex="0" data-point="${key}" aria-label="${escape(label)}" aria-pressed="${active}">`;
+      content += `<title>${escape(label)}</title><circle cx="${x}" cy="${y}" r="${14*unit}" fill="transparent"/>`;
+      content += `<circle cx="${x}" cy="${y}" r="${radius}" fill="${color}" stroke="${active?'#fff':'#071727'}" stroke-width="${2*unit}"/>`;
+      if (rank) content += text(x,y+4*unit,rank,'#071727',11);
+      content += '</g>';
+      if (rank || active || allNames) {
+        const labelText = p.label;
+        const width = [...labelText].reduce((n,c)=>n+(c.charCodeAt(0)>255?12:7),0)*unit;
+        const height = 16*unit;
+        let target;
+        for (const [dx,dy] of [[0,-21],[0,29],[width/2/unit+15,5],[-width/2/unit-15,5],[0,-43],[0,51]]) {
+          const cx=x+dx*unit, cy=y+dy*unit;
+          const box = {l:cx-width/2-3*unit,r:cx+width/2+3*unit,t:cy-height,b:cy+3*unit};
+          if (box.l<view.x || box.r>view.x+view.w || box.t<view.y || box.b>view.y+view.h) continue;
+          if (placed.some(b=>box.l<b.r&&box.r>b.l&&box.t<b.b&&box.b>b.t)) continue;
+          placed.push(box); target=[cx,cy]; break;
+        }
+        if (target) {
+          content += `<line x1="${x}" y1="${y}" x2="${target[0]}" y2="${target[1]-6*unit}" stroke="${color}" stroke-width="${unit}" opacity=".6"/>`;
+          content += text(...target,labelText,active?'#fff':'#dfebec');
+        }
+      }
+    }
+    svg.setAttribute('viewBox',`${view.x} ${view.y} ${view.w} ${view.h}`);
+    svg.innerHTML = content;
+    const scale = MapGeometry.scaleBar(view.w,s.w);
+    $('#map-scale-line').style.width = scale.pixels+'px';
+    $('#map-scale-label').textContent = `概略 ${scale.metres} m`;
+    $('#map-zone-status').textContent = !hypothesisOn ? '局所流・予想域の仮説は非表示' :
+      MapGeometry.contains(view,MapGeometry.ellipseBounds(h.zone)) ? '予想域は未検証の仮説です' : '予想域の一部または全体が画面外です。「予想域まで表示」で確認できます。';
+    const currentLabel = `${hour.hour}:00の推奨`;
+    $('#map-ranked').innerHTML = top.map((k,i)=>`<button type="button" data-select="${k}" aria-pressed="${k===selected}"><span class="map-rank">${i+1}</span><span>${escape(POINTS[k].label)}</span><b>${Math.round(scores[k]*100)}</b></button>`).join('');
+    $('#map-ranked-title').textContent = currentLabel;
+    const p = POINTS[selected];
+    $('#map-point-detail').innerHTML = `<strong>${escape(p.label)}</strong><span>地点スコア ${Math.round(scores[selected]*100)} / 100</span><p>${escape(p.note || '地点の詳細は現地ガイドに確認してください。')}</p><p>参考水深 ${escape(p.depth==='-'?'不明':p.depth)} · 位置・形状は未校正</p>`;
+  }
+  $('#point-select').innerHTML = points.map(([key,p])=>`<option value="${key}">${escape(p.label)}</option>`).join('');
+  $('#point-select').addEventListener('change',e=>choose(e.target.value,true));
+  $('#map-ranked').addEventListener('click',e=>{const b=e.target.closest('[data-select]');if(b)choose(b.dataset.select,true);});
+  svg.addEventListener('click',e=>{if(suppressClick){suppressClick=false;return;}const p=e.target.closest('[data-point]');if(p)choose(p.dataset.point);});
+  svg.addEventListener('keydown',e=>{
+    const p=e.target.closest('[data-point]');
+    if(p && ['Enter',' '].includes(e.key)){e.preventDefault();choose(p.dataset.point);$('#point-select').focus();return;}
+    const moves={ArrowLeft:[-.2,0],ArrowRight:[.2,0],ArrowUp:[0,-.2],ArrowDown:[0,.2]};
+    if(moves[e.key]){e.preventDefault();view.x+=moves[e.key][0]*view.w;view.y+=moves[e.key][1]*view.h;draw();}
+  });
+  svg.addEventListener('pointerdown',e=>{
+    if(e.button!==0 || drag)return;
+    drag={id:e.pointerId,x:e.clientX,y:e.clientY,view:{...view},moved:false};
+    suppressClick=false;
+  });
+  svg.addEventListener('pointermove',e=>{
+    if(!drag||e.pointerId!==drag.id)return;
+    const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
+    if(Math.hypot(dx,dy)>4 && !drag.moved){drag.moved=true;svg.setPointerCapture(e.pointerId);}
+    if(drag.moved){const s=size();view={...drag.view,x:drag.view.x-dx*drag.view.w/s.w,y:drag.view.y-dy*drag.view.h/s.h};draw();}
+  });
+  function stopDrag(e){if(drag&&e.pointerId===drag.id){suppressClick=drag.moved;drag=null;}}
+  svg.addEventListener('pointerup',stopDrag);svg.addEventListener('pointercancel',stopDrag);
+  $('#map-zoom-in').onclick=()=>{view=MapGeometry.zoom(view,.65);draw();};
+  $('#map-zoom-out').onclick=()=>{view=MapGeometry.zoom(view,1/.65);draw();};
+  $('#map-reset').onclick=()=>fit();
+  $('#map-fit-zone').onclick=()=>{$('#map-hypothesis').checked=true;fit(true);};
+  $('#map-hypothesis').onchange=draw;$('#map-labels').onchange=draw;
+  $('#map-fullscreen').onclick=async()=>{
+    try {if(document.fullscreenElement)await document.exitFullscreen();else await $('#map-workbench').requestFullscreen();}
+    catch {$('#map-zone-status').textContent='このブラウザーは全画面表示に対応していません。＋で拡大できます。';}
+  };
+  document.addEventListener('fullscreenchange',()=>{
+    $('#map-fullscreen').textContent=document.fullscreenElement?'全画面を終了':'全画面';
+  });
+  new ResizeObserver(()=>{if(view){const s=size(),h=view.w*s.h/s.w;view.y+=(view.h-h)/2;view.h=h;draw();}}).observe(canvas);
+  return {update(h,d){
+    const changed=hour?.time!==h.time;
+    hour=h;day=d;
+    const ranked=Object.keys(h.point_scores).filter(k=>POINTS[k]).sort((a,b)=>h.point_scores[b]-h.point_scores[a]);
+    if(changed||!selected)selected=ranked[0];
+    $('#point-select').value=selected;
+    $('#map-conditions').innerHTML=`<div><span>選択中</span><b>${escape(h.time.slice(0,10))} ${h.hour}:00</b></div>`+
+      `<div><span>広域海流予報</span><b><i class="flow-bearing" style="transform:rotate(${h.current_direction}deg)">↑</i> ${(h.current_velocity_kmh/1.852).toFixed(1)} kt</b><small>${h.current_direction.toFixed(0)}°へ流れる · 約8km格子</small></div>`+
+      `<div><span>海面水温（補正後）</span><b>${h.sst.toFixed(1)}℃</b><small>平年偏差 ${h.sst_anomaly>0?'+':''}${h.sst_anomaly.toFixed(1)}℃</small></div>`;
+    const danger=d.diveable===false;
+    $('#map-sea-status').className='map-sea-status'+(danger?' is-danger':'');
+    $('#map-sea-status').textContent=`${d.sea_status} · この日の最大 波${d.max_wave.toFixed(1)}m / 風${d.max_wind.toFixed(1)}m/s`;
+    if(!view)fit();else draw();
+  }};
+}
+
 
 // === HOURLY STRIP ===
 function renderHourlyStrip(data) {
@@ -9460,33 +8955,39 @@ function renderLrNav() {
   $('#lr-monthnav').innerHTML = lrMonths().map(m =>
     `<button class="${m === lrMonth ? 'on' : ''}" onclick="lrSetMonth('${m}')">${m.slice(0, 4)}.${m.slice(5)}</button>`).join('');
 }
+let selectedCalendarDate = null;
 function renderLrCal() {
   const days = LONGRANGE.days.filter(d => d.date.slice(0, 7) === lrMonth);
   if (!days.length) { $('#lr-cal').innerHTML = ''; return; }
+  if (!days.some(d => d.date === selectedCalendarDate)) selectedCalendarDate = days[0].date;
   const fcMap = Object.fromEntries((FORECAST.daily || []).filter(d => d.forecast_kind === 'full').map(d => [d.date, d]));
-  const cells = ['月', '火', '水', '木', '金', '土', '日'].map(d => `<div class="lr-dow">${d}</div>`);
-  const pad = days[0].weekday; // 0=月
-  for (let i = 0; i < pad; i++) cells.push('<div class="lr-day empty"></div>');
+  const cells = ['月','火','水','木','金','土','日'].map(d => `<div class="lr-dow">${d}</div>`);
+  for (let i=0; i<days[0].weekday; i++) cells.push('<div class="lr-day empty" aria-hidden="true"></div>');
   for (const d of days) {
-    const fc = fcMap[d.date];
-    const score = fc ? fc.score : d.aim_score;
-    const dt = parseInt(d.date.slice(8), 10);
-    const wd = d.weekday;
-    const dcls = wd === 5 ? 'sat' : wd === 6 ? 'sun' : '';
-    cells.push(`
-      <div class="lr-day ${d.kuroshio_known ? '' : 'unknown-kuro'} ${score >= 70 && fc?.diveable !== false ? 'hot' : ''}"
-           title="月齢${d.moon_age} ${d.tide_name} / 朝→昼下げ${d.morning_ebb_m}m 未明→朝${d.predawn_ebb_m}m 下げ止まり${d.stop_h}時 / 季節${Math.round(d.f_month * 100)} 下げ${Math.round(d.f_ebb * 100)} 黒潮${Math.round(d.f_kuroshio * 100)} 月齢${Math.round(d.f_moon * 100)}">
-        ${!fc && d.is_top ? '<span class="star">⭐</span>' : ''}
-        <div class="d"><span class="${dcls}">${dt}</span></div>
-        <div class="ld-badge ${fc ? 'full' : 'lrng'}">${fc ? '◉ フル予報' : '◇ 長期見込み'}</div>
-        <div class="moon">${d.phase_icon}<span style="font-size:8.5px;color:var(--pelagic)"> ${d.tide_name}</span></div>
-        ${lrSpark(d)}
-        <div class="flow ${d.flow_type}">${d.flow_type==='ebb'?'↓':d.flow_type==='ebbstop'?'⤵':d.flow_type==='flood'?'↑':'→'} ${d.flow_label}</div>
-        <div class="sc" style="color:${lrColor(score)}">${Math.round(score)}</div>
-        ${fc ? `<div class="ld-tags">${fc.sea_status}</div>` : ''}
-      </div>`);
+    const fc=fcMap[d.date], score=fc?fc.score:d.aim_score;
+    const kind=fc?'フル予報':'長期見込み';
+    const sea=fc?(fc.diveable===false?'超過':fc.max_wind>9||fc.max_wave>1.5?'注意':'基準内'):'—';
+    cells.push(`<button type="button" class="lr-day" data-date="${d.date}" aria-pressed="${d.date===selectedCalendarDate}"
+      aria-label="${d.date} ${kind} スコア${Math.round(score)}${fc?' 海況'+sea:''}">
+      <span class="d ${d.weekday===5?'sat':d.weekday===6?'sun':''}">${Number(d.date.slice(8))}</span>
+      <span class="cal-kind">${fc?'◉':'◇'}<span class="kind-text"> ${kind}</span></span>
+      <span class="cal-score" style="color:${lrColor(score)}">${Math.round(score)}</span>
+      <span class="cal-sea ${fc?.diveable===false?'danger':''}">${sea}</span></button>`);
   }
-  $('#lr-cal').innerHTML = cells.join('');
+  $('#lr-cal').innerHTML=cells.join('');
+  $('#lr-cal').querySelectorAll('[data-date]').forEach(b=>b.addEventListener('click',()=>{
+    selectedCalendarDate=b.dataset.date; renderLrCal();
+    $('#lr-cal').querySelector(`[data-date="${selectedCalendarDate}"]`).focus({preventScroll:true});
+  }));
+  const d=days.find(d=>d.date===selectedCalendarDate), fc=fcMap[d.date];
+  const score=fc?fc.score:d.aim_score;
+  $('#lr-day-detail').innerHTML=`<h3>${fmtDate(d.date)}（${DOW_JA[(d.weekday+1)%7]}） ${fc?'◉ フル予報':'◇ 長期見込み'}</h3>
+    <div class="detail-score">${Math.round(score)} <small>/100</small></div>
+    ${fc?`<p class="${fc.diveable===false?'is-danger':''}">${fc.sea_status}<br>波 ${fc.max_wave.toFixed(1)}m / 風 ${fc.max_wind.toFixed(1)}m/s</p>
+      <p>推奨 ${POINT_JA[fc.best_point] || fc.best_point} · ${fc.best_hour}:00<br>広域海流 ${(fc.avg_current_kmh/1.852).toFixed(1)} kt（8〜14時平均）</p>`:
+      '<p>海況データがない期間の見込みです。出航可否は予測していません。</p>'}
+    <p>${d.phase_icon} ${d.tide_name} · ${d.flow_label}</p>${lrSpark(d)}
+    <p>${d.kuroshio_known?'黒潮予測の有効期間内':'黒潮予測の有効期間外 · 黒潮条件は未確定'}<br>スコアは遭遇確率ではありません。</p>`;
 }
 function renderLongrange() {
   if (!LONGRANGE) { const w = document.querySelector('.lr-wrap'); if (w) w.style.display = 'none'; return; }
@@ -9504,6 +9005,8 @@ function renderLongrange() {
     renderLrCal();
   } else {
     // トップ: 直近8週間の狙い目ダイジェスト + 専用ページへ誘導
+    $('#lr-day-detail').hidden = true;
+    document.querySelector('.lr-calendar-hint').hidden = true;
     renderLrDigest();
   }
 }
@@ -9589,10 +9092,10 @@ function renderNavLinks() {
   if (!el) return;
   const base = PAGE_MODE ? '../' : '';
   el.innerHTML =
-    `<a href="${base}./" class="${PAGE_MODE ? '' : 'here'}">◆ 今日の予報</a>` +
-    `<a href="${base}map/" class="${MAP_MODE ? 'here' : ''}">◇ 予測マップ</a>` +
-    `<a href="${base}aim/" class="${AIM_MODE ? 'here' : ''}">◆ 狙い目カレンダー</a>` +
-    `<a href="${base}history/">◇ 検証ログ</a>`;
+    `<a href="${base}./" class="${PAGE_MODE ? '' : 'here'}"><span class="nav-long">◆ 今日の予報</span><span class="nav-short">今日の予報</span></a>` +
+    `<a href="${base}map/" class="${MAP_MODE ? 'here' : ''}"><span class="nav-long">◇ 予測マップ</span><span class="nav-short">マップ</span></a>` +
+    `<a href="${base}aim/" class="${AIM_MODE ? 'here' : ''}"><span class="nav-long">◆ 狙い目カレンダー</span><span class="nav-short">カレンダー</span></a>` +
+    `<a href="${base}history/"><span class="nav-long">◇ 検証ログ</span><span class="nav-short">検証ログ</span></a>`;
 }
 
 // === BOOT ===
