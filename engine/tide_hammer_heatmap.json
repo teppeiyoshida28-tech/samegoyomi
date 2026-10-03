@@ -1,20 +1,9 @@
 {
-  "generated_at": "2026-10-03T09:35:20.157958+09:00",
+  "generated_at": "2026-10-04T01:25:33.511062+09:00",
   "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
   "n_days": 189,
   "window_days": 365,
   "entries": [
-    {
-      "date": "2026-09-04",
-      "moon_age": 21.7,
-      "phase": "中潮",
-      "seen": true,
-      "size": "medium",
-      "size_num": 3,
-      "vis_hi": 15.0,
-      "wt_hi": 24.0,
-      "tropical_count": 0
-    },
     {
       "date": "2026-09-05",
       "moon_age": 22.7,
@@ -179,6 +168,17 @@
       "vis_hi": 10.0,
       "wt_hi": 24.0,
       "tropical_count": 0
+    },
+    {
+      "date": "2026-10-03",
+      "moon_age": 21.1,
+      "phase": "中潮",
+      "seen": true,
+      "size": "medium",
+      "size_num": 3,
+      "vis_hi": 15.0,
+      "wt_hi": 25.0,
+      "tropical_count": 2
     }
   ],
   "phase_summary": [
@@ -216,17 +216,6 @@
       "large_rate": 0.455
     },
     {
-      "phase": "中潮",
-      "days": 60,
-      "seen_days": 57,
-      "encounter_rate": 0.95,
-      "avg_size": 3.2711864406779663,
-      "n_known_size": 59,
-      "weighted_size": 2.9,
-      "large_days": 27,
-      "large_rate": 0.458
-    },
-    {
       "phase": "新月大潮",
       "days": 27,
       "seen_days": 25,
@@ -238,15 +227,26 @@
       "large_rate": 0.5
     },
     {
+      "phase": "中潮",
+      "days": 61,
+      "seen_days": 58,
+      "encounter_rate": 0.9508196721311475,
+      "avg_size": 3.2666666666666666,
+      "n_known_size": 60,
+      "weighted_size": 2.89,
+      "large_days": 27,
+      "large_rate": 0.45
+    },
+    {
       "phase": "若潮",
-      "days": 25,
-      "seen_days": 23,
-      "encounter_rate": 0.92,
-      "avg_size": 3.1666666666666665,
-      "n_known_size": 24,
-      "weighted_size": 2.79,
-      "large_days": 10,
-      "large_rate": 0.417
+      "days": 24,
+      "seen_days": 22,
+      "encounter_rate": 0.9166666666666666,
+      "avg_size": 3.130434782608696,
+      "n_known_size": 23,
+      "weighted_size": 2.74,
+      "large_days": 9,
+      "large_rate": 0.391
     }
   ]
 }

@@ -1,8 +1,236 @@
 {
- "generated_at": "2026-10-03T09:35:30.378151+09:00",
+ "generated_at": "2026-10-04T01:25:33.702931+09:00",
  "evaluation_type": "issued",
  "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
  "method": "保存した発表時点の予報を評価。同じ対象日・予測日数では最初の発表を採用。未観測は採点しません。",
- "by_lead": {},
- "days": []
+ "by_lead": {
+  "0": {
+   "n_days": 1,
+   "n_evaluated": 1,
+   "n_no_report": 0,
+   "n_seen_days": 1,
+   "n_unknown_seen": 0,
+   "n_size_days": 1,
+   "n_tier_days": 1,
+   "seen_hit_rate": 1.0,
+   "seen_metrics": {
+    "n": 1,
+    "positive": 1,
+    "negative": 0,
+    "accuracy": 1.0,
+    "balanced_accuracy": null,
+    "brier": 0.0025,
+    "auc": null,
+    "recall": 1.0,
+    "specificity": null,
+    "calibration": [
+     {
+      "n": 1,
+      "predicted": 0.95,
+      "observed": 1
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": {
+     "n": 1,
+     "positive": 1,
+     "negative": 0,
+     "accuracy": 1.0,
+     "balanced_accuracy": null,
+     "brier": 0.0,
+     "auc": null,
+     "recall": 1.0,
+     "specificity": null,
+     "calibration": [
+      {
+       "n": 1,
+       "predicted": 1.0,
+       "observed": 1
+      }
+     ]
+    },
+    "seasonal": {
+     "n": 1,
+     "positive": 1,
+     "negative": 0,
+     "accuracy": 1.0,
+     "balanced_accuracy": null,
+     "brier": 0.0016,
+     "auc": null,
+     "recall": 1.0,
+     "specificity": null,
+     "calibration": [
+      {
+       "n": 1,
+       "predicted": 0.96,
+       "observed": 1
+      }
+     ]
+    },
+    "persistence": {
+     "n": 1,
+     "positive": 1,
+     "negative": 0,
+     "accuracy": 1.0,
+     "balanced_accuracy": null,
+     "brier": 0.0,
+     "auc": null,
+     "recall": 1.0,
+     "specificity": null,
+     "calibration": [
+      {
+       "n": 1,
+       "predicted": 1.0,
+       "observed": 1
+      }
+     ]
+    },
+    "model_on_persistence_days": {
+     "n": 1,
+     "positive": 1,
+     "negative": 0,
+     "accuracy": 1.0,
+     "balanced_accuracy": null,
+     "brier": 0.0025,
+     "auc": null,
+     "recall": 1.0,
+     "specificity": null,
+     "calibration": [
+      {
+       "n": 1,
+       "predicted": 0.95,
+       "observed": 1
+      }
+     ]
+    }
+   },
+   "large_metrics": {
+    "n": 1,
+    "positive": 0,
+    "negative": 1,
+    "accuracy": 1.0,
+    "balanced_accuracy": null,
+    "brier": 0.1833,
+    "auc": null,
+    "recall": null,
+    "specificity": 1.0,
+    "calibration": [
+     {
+      "n": 1,
+      "predicted": 0.428,
+      "observed": 0
+     }
+    ]
+   },
+   "large_baseline": {
+    "n": 1,
+    "positive": 0,
+    "negative": 1,
+    "accuracy": 1.0,
+    "balanced_accuracy": null,
+    "brier": 0.1698,
+    "auc": null,
+    "recall": null,
+    "specificity": 1.0,
+    "calibration": [
+     {
+      "n": 1,
+      "predicted": 0.412,
+      "observed": 0
+     }
+    ]
+   },
+   "tier_exact_rate": 0,
+   "tier_within1_rate": 1,
+   "size_exact_rate": 1,
+   "size_within1_rate": 1,
+   "size_correlation": null,
+   "visibility_mae_m": 3.0,
+   "water_temp_mae_c": 0.6,
+   "n_point_days": 0,
+   "point_top3_hit_rate": null
+  }
+ },
+ "days": [
+  {
+   "date": "2026-10-03",
+   "lead_days": 0,
+   "predicted": {
+    "seen_probability": 0.95,
+    "large_probability": 0.4281,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.11,
+    "size_label": "中群(50前後)",
+    "count_est": 70,
+    "visibility_m": 12.0,
+    "water_temp": 23.4,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "kado_ne",
+     "jab_ne",
+     "zabu_ne"
+    ],
+    "avg_anomaly": -3.44,
+    "avg_current_kmh": 2.03,
+    "max_wave": 2.16,
+    "max_wind": 14.3,
+    "diveable": false,
+    "score": 48.2
+   },
+   "recommendation": {
+    "best_point": "kado_ne",
+    "best_point_score": 0.449,
+    "best_point_evidence": {
+     "stats_key": "kado_ne",
+     "overall_fallback": {
+      "rate": 0.9375,
+      "n": 16
+     }
+    },
+    "top3_points": [
+     {
+      "point": "kado_ne",
+      "score": 0.449
+     },
+     {
+      "point": "jab_ne",
+      "score": 0.438
+     },
+     {
+      "point": "zabu_ne",
+      "score": 0.432
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   },
+   "issued_at": "2026-10-03T00:06:09.259326+09:00",
+   "model_version": "2026-10-integrity-v1",
+   "actual": {
+    "hammer_seen": true,
+    "hammer_size": "medium",
+    "size_num": 3,
+    "hammer_points": [],
+    "visibility_hi": 15.0,
+    "visibility": "8-15m",
+    "water_temp_mean": 24.0,
+    "water_temp": "23-25℃",
+    "tier": "C",
+    "tier_label": "◆ 中規模群",
+    "shops_reporting": [
+     "290",
+     "hammers",
+     "ms"
+    ]
+   }
+  }
+ ]
 }
