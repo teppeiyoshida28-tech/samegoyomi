@@ -1,0 +1,593 @@
+{
+  "version": "2026-10-schematic-v1",
+  "coordinate_system": "島中心の概略相対座標。東+x、南+y、単位m。GPS・実測水深による校正前。",
+  "source": "既存の予測計算座標を維持。公式ポイント案内を参考にした概略配置であり測量成果ではない。",
+  "source_url": "https://www.mikomoto.com/about/location.html",
+  "coverage": "オーナー指定により南側のみを予測・推奨の対象とする。北側の潜水可否は判定しない。",
+  "points": {
+    "A_point": {
+      "pos": [
+        145,
+        125
+      ],
+      "label": "Aポイント",
+      "depth": "13-26m",
+      "note": "湾状 着底ハンマー",
+      "shape": [
+        22,
+        18,
+        -35
+      ],
+      "tier": "primary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "karito": {
+      "pos": [
+        110,
+        165
+      ],
+      "label": "カリトの鼻",
+      "depth": "10m",
+      "note": "Aから南下ルート",
+      "shape": [
+        12,
+        10,
+        0
+      ],
+      "tier": "secondary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "eno_kuchi": {
+      "pos": [
+        -100,
+        100
+      ],
+      "label": "江の口",
+      "depth": "10-15m",
+      "note": "穏やかな湾",
+      "shape": [
+        18,
+        14,
+        45
+      ],
+      "tier": "secondary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "andoro": {
+      "pos": [
+        -180,
+        20
+      ],
+      "label": "アンドロ",
+      "depth": "16-23m",
+      "note": "西側浅根群",
+      "shape": [
+        15,
+        12,
+        0
+      ],
+      "tier": "secondary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "kita_ne": {
+      "pos": [
+        235,
+        175
+      ],
+      "label": "北の根",
+      "depth": "-18m",
+      "note": "カメ根北端",
+      "shape": [
+        10,
+        10,
+        0
+      ],
+      "tier": "secondary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "higashi_ne": {
+      "pos": [
+        345,
+        185
+      ],
+      "label": "東の根",
+      "depth": "-22m",
+      "note": "外海側 深場",
+      "shape": [
+        10,
+        10,
+        0
+      ],
+      "tier": "secondary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "cliff_rock": {
+      "pos": [
+        122,
+        275
+      ],
+      "label": "絶壁の根",
+      "depth": "-10m",
+      "note": "エリア西の壁",
+      "shape": [
+        15,
+        42,
+        0
+      ],
+      "tier": "primary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "namb_ne": {
+      "pos": [
+        190,
+        270
+      ],
+      "label": "南北の根",
+      "depth": "-18m",
+      "note": "細長スリット",
+      "shape": [
+        12,
+        25,
+        0
+      ],
+      "tier": "secondary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "most_south": {
+      "pos": [
+        190,
+        315
+      ],
+      "label": "最南端の根",
+      "depth": "-",
+      "note": "",
+      "shape": [
+        10,
+        10,
+        0
+      ],
+      "tier": "tertiary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "twin_peaks": {
+      "pos": [
+        235,
+        245
+      ],
+      "label": "ツインピークス",
+      "depth": "-18/19m",
+      "note": "2つの峰",
+      "shape": [
+        10,
+        20,
+        0
+      ],
+      "tier": "secondary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "view_point": {
+      "pos": [
+        235,
+        290
+      ],
+      "label": "ビューポイント",
+      "depth": "-10/19m",
+      "note": "パノラマ大根",
+      "shape": [
+        12,
+        32,
+        0
+      ],
+      "tier": "primary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "kabe_ne": {
+      "pos": [
+        280,
+        280
+      ],
+      "label": "カベ根",
+      "depth": "-17m",
+      "note": "東寄り垂直壁",
+      "shape": [
+        10,
+        28,
+        0
+      ],
+      "tier": "secondary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "jab_ne": {
+      "pos": [
+        -80,
+        240
+      ],
+      "label": "ジャブ根（青根）",
+      "depth": "20m",
+      "note": "下げ潮に強い",
+      "shape": [
+        28,
+        45,
+        -30
+      ],
+      "tier": "primary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "zabu_ne": {
+      "pos": [
+        -140,
+        220
+      ],
+      "label": "ザブ根",
+      "depth": "18-22m",
+      "note": "南西",
+      "shape": [
+        18,
+        25,
+        0
+      ],
+      "tier": "secondary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "kado_ne": {
+      "pos": [
+        -320,
+        30
+      ],
+      "label": "カド根",
+      "depth": "20-25m",
+      "note": "西端 -50m落込み",
+      "shape": [
+        22,
+        32,
+        0
+      ],
+      "tier": "secondary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "mitsu_ne": {
+      "pos": [
+        -220,
+        -20
+      ],
+      "label": "三ツ根",
+      "depth": "25m",
+      "note": "北西ドロップオフ",
+      "shape": [
+        20,
+        20,
+        0
+      ],
+      "tier": "primary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "seven_rock": {
+      "pos": [
+        110,
+        470
+      ],
+      "label": "セブンロック",
+      "depth": "-",
+      "note": "小岩礁群",
+      "shape": [
+        22,
+        14,
+        0
+      ],
+      "tier": "tertiary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "west_west": {
+      "pos": [
+        150,
+        450
+      ],
+      "label": "西の西の根",
+      "depth": "10-17m",
+      "note": "",
+      "shape": [
+        14,
+        18,
+        0
+      ],
+      "tier": "tertiary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "west_rock": {
+      "pos": [
+        170,
+        470
+      ],
+      "label": "西の根",
+      "depth": "10-21m",
+      "note": "",
+      "shape": [
+        15,
+        20,
+        0
+      ],
+      "tier": "tertiary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "tall_rock": {
+      "pos": [
+        200,
+        470
+      ],
+      "label": "高根",
+      "depth": "-",
+      "note": "",
+      "shape": [
+        12,
+        14,
+        0
+      ],
+      "tier": "tertiary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "west_takane": {
+      "pos": [
+        0,
+        520
+      ],
+      "label": "西の高根",
+      "depth": "10m",
+      "note": "真南",
+      "shape": [
+        16,
+        20,
+        0
+      ],
+      "tier": "tertiary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "west_west_tk": {
+      "pos": [
+        -50,
+        460
+      ],
+      "label": "西の西の高根",
+      "depth": "12m",
+      "note": "",
+      "shape": [
+        12,
+        16,
+        0
+      ],
+      "tier": "tertiary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "plate": {
+      "pos": [
+        80,
+        570
+      ],
+      "label": "プレート",
+      "depth": "21m",
+      "note": "平坦大根",
+      "shape": [
+        75,
+        60,
+        0
+      ],
+      "tier": "primary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "hammers_rock": {
+      "pos": [
+        180,
+        620
+      ],
+      "label": "ハンマーズロック",
+      "depth": "23m",
+      "note": "外洋南の孤根",
+      "shape": [
+        16,
+        16,
+        0
+      ],
+      "tier": "primary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "eagleray_rock": {
+      "pos": [
+        310,
+        520
+      ],
+      "label": "トビエイロック",
+      "depth": "27m",
+      "note": "エイの群れ",
+      "shape": [
+        15,
+        15,
+        0
+      ],
+      "tier": "primary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    },
+    "third_takane": {
+      "pos": [
+        240,
+        770
+      ],
+      "label": "三つ目の高根",
+      "depth": "15-25m",
+      "note": "★最南端の巨根",
+      "shape": [
+        125,
+        75,
+        0
+      ],
+      "tier": "primary",
+      "coordinate_status": "schematic_unverified",
+      "lat_lon": null
+    }
+  },
+  "island_outline_m": [
+    [
+      -40,
+      -150
+    ],
+    [
+      0,
+      -120
+    ],
+    [
+      30,
+      -110
+    ],
+    [
+      60,
+      -100
+    ],
+    [
+      80,
+      -80
+    ],
+    [
+      75,
+      -40
+    ],
+    [
+      95,
+      0
+    ],
+    [
+      120,
+      30
+    ],
+    [
+      160,
+      80
+    ],
+    [
+      191,
+      110
+    ],
+    [
+      160,
+      130
+    ],
+    [
+      110,
+      120
+    ],
+    [
+      90,
+      110
+    ],
+    [
+      60,
+      100
+    ],
+    [
+      20,
+      90
+    ],
+    [
+      9,
+      150
+    ],
+    [
+      -20,
+      130
+    ],
+    [
+      -50,
+      110
+    ],
+    [
+      -100,
+      80
+    ],
+    [
+      -120,
+      60
+    ],
+    [
+      -150,
+      9
+    ],
+    [
+      -170,
+      -20
+    ],
+    [
+      -130,
+      -30
+    ],
+    [
+      -100,
+      -40
+    ],
+    [
+      -90,
+      -70
+    ],
+    [
+      -120,
+      -95
+    ],
+    [
+      -150,
+      -100
+    ],
+    [
+      -170,
+      -75
+    ],
+    [
+      -200,
+      -60
+    ],
+    [
+      -130,
+      -120
+    ],
+    [
+      -80,
+      -140
+    ]
+  ],
+  "shelf_radii_m": {
+    "0": 900,
+    "30": 900,
+    "60": 475,
+    "90": 300,
+    "120": 250,
+    "150": 225,
+    "180": 250,
+    "210": 350,
+    "240": 725,
+    "270": 900,
+    "300": 900,
+    "330": 900
+  },
+  "shelf_note": "旧モデル由来の方位別仮説パラメータ。表示用の実測等深線ではない。",
+  "reference_map_url": "https://maps.gsi.go.jp/#16/34.5717/138.9433/&base=std&ls=std&disp=1"
+}

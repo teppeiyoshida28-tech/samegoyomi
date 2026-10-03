@@ -12,8 +12,10 @@ import os
 import re
 import sys
 from datetime import date, datetime
+from pathlib import Path
 from domain import today_jst, MODEL_VERSION
 from validation import validate_forecast
+from point_catalog import CATALOG
 
 BASE = os.path.dirname(os.path.abspath(__file__))        # engine/
 REPO_ROOT = os.path.dirname(BASE)                         # リポジトリルート
@@ -68,16 +70,19 @@ def check_site_built():
         if not os.path.exists(p):
             problems.append(f"docs/{rel} が存在しない (ビルド失敗)")
             continue
-        html = open(p, encoding="utf-8", errors="replace").read()
+        html = Path(p).read_text(encoding="utf-8", errors="replace")
         if "鮫暦" not in html:
             problems.append(f"docs/{rel} にタイトルがない (テンプレ破損?)")
         if rel != "history/index.html":
             try:
                 match = re.search(r"const FORECAST = (.*?);\s*\n", html)
                 embedded = json.loads(match.group(1))
-                current = json.load(open(os.path.join(BASE, "forecast_data.json")))
+                current = json.loads(Path(BASE, "forecast_data.json").read_text(encoding="utf-8"))
                 if embedded.get("daily") != current.get("daily") or embedded.get("generated_at") != current.get("generated_at"):
                     problems.append(f"docs/{rel} が現在の予報と一致しません（古いビルド）")
+                map_match = re.search(r"const MAP_CATALOG = (.*?);\s*\n", html)
+                if json.loads(map_match.group(1)) != CATALOG:
+                    problems.append(f"docs/{rel} の地点座標が予測計算の定義と一致しません")
             except (AttributeError, ValueError) as e:
                 problems.append(f"docs/{rel} の埋込予報が無効: {e}")
         elif "/*__BACKTEST_JSON__*/ null" in html or MODEL_VERSION not in html:

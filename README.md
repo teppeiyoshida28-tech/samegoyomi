@@ -25,6 +25,8 @@
 - `build_html.py` — forecast_data.json をテンプレに埋め込み 3ページ生成
 - `build_longrange.py` / `build_history_html.py` — 長期狙い目カレンダー・検証履歴ページ
 - `index.html` / `history_index.html` — ページテンプレ（JS/CSSインライン）
+- `map_points.json` / `point_catalog.py` — 予測計算と地図表示で共有する26地点の概略座標。GPS校正前。南側のみを予測対象とする
+- `map_geometry.js` / `map_ui.js` / `map_panel.html` / `ui_refresh.css` — 地図の幾何・操作・構造・表示。ビルド時にHTMLへ埋め込む
 - `monitor.py` / `validation.py` — 公開前の整合性・鮮度検査。異常時は公開を停止する
 - `forecast_archive.py` — Pages 公開成功後の予報を `forecast_archive/` に追記保存。生成日時・公開日時・モデル版・コード SHA・予報ハッシュ・予測日数を記録
 - `evaluation.py` / `domain.py` — 評価指標・教師ラベル・海況判定・JST の共通定義
@@ -118,3 +120,14 @@ Actions のジョブが失敗すると GitHub から自動でメール通知が�
 4. ポイント座標の現地校正・実地図化（今回の信頼性修正の対象外）
 
 回帰テスト: `python -m unittest discover -s tests -v`。構文検査: `python -m compileall -q engine data analysis`。
+
+地図の回帰テスト: `node --test tests/map_geometry.test.js`（Node.js 22）。位置を動かさない表示範囲調整・方位・縮尺・拡大と固定スコア色を検査する。
+公開前monitorは、公開HTMLの地点定義と予測計算用の定義の一致も検査する。テンプレ変更後は必ずbuild_html.pyを実行し、生成HTMLをdocsへコピーする。
+
+## マップの読み方
+
+南側の概略図で、実測等深線や航行用地図ではない。地理院地図で島の位置を確認できるが、地点は未測量のため実地図へ重ねていない。
+拡大・ドラッグ移動・矢印キー移動・全画面に対応。上位3地点以外も地図または選択欄から詳細を確認できる。
+「潮陰・予想域の仮説」をオンにすると未検証の仮説領域を表示する。画面外の領域は移動せず、「予想域まで表示」で全体を見る。
+広域海流と水温は選択した日付・時刻の値。地図の色は地点スコア0〜100の固定目盛りで、遭遇確率ではない。
+カレンダーは日付を押すと、フル予報では海況・推奨地点、長期見込みでは潮・黒潮の前提を表示する。

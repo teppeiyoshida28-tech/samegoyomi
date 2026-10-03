@@ -43,6 +43,13 @@ jobs:
       - name: Regression checks
         run: python3 -m unittest discover -s tests -v
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Map geometry checks
+        run: node --test tests/map_geometry.test.js
+
       - name: Incremental scrape (shop blogs)
         working-directory: data
         continue-on-error: true

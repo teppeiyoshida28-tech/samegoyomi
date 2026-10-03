@@ -10,6 +10,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 tpl = (ROOT / "index.html").read_text(encoding="utf-8")
+for marker, filename in [("<!--__MAP_PANEL__-->", "map_panel.html"),
+                         ("/*__MAP_GEOMETRY__*/", "map_geometry.js"),
+                         ("/*__MAP_UI__*/", "map_ui.js"),
+                         ("/*__UI_REFRESH__*/", "ui_refresh.css")]:
+    tpl = tpl.replace(marker, (ROOT / filename).read_text(encoding="utf-8"))
+from point_catalog import CATALOG
+tpl = tpl.replace("/*__MAP_CATALOG__*/ null", json.dumps(CATALOG, ensure_ascii=False, allow_nan=False).replace("<", "\\u003c"))
 data = json.loads((ROOT / "forecast_data.json").read_text(encoding="utf-8"))
 lr_path = ROOT / "longrange_data.json"
 lr_text = lr_path.read_text(encoding="utf-8") if lr_path.exists() else "null"

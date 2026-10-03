@@ -15,3 +15,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python -m unittest discover -s tests -v
       - run: python -m compileall -q engine data analysis
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/map_geometry.test.js
