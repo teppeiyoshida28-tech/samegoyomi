@@ -15,7 +15,7 @@ function createMapController() {
     ...points.map(([,p]) => ({left:p.pos[0]-40,right:p.pos[0]+40,top:p.pos[1]-40,bottom:p.pos[1]+40})),
     ...MAP_CATALOG.island_outline_m.map(([x,y]) => ({left:x,right:x,top:y,bottom:y}))
   ]);
-  let view, hour, day, selected = null, drag = null, suppressClick = false;
+  let view, hour, day, selected = null, drag = null, suppressClick = false, flowMode = 'regional';
   const escape = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const size = () => ({w:canvas.clientWidth || 320,h:canvas.clientHeight || 480});
   function fit(includeHypothesis = false) {
@@ -47,9 +47,20 @@ function createMapController() {
     const h = MapGeometry.hypothesis(MAP_CATALOG.shelf_radii_m,hour.current_direction,hour.current_velocity_kmh);
     const hypothesisOn = $('#map-hypothesis').checked;
     const allNames = $('#map-labels').checked;
+    const current = MapGeometry.currentVector(hour.current_direction,hour.current_velocity_kmh);
     const ellipse = (e,cls) => `<ellipse class="${cls}" cx="${e.x}" cy="${e.y}" rx="${e.rx}" ry="${e.ry}" transform="rotate(${e.rotation} ${e.x} ${e.y})"/>`;
     const text = (x,y,label,color='#f2ead8',font=12) => `<text x="${x}" y="${y}" text-anchor="middle" fill="${color}" font-size="${font*unit}" class="map-label">${escape(label)}</text>`;
-    let content = `<path class="map-island" d="M ${MAP_CATALOG.island_outline_m.map(p=>p.join(',')).join(' L ')} Z"/>`;
+    const arrows=MapGeometry.flowArrows(view,s.w,hour.current_direction,hour.current_velocity_kmh,MAP_CATALOG.island_outline_m,flowMode);
+    let content='<g class="map-current-arrows '+(flowMode==='local'?'is-local':'')+'" aria-hidden="true">';
+    for(const path of arrows) {
+      const end=path[path.length-1], prev=path[path.length-2];
+      const angle=Math.atan2(end[1]-prev[1],end[0]-prev[0]), head=6*unit;
+      const left=[end[0]-head*Math.cos(angle-.5),end[1]-head*Math.sin(angle-.5)];
+      const right=[end[0]-head*Math.cos(angle+.5),end[1]-head*Math.sin(angle+.5)];
+      content+=`<path d="M ${path.map(p=>p.join(',')).join(' L ')}"/><path class="flow-arrow-head" d="M ${left.join(',')} L ${end.join(',')} L ${right.join(',')}"/>`;
+    }
+    content+='</g>';
+    content += `<path class="map-island" d="M ${MAP_CATALOG.island_outline_m.map(p=>p.join(',')).join(' L ')} Z"/>`;
     content += text(0,15,'神子元島','#f2ead8',13);
     if (hypothesisOn) {
       content = ellipse(h.lee,'hypothesis-lee') + ellipse(h.zone,'hypothesis-zone') + content;
@@ -93,7 +104,15 @@ function createMapController() {
     const scale = MapGeometry.scaleBar(view.w,s.w);
     $('#map-scale-line').style.width = scale.pixels+'px';
     $('#map-scale-label').textContent = `概略 ${scale.metres} m`;
-    $('#map-zone-status').textContent = !hypothesisOn ? '局所流・予想域の仮説は非表示' :
+    const flowKey=$('#map-flow-key');
+    flowKey.className='map-flow-key'+(flowMode==='local'?' is-local':'');
+    flowKey.hidden=flowMode==='off';
+    flowKey.textContent=!current?'海流データなし':current.kt<.2?'弱い流れ · 矢印を省略':flowMode==='local'?'回り込みの仮説':'広域の表面流';
+    $('#map-flow-description').textContent=flowMode==='off'?'流れの矢印は非表示です。':!current?'選択時刻の海流データがありません。':
+      current.kt<.2?`広域の表面流 ${current.kt.toFixed(2)} kt · 0.2 kt未満のため矢印を省略しています。`:
+      flowMode==='local'?`金色の曲線は未検証の回り込みイメージです。入力の広域予報は${current.kt.toFixed(1)} kt・${hour.current_direction.toFixed(0)}°へ。地点ごとの流速予報ではありません。`:
+      `青い矢印は${hour.hour}:00の広域予報：${current.kt.toFixed(1)} kt・${hour.current_direction.toFixed(0)}°へ流れる向き。同じ予報値を繰り返し描いています。長さは流速の目安です。`;
+    $('#map-zone-status').textContent = !hypothesisOn ? '潮陰・予想域の仮説は非表示' :
       MapGeometry.contains(view,MapGeometry.ellipseBounds(h.zone)) ? '予想域は未検証の仮説です' : '予想域の一部または全体が画面外です。「予想域まで表示」で確認できます。';
     const currentLabel = `${hour.hour}:00の推奨`;
     $('#map-ranked').innerHTML = top.map((k,i)=>`<button type="button" data-select="${k}" aria-pressed="${k===selected}"><span class="map-rank">${i+1}</span><span>${escape(POINTS[k].label)}</span><b>${Math.round(scores[k]*100)}</b></button>`).join('');
@@ -129,6 +148,11 @@ function createMapController() {
   $('#map-reset').onclick=()=>fit();
   $('#map-fit-zone').onclick=()=>{$('#map-hypothesis').checked=true;fit(true);};
   $('#map-hypothesis').onchange=draw;$('#map-labels').onchange=draw;
+  document.querySelectorAll('[data-flow-mode]').forEach(button=>button.addEventListener('click',()=>{
+    flowMode=button.dataset.flowMode;
+    document.querySelectorAll('[data-flow-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+    draw();
+  }));
   $('#map-fullscreen').onclick=async()=>{
     try {if(document.fullscreenElement)await document.exitFullscreen();else await $('#map-workbench').requestFullscreen();}
     catch {$('#map-zone-status').textContent='このブラウザーは全画面表示に対応していません。＋で拡大できます。';}

@@ -2,6 +2,8 @@
 
 作成日：2026-08-23 / 対象格子：神子元島 34.56°N, 138.94°E （下田港から南約9km）
 
+2026-10-04追記：海流の現行採用範囲・深度・表示の限界は[公開海流データと流れの表示](../analysis/REPORT_current_visualization.md)を優先する。実際の要求位置は`forecast_engine.py`の34.5717°N, 138.9433°E。以下の初期調査から、沿岸精度と予報期間の過大な記述を修正した。
+
 ---
 
 ## 0. 総括：まず何を使うか
@@ -11,7 +13,7 @@
 
 | データ | ソース | 理由 |
 |---|---|---|
-| **海流ベクトル・SST・波・潮位** | **Open-Meteo Marine API** | 1点lat/lonでJSON、無料、16日先、hourly、認証不要 |
+| **海流ベクトル・SST・波・潮位** | **Open-Meteo Marine API** | 1点lat/lonでJSON、非商用の無料API、hourly。必要な値が揃う日のみ採用 |
 | **潮汐（時刻＋潮位）** | **気象庁 潮位表（下田／石廊崎）** | 公式・年間まとめて取得可・完全無料 |
 | **黒潮位置・水温場** | **JAMSTEC 黒潮親潮ウォッチ（画像）＋Copernicus Marine GLORYS12（数値）** | 前者は流路タイプの週次判断に、後者は暖水舌の格子データ取得に |
 
@@ -28,7 +30,7 @@
 - **提供変数**: `ocean_current_velocity`（速さ km/h / knots）、`ocean_current_direction`（0=北向き、90=東向き）— 潮汐込み（Eulerian + Waves + Tides）
 - **空間解像度**: 0.08度（約8km） — 神子元単一格子でカバー
 - **時間解像度**: hourly、15分単位の current conditions
-- **予測範囲**: デフォルト7日、最大16日先
+- **予測範囲**: SMOCの提供元モデルは約10日予報。API全体で要求できる期間と各変数が揃う期間は異なり、運用では全必須値が揃う約9日先までを採用
 - **API 形式**: GETリクエスト、JSON レスポンス、認証不要（非商用）
 - **リクエスト例**:
   ```
@@ -39,32 +41,32 @@
      &forecast_days=14
      &timezone=Asia%2FTokyo
   ```
-- **注意**: 沿岸域は「limited accuracy」の但し書きあり。神子元は絶海の孤島型なので精度期待は中〜高。
+- **注意**: 公式に沿岸精度の制約がある。神子元の島や根より格子が大きく、孤島であることだけで高精度とは言えない。島周辺・深度別の流れは未校正
 - **商用ライセンス**: 商用利用時は要有料契約（customer- プレフィックス）
 
-### 1-2. Copernicus Marine GLORYS12 / SMOC ★精度向上用（無料・要登録）
+### 1-2. Copernicus Marine 全球解析予報 / SMOC（成分別取得の候補）
 
 - URL: https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description
 - 提供元: EU Copernicus Marine Service（MeteoFrance）
-- **Open-Meteo が背後で使っている元データそのもの**。直接叩けば潮汐と Eulerian 成分を分離できる
+- SMOCはOpen-Meteo海流の元データ。同じデータへの取得経路を変えるだけでは精度向上にならない。直接取得では潮汐・循環・波の成分を区別できる
 - **提供変数**: 三次元流速（u, v, w）、水温、塩分、海面高度
-- **空間解像度**: 1/12度（約8km、全球）／1/36度は日本近海用の別プロダクトあり
-- **時間解像度**: 3-hourly（潮汐込み SMOC は hourly）
+- **空間解像度**: 1/12度（約8km、全球）
+- **時間解像度**: データセットによる。SMOC表面総流はhourly。三次元流速は別データセットで、深度・成分を取り違えない
 - **API 形式**: `copernicusmarine` Python CLI／ERDDAP／DAP／NetCDF ダウンロード
 - **アカウント**: 要無料登録（研究・非商用ならOK）
 
-### 1-3. JCOPE-T (JAMSTEC) ★最高解像度・要問い合わせ
+### 1-3. JCOPE-T (JAMSTEC) / 海中天気予報 (JAMSTEC・JAXA)
 
 - URL: https://www.jamstec.go.jp/aplinfo/kowatch/
 - 概要ページ: https://forecastocean.com/j/research.html
-- **空間解像度**: **1/36度（約3km格子）** — 日本沿岸で最高クラス
+- **空間解像度**: JCOPE-T DAは1/36度、JCOPE-T 1ksは1/120度（約1km）。[公開ビューア](https://www.eorc.jaxa.jp/ptree/ocean_model/index_j.html)に水深を選べる海流表示がある
 - **時間解像度**: 1時間毎
 - **提供変数**: 海底までの水温、塩分、潮流、水位（3D）
-- **予測範囲**: 短期（JCOPE-T DA）は20日先、長期（JCOPE3M）は2ヶ月先
-- **入手**: 公開の解説ページは画像のみ／数値データは JAMSTEC VENTURE（forecastocean.com）に法人問い合わせ必要
-- **神子元用途**: 1/36度は神子元島を "islands as land-mask" として認識できる解像度なので、島陰渦流もある程度シミュレートされている
+- **予測範囲**: プロダクトによって異なる。公開ビューアの生成時刻と選択できる予測日時を確認する
+- **入手**: 公開ビューアは比較用リンクとして参照する。数値の継続取得は対象プロダクト・提供条件・更新時刻を別途確認する。現状、本サイトには取り込んでいない
+- **神子元用途**: 約1kmでも島や根の細かい地形・局所渦を正確に再現できると断定できない。現地座標・深度・時刻別の流速観測との比較が必要
 
-**推奨アプローチ**: MVPは Open-Meteo で立ち上げ、精度と商用性が問題になったら Copernicus Marine か JCOPE-T に移行する。
+**現行アプローチ**: Open-Meteoで取得したSMOC総流を使用し、公開図へのリンクで比較できるようにする。データソースの変更は同時刻・同深度で検証してから判断する。
 
 ---
 
