@@ -43,3 +43,54 @@ test('score colors use a fixed zero-to-one scale', () => {
   assert.equal(G.scoreColor(2),G.scoreColor(1));
   assert.notEqual(G.scoreColor(.45),G.scoreColor(1));
 });
+
+test('current arrows use toward bearings and knots without another tide component', () => {
+  for(const [bearing,x,y] of [[0,0,-1],[90,1,0],[180,0,1],[270,-1,0]]) {
+    const v=G.currentVector(bearing,1.852*2);
+    assert.equal(v.kt,2);
+    assert.ok(Math.abs(v.x-x)<1e-10 && Math.abs(v.y-y)<1e-10);
+    const paths=G.flowArrows({x:400,y:400,w:800,h:800},400,bearing,1.852*2,catalog.island_outline_m);
+    assert.ok(paths.length>0);
+    for(const path of paths) {
+      const [sx,sy]=path[0], [ex,ey]=path.at(-1);
+      assert.ok((ex-sx)*x+(ey-sy)*y>0,'arrow points downstream');
+      assert.ok(Math.abs((ex-sx)*y-(ey-sy)*x)<1e-8,'regional flow stays uniform');
+    }
+  }
+});
+test('unavailable or weak current never creates fictitious directional arrows', () => {
+  const view={x:-600,y:-400,w:1400,h:1600};
+  for(const [dir,speed] of [[null,2],[90,null],[NaN,2],[90,-1],[90,0],[90,.1]]) {
+    assert.deepEqual(G.flowArrows(view,600,dir,speed,catalog.island_outline_m),[]);
+  }
+  assert.deepEqual(G.flowArrows(view,600,90,2,catalog.island_outline_m,'off'),[]);
+});
+test('regional and hypothetical arrows exclude the northern area and land at every bearing', () => {
+  const land=catalog.island_outline_m;
+  for(const mode of ['regional','local']) for(const width of [320,900]) for(let dir=0;dir<360;dir+=15) {
+    const paths=G.flowArrows({x:-650,y:-350,w:1300,h:1500},width,dir,5,land,mode);
+    assert.ok(paths.length>0);
+    for(const path of paths) for(const [x,y] of path) {
+      assert.ok(Number.isFinite(x)&&Number.isFinite(y)&&y>=0);
+      assert.equal(G.insideLand(x,y,land),false);
+      if(mode==='local') assert.ok(Math.hypot(x,y)>G.illustrativeObstacle(land));
+    }
+  }
+});
+test('illustrative flow bends round the obstacle but approaches the forecast direction offshore', () => {
+  const v=G.currentVector(90,2), radius=G.illustrativeObstacle(catalog.island_outline_m);
+  const near=G.localFlowVector(-radius,radius,v,radius);
+  assert.ok(near.y>0,'south-side upstream flow bends south around the island');
+  assert.equal(G.localFlowVector(0,0,v,radius),null);
+  const far=G.localFlowVector(100000,100000,v,radius);
+  assert.ok(Math.abs(far.y)<1e-5 && far.x>.999);
+});
+test('arrow length increases with forecast speed, and only saturates above four knots', () => {
+  const length=kt=>{
+    const p=G.flowArrows({x:600,y:600,w:600,h:600},600,90,kt*1.852,catalog.island_outline_m)[0];
+    return p.at(-1)[0]-p[0][0];
+  };
+  assert.ok(length(.5)<length(2));
+  assert.ok(length(2)<length(4));
+  assert.equal(length(4),length(8));
+});

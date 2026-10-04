@@ -62,6 +62,63 @@ const MapGeometry = (() => {
     const metres = [10,20,50,100,200,500,1000].filter(n => n <= max).pop() || 10;
     return {metres, pixels: metres / metresPerPixel};
   }
-  return {shelfRadius, hypothesis, ellipseBounds, union, fit, zoom, contains, scoreColor, scaleBar};
+  // SMOC reports the direction TOWARD which surface water flows, not a wind bearing.
+  // A single forecast value is repeated for legibility; these are not separate cells.
+  function currentVector(direction, speedKmh) {
+    if (!Number.isFinite(direction) || !Number.isFinite(speedKmh) || speedKmh < 0) return null;
+    const radians = direction * Math.PI / 180;
+    return {x:Math.sin(radians), y:-Math.cos(radians), kt:speedKmh/1.852};
+  }
+  function insideLand(x,y,polygon) {
+    let inside=false;
+    for(let i=0,j=polygon.length-1;i<polygon.length;j=i++) {
+      const [xi,yi]=polygon[i], [xj,yj]=polygon[j];
+      if((yi>y)!==(yj>y) && x<(xj-xi)*(y-yi)/(yj-yi)+xi) inside=!inside;
+    }
+    return inside;
+  }
+  function illustrativeObstacle(polygon) {
+    // An enclosing circle, NOT measured bathymetry or a calibrated current model.
+    // Potential-flow direction around it is only an explanatory illustration.
+    return Math.max(...polygon.map(([x,y])=>Math.hypot(x,y))) + 12;
+  }
+  function localFlowVector(x,y,current,radius) {
+    const r2=x*x+y*y;
+    if(r2<=radius*radius) return null;
+    const along=x*current.x+y*current.y, cross=-x*current.y+y*current.x;
+    const a2=radius*radius, r4=r2*r2;
+    const u=1-a2*(along*along-cross*cross)/r4;
+    const v=-2*a2*along*cross/r4;
+    const vx=u*current.x-v*current.y, vy=u*current.y+v*current.x;
+    const magnitude=Math.hypot(vx,vy);
+    return magnitude>1e-6 ? {x:vx/magnitude,y:vy/magnitude} : null;
+  }
+  function flowArrows(view,pixelWidth,direction,speedKmh,polygon,mode='regional') {
+    const current=currentVector(direction,speedKmh);
+    if(!current || current.kt<.2 || mode==='off') return [];
+    const unit=view.w/pixelWidth, spacing=90*unit;
+    const length=(24+Math.min(current.kt,4)*12)*unit;
+    const radius=illustrativeObstacle(polygon), arrows=[];
+    // South of the schematic island origin only. Never add northern dive targets.
+    const south=0;
+    const valid=(x,y)=>y>=south && !insideLand(x,y,polygon);
+    for(let y=Math.ceil(Math.max(view.y,south)/spacing)*spacing; y<view.y+view.h; y+=spacing) {
+      for(let x=Math.ceil(view.x/spacing)*spacing; x<view.x+view.w; x+=spacing) {
+        let px=x,py=y,ok=true;
+        const path=[[x,y]];
+        for(let step=0;step<16;step++) {
+          const v=mode==='local'?localFlowVector(px,py,current,radius):current;
+          if(!v || !valid(px,py)){ok=false;break;}
+          px+=v.x*length/16;py+=v.y*length/16;
+          if(!valid(px,py)){ok=false;break;}
+          path.push([px,py]);
+        }
+        if(ok) arrows.push(path);
+      }
+    }
+    return arrows;
+  }
+  return {shelfRadius, hypothesis, ellipseBounds, union, fit, zoom, contains, scoreColor, scaleBar,
+    currentVector, insideLand, illustrativeObstacle, localFlowVector, flowArrows};
 })();
 if (typeof module !== 'undefined') module.exports = MapGeometry;

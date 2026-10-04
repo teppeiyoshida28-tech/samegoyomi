@@ -21,12 +21,20 @@
           <button type="button" id="map-reset">対象地点に戻す</button>
           <button type="button" id="map-fullscreen">全画面</button>
         </div>
+        <div class="map-flow-controls" role="group" aria-label="流れの表示">
+          <button type="button" data-flow-mode="regional" aria-pressed="true">広域海流</button>
+          <button type="button" data-flow-mode="local" aria-pressed="false">回り込み（仮説）</button>
+          <button type="button" data-flow-mode="off" aria-pressed="false">非表示</button>
+        </div>
         <div class="map-canvas" id="map-canvas">
           <svg id="forecast-map" tabindex="0" role="group" aria-label="神子元島南側の概略地図。地点を選択、矢印キーで移動できます。" aria-describedby="map-help" viewBox="-500 -200 1000 1200"></svg>
           <div class="map-north" aria-hidden="true">↑<br>N</div>
           <div class="map-scale"><div id="map-scale-line"></div><span id="map-scale-label"></span></div>
           <span class="map-schematic">概略図・位置未校正</span>
+          <div class="map-flow-key" id="map-flow-key"></div>
         </div>
+        <p class="map-flow-description" id="map-flow-description" role="status"></p>
+        <p class="map-flow-source">海流データ：<a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener">Open-Meteo</a> / <a href="https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description" target="_blank" rel="noopener">Copernicus Marine（SMOC）</a> · 表面流・約8km格子</p>
         <p class="map-help" id="map-help">ドラッグで移動 · ＋/−で拡大縮小 · 地点を選ぶと詳細表示</p>
         <div class="map-layers">
           <label><input type="checkbox" id="map-labels"> 全地点の名前</label>
@@ -43,12 +51,19 @@
         <div id="map-point-detail" aria-live="polite"></div>
         <div class="map-score-legend"><span></span><div>0 <b>地点スコア</b> 100</div></div>
         <p class="map-help">色の目盛りは全日・全地点で共通です。番号は選択時刻の上位3地点。スコアは遭遇確率ではありません。</p>
+        <div class="map-current-references">
+          <h4>公開海流図と見比べる</h4>
+          <a href="https://www.eorc.jaxa.jp/ptree/ocean_model/index_j.html" target="_blank" rel="noopener">JAMSTEC・JAXA 海中天気予報 ↗<small>約1km格子 · 水深を選択可能</small></a>
+          <a href="https://www.data.jma.go.jp/kaikyou/kaikyou/tile/jp/index_subsfct.html" target="_blank" rel="noopener">気象庁 海流予想図 ↗<small>50m深の海流 · 30日先まで</small></a>
+          <p>比較するときは日時・水深を確認してください。こちらの2サイトの数値は本図に合成していません。</p>
+        </div>
       </aside>
     </div>
     <details class="map-provenance">
       <summary>地図と予測の根拠・限界</summary>
       <p>島・根の形状と位置は公式ポイント案内を参考にした概略です。GPS座標・測深による校正は未完了で、航行や潜水経路の判断には使えません。実測に基づかない等深線は表示していません。</p>
-      <p>広域海流はOpen-MeteoのSMOC（約8km格子、潮汐を含む）。島周辺の局所流や水深ごとの流れを実測したものではありません。海面水温も海中の水温分布とは異なります。</p>
+      <p>青い矢印はOpen-Meteo経由のCopernicus Marine SMOC表面流予報（約8km格子、1時間値）です。選択時刻の同じ広域予報を繰り返し描き、各地点で別々に計測した流れではありません。矢印は流れていく向き、長さは流速の目安（4ktで上限）を示します。0.2kt未満は向きを強調しないため矢印を描きません。潮汐・波浪の成分を既に含むため、独自の潮汐流を再加算していません。</p>
+      <p>金色の「回り込み（仮説）」は同じ広域流向から、島を円形の障害物とみなして描いた模式図です。海底地形や根ごとの加速・反流を再現した予報ではなく、局所流速の数値には使いません。北側には流れのイラストを追加していません。海面水温も海中の水温分布とは異なります。</p>
       <p>潮陰とハンマー予想域は現地知見をもとにした未検証の仮説です。地点順位は潮流・地形の仮説と訪問記事の統計に基づき、行先選択・記載・透明度による観測バイアスがあります。</p>
       <p>オーナー指定により南側のみを予測・推奨の対象にしています。北側の潜水可否を判定する表示ではありません。</p>
       <a href="https://maps.gsi.go.jp/#16/34.5717/138.9433/&amp;base=std&amp;ls=std&amp;disp=1" target="_blank" rel="noopener">島の位置を地理院地図で確認 ↗</a>

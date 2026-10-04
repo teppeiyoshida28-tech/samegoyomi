@@ -45,6 +45,24 @@ button:focus-visible, a:focus-visible, select:focus-visible, summary:focus-visib
 .map-toolbar { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:10px; }
 .map-toolbar button,.map-layers button { min-height:40px; padding:6px 12px; border:1px solid #526a7d; background:#1c344b; border-radius:8px; color:var(--foam); cursor:pointer; font-size:13px; }
 .map-toolbar button:first-child,.map-toolbar button:nth-child(2) { font-size:22px; min-width:42px; }
+.map-flow-controls { display:flex; flex-wrap:wrap; gap:5px; margin:0 0 10px; }
+.map-flow-controls button { padding:9px 13px; min-height:40px; border:1px solid #48667d; border-radius:8px; background:#132b40; color:#c5d9e6; font-size:13px; cursor:pointer; }
+.map-flow-controls button[aria-pressed=true] { color:#d1f0ff; border-color:#73bedf; background:#20435a; }
+.map-flow-controls button[data-flow-mode=local][aria-pressed=true] { color:#ffe0a4; border-color:#ddba75; background:#473d2a; }
+.map-current-arrows { fill:none; stroke:#6fbfe4; stroke-width:1.6px; stroke-linecap:round; stroke-linejoin:round; pointer-events:none; opacity:.65; }
+.map-current-arrows path { vector-effect:non-scaling-stroke; }
+.map-current-arrows.is-local { stroke:#e0b970; opacity:.75; }
+.map-current-arrows.is-local path:not(.flow-arrow-head) { stroke-dasharray:5 3; }
+.map-flow-key { position:absolute; right:12px; bottom:12px; border-left:3px solid #6fbfe4; background:rgba(8,27,43,.92); padding:7px 9px; color:#b9eaff; font-size:11px; pointer-events:none; }
+.map-flow-key.is-local { border-color:#e0b970; color:#f3d598; }
+.map-flow-description { color:#c4dce9; font-size:12px; line-height:1.8; margin:12px 0 5px; }
+.map-flow-source { color:#9fb6c7; font-size:11px; line-height:1.8; }
+.map-flow-source a { color:#9acfe7; text-decoration:underline; text-underline-offset:3px; }
+.map-current-references { margin-top:24px; padding-top:20px; border-top:1px solid var(--line-strong); }
+.map-current-references h4 { font-size:14px; }
+.map-current-references a { display:block; padding:10px 12px; margin:8px 0; background:#1b344a; border:1px solid #426073; border-radius:8px; color:#cbe4f4; font-size:12px; line-height:1.7; }
+.map-current-references small { display:block; color:#a8c1d4; font-size:11px; }
+.map-current-references p { color:#afc4d5; font-size:11px; line-height:1.8; }
 .map-canvas { position:relative; height:640px; width:100%; overflow:hidden; border:1px solid #405b6b; border-radius:12px; background:#081b2b; }
 #forecast-map { display:block; width:100%; height:100%; touch-action:none; cursor:grab; }
 #forecast-map:active { cursor:grabbing; }
@@ -151,6 +169,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, summary:focus-visib
   .map-canvas { height:460px; }
   .map-toolbar { gap:5px; }
   .map-toolbar button { padding:5px 9px; font-size:12px; }
+  .map-flow-controls button { padding:8px; font-size:12px; }
   .map-sidebar { padding:0 4px; }
   #map-ranked { gap:6px; }
   .map-provenance { padding-left:4px; padding-right:4px; }

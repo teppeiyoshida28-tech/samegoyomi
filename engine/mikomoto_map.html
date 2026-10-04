@@ -1437,6 +1437,24 @@ button:focus-visible, a:focus-visible, select:focus-visible, summary:focus-visib
 .map-toolbar { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:10px; }
 .map-toolbar button,.map-layers button { min-height:40px; padding:6px 12px; border:1px solid #526a7d; background:#1c344b; border-radius:8px; color:var(--foam); cursor:pointer; font-size:13px; }
 .map-toolbar button:first-child,.map-toolbar button:nth-child(2) { font-size:22px; min-width:42px; }
+.map-flow-controls { display:flex; flex-wrap:wrap; gap:5px; margin:0 0 10px; }
+.map-flow-controls button { padding:9px 13px; min-height:40px; border:1px solid #48667d; border-radius:8px; background:#132b40; color:#c5d9e6; font-size:13px; cursor:pointer; }
+.map-flow-controls button[aria-pressed=true] { color:#d1f0ff; border-color:#73bedf; background:#20435a; }
+.map-flow-controls button[data-flow-mode=local][aria-pressed=true] { color:#ffe0a4; border-color:#ddba75; background:#473d2a; }
+.map-current-arrows { fill:none; stroke:#6fbfe4; stroke-width:1.6px; stroke-linecap:round; stroke-linejoin:round; pointer-events:none; opacity:.65; }
+.map-current-arrows path { vector-effect:non-scaling-stroke; }
+.map-current-arrows.is-local { stroke:#e0b970; opacity:.75; }
+.map-current-arrows.is-local path:not(.flow-arrow-head) { stroke-dasharray:5 3; }
+.map-flow-key { position:absolute; right:12px; bottom:12px; border-left:3px solid #6fbfe4; background:rgba(8,27,43,.92); padding:7px 9px; color:#b9eaff; font-size:11px; pointer-events:none; }
+.map-flow-key.is-local { border-color:#e0b970; color:#f3d598; }
+.map-flow-description { color:#c4dce9; font-size:12px; line-height:1.8; margin:12px 0 5px; }
+.map-flow-source { color:#9fb6c7; font-size:11px; line-height:1.8; }
+.map-flow-source a { color:#9acfe7; text-decoration:underline; text-underline-offset:3px; }
+.map-current-references { margin-top:24px; padding-top:20px; border-top:1px solid var(--line-strong); }
+.map-current-references h4 { font-size:14px; }
+.map-current-references a { display:block; padding:10px 12px; margin:8px 0; background:#1b344a; border:1px solid #426073; border-radius:8px; color:#cbe4f4; font-size:12px; line-height:1.7; }
+.map-current-references small { display:block; color:#a8c1d4; font-size:11px; }
+.map-current-references p { color:#afc4d5; font-size:11px; line-height:1.8; }
 .map-canvas { position:relative; height:640px; width:100%; overflow:hidden; border:1px solid #405b6b; border-radius:12px; background:#081b2b; }
 #forecast-map { display:block; width:100%; height:100%; touch-action:none; cursor:grab; }
 #forecast-map:active { cursor:grabbing; }
@@ -1543,6 +1561,7 @@ button:focus-visible, a:focus-visible, select:focus-visible, summary:focus-visib
   .map-canvas { height:460px; }
   .map-toolbar { gap:5px; }
   .map-toolbar button { padding:5px 9px; font-size:12px; }
+  .map-flow-controls button { padding:8px; font-size:12px; }
   .map-sidebar { padding:0 4px; }
   #map-ranked { gap:6px; }
   .map-provenance { padding-left:4px; padding-right:4px; }
@@ -1641,12 +1660,20 @@ button:focus-visible, a:focus-visible, select:focus-visible, summary:focus-visib
           <button type="button" id="map-reset">対象地点に戻す</button>
           <button type="button" id="map-fullscreen">全画面</button>
         </div>
+        <div class="map-flow-controls" role="group" aria-label="流れの表示">
+          <button type="button" data-flow-mode="regional" aria-pressed="true">広域海流</button>
+          <button type="button" data-flow-mode="local" aria-pressed="false">回り込み（仮説）</button>
+          <button type="button" data-flow-mode="off" aria-pressed="false">非表示</button>
+        </div>
         <div class="map-canvas" id="map-canvas">
           <svg id="forecast-map" tabindex="0" role="group" aria-label="神子元島南側の概略地図。地点を選択、矢印キーで移動できます。" aria-describedby="map-help" viewBox="-500 -200 1000 1200"></svg>
           <div class="map-north" aria-hidden="true">↑<br>N</div>
           <div class="map-scale"><div id="map-scale-line"></div><span id="map-scale-label"></span></div>
           <span class="map-schematic">概略図・位置未校正</span>
+          <div class="map-flow-key" id="map-flow-key"></div>
         </div>
+        <p class="map-flow-description" id="map-flow-description" role="status"></p>
+        <p class="map-flow-source">海流データ：<a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener">Open-Meteo</a> / <a href="https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description" target="_blank" rel="noopener">Copernicus Marine（SMOC）</a> · 表面流・約8km格子</p>
         <p class="map-help" id="map-help">ドラッグで移動 · ＋/−で拡大縮小 · 地点を選ぶと詳細表示</p>
         <div class="map-layers">
           <label><input type="checkbox" id="map-labels"> 全地点の名前</label>
@@ -1663,12 +1690,19 @@ button:focus-visible, a:focus-visible, select:focus-visible, summary:focus-visib
         <div id="map-point-detail" aria-live="polite"></div>
         <div class="map-score-legend"><span></span><div>0 <b>地点スコア</b> 100</div></div>
         <p class="map-help">色の目盛りは全日・全地点で共通です。番号は選択時刻の上位3地点。スコアは遭遇確率ではありません。</p>
+        <div class="map-current-references">
+          <h4>公開海流図と見比べる</h4>
+          <a href="https://www.eorc.jaxa.jp/ptree/ocean_model/index_j.html" target="_blank" rel="noopener">JAMSTEC・JAXA 海中天気予報 ↗<small>約1km格子 · 水深を選択可能</small></a>
+          <a href="https://www.data.jma.go.jp/kaikyou/kaikyou/tile/jp/index_subsfct.html" target="_blank" rel="noopener">気象庁 海流予想図 ↗<small>50m深の海流 · 30日先まで</small></a>
+          <p>比較するときは日時・水深を確認してください。こちらの2サイトの数値は本図に合成していません。</p>
+        </div>
       </aside>
     </div>
     <details class="map-provenance">
       <summary>地図と予測の根拠・限界</summary>
       <p>島・根の形状と位置は公式ポイント案内を参考にした概略です。GPS座標・測深による校正は未完了で、航行や潜水経路の判断には使えません。実測に基づかない等深線は表示していません。</p>
-      <p>広域海流はOpen-MeteoのSMOC（約8km格子、潮汐を含む）。島周辺の局所流や水深ごとの流れを実測したものではありません。海面水温も海中の水温分布とは異なります。</p>
+      <p>青い矢印はOpen-Meteo経由のCopernicus Marine SMOC表面流予報（約8km格子、1時間値）です。選択時刻の同じ広域予報を繰り返し描き、各地点で別々に計測した流れではありません。矢印は流れていく向き、長さは流速の目安（4ktで上限）を示します。0.2kt未満は向きを強調しないため矢印を描きません。潮汐・波浪の成分を既に含むため、独自の潮汐流を再加算していません。</p>
+      <p>金色の「回り込み（仮説）」は同じ広域流向から、島を円形の障害物とみなして描いた模式図です。海底地形や根ごとの加速・反流を再現した予報ではなく、局所流速の数値には使いません。北側には流れのイラストを追加していません。海面水温も海中の水温分布とは異なります。</p>
       <p>潮陰とハンマー予想域は現地知見をもとにした未検証の仮説です。地点順位は潮流・地形の仮説と訪問記事の統計に基づき、行先選択・記載・透明度による観測バイアスがあります。</p>
       <p>オーナー指定により南側のみを予測・推奨の対象にしています。北側の潜水可否を判定する表示ではありません。</p>
       <a href="https://maps.gsi.go.jp/#16/34.5717/138.9433/&amp;base=std&amp;ls=std&amp;disp=1" target="_blank" rel="noopener">島の位置を地理院地図で確認 ↗</a>
@@ -1873,7 +1907,64 @@ const MapGeometry = (() => {
     const metres = [10,20,50,100,200,500,1000].filter(n => n <= max).pop() || 10;
     return {metres, pixels: metres / metresPerPixel};
   }
-  return {shelfRadius, hypothesis, ellipseBounds, union, fit, zoom, contains, scoreColor, scaleBar};
+  // SMOC reports the direction TOWARD which surface water flows, not a wind bearing.
+  // A single forecast value is repeated for legibility; these are not separate cells.
+  function currentVector(direction, speedKmh) {
+    if (!Number.isFinite(direction) || !Number.isFinite(speedKmh) || speedKmh < 0) return null;
+    const radians = direction * Math.PI / 180;
+    return {x:Math.sin(radians), y:-Math.cos(radians), kt:speedKmh/1.852};
+  }
+  function insideLand(x,y,polygon) {
+    let inside=false;
+    for(let i=0,j=polygon.length-1;i<polygon.length;j=i++) {
+      const [xi,yi]=polygon[i], [xj,yj]=polygon[j];
+      if((yi>y)!==(yj>y) && x<(xj-xi)*(y-yi)/(yj-yi)+xi) inside=!inside;
+    }
+    return inside;
+  }
+  function illustrativeObstacle(polygon) {
+    // An enclosing circle, NOT measured bathymetry or a calibrated current model.
+    // Potential-flow direction around it is only an explanatory illustration.
+    return Math.max(...polygon.map(([x,y])=>Math.hypot(x,y))) + 12;
+  }
+  function localFlowVector(x,y,current,radius) {
+    const r2=x*x+y*y;
+    if(r2<=radius*radius) return null;
+    const along=x*current.x+y*current.y, cross=-x*current.y+y*current.x;
+    const a2=radius*radius, r4=r2*r2;
+    const u=1-a2*(along*along-cross*cross)/r4;
+    const v=-2*a2*along*cross/r4;
+    const vx=u*current.x-v*current.y, vy=u*current.y+v*current.x;
+    const magnitude=Math.hypot(vx,vy);
+    return magnitude>1e-6 ? {x:vx/magnitude,y:vy/magnitude} : null;
+  }
+  function flowArrows(view,pixelWidth,direction,speedKmh,polygon,mode='regional') {
+    const current=currentVector(direction,speedKmh);
+    if(!current || current.kt<.2 || mode==='off') return [];
+    const unit=view.w/pixelWidth, spacing=90*unit;
+    const length=(24+Math.min(current.kt,4)*12)*unit;
+    const radius=illustrativeObstacle(polygon), arrows=[];
+    // South of the schematic island origin only. Never add northern dive targets.
+    const south=0;
+    const valid=(x,y)=>y>=south && !insideLand(x,y,polygon);
+    for(let y=Math.ceil(Math.max(view.y,south)/spacing)*spacing; y<view.y+view.h; y+=spacing) {
+      for(let x=Math.ceil(view.x/spacing)*spacing; x<view.x+view.w; x+=spacing) {
+        let px=x,py=y,ok=true;
+        const path=[[x,y]];
+        for(let step=0;step<16;step++) {
+          const v=mode==='local'?localFlowVector(px,py,current,radius):current;
+          if(!v || !valid(px,py)){ok=false;break;}
+          px+=v.x*length/16;py+=v.y*length/16;
+          if(!valid(px,py)){ok=false;break;}
+          path.push([px,py]);
+        }
+        if(ok) arrows.push(path);
+      }
+    }
+    return arrows;
+  }
+  return {shelfRadius, hypothesis, ellipseBounds, union, fit, zoom, contains, scoreColor, scaleBar,
+    currentVector, insideLand, illustrativeObstacle, localFlowVector, flowArrows};
 })();
 if (typeof module !== 'undefined') module.exports = MapGeometry;
 
@@ -2117,7 +2208,7 @@ function createMapController() {
     ...points.map(([,p]) => ({left:p.pos[0]-40,right:p.pos[0]+40,top:p.pos[1]-40,bottom:p.pos[1]+40})),
     ...MAP_CATALOG.island_outline_m.map(([x,y]) => ({left:x,right:x,top:y,bottom:y}))
   ]);
-  let view, hour, day, selected = null, drag = null, suppressClick = false;
+  let view, hour, day, selected = null, drag = null, suppressClick = false, flowMode = 'regional';
   const escape = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const size = () => ({w:canvas.clientWidth || 320,h:canvas.clientHeight || 480});
   function fit(includeHypothesis = false) {
@@ -2149,9 +2240,20 @@ function createMapController() {
     const h = MapGeometry.hypothesis(MAP_CATALOG.shelf_radii_m,hour.current_direction,hour.current_velocity_kmh);
     const hypothesisOn = $('#map-hypothesis').checked;
     const allNames = $('#map-labels').checked;
+    const current = MapGeometry.currentVector(hour.current_direction,hour.current_velocity_kmh);
     const ellipse = (e,cls) => `<ellipse class="${cls}" cx="${e.x}" cy="${e.y}" rx="${e.rx}" ry="${e.ry}" transform="rotate(${e.rotation} ${e.x} ${e.y})"/>`;
     const text = (x,y,label,color='#f2ead8',font=12) => `<text x="${x}" y="${y}" text-anchor="middle" fill="${color}" font-size="${font*unit}" class="map-label">${escape(label)}</text>`;
-    let content = `<path class="map-island" d="M ${MAP_CATALOG.island_outline_m.map(p=>p.join(',')).join(' L ')} Z"/>`;
+    const arrows=MapGeometry.flowArrows(view,s.w,hour.current_direction,hour.current_velocity_kmh,MAP_CATALOG.island_outline_m,flowMode);
+    let content='<g class="map-current-arrows '+(flowMode==='local'?'is-local':'')+'" aria-hidden="true">';
+    for(const path of arrows) {
+      const end=path[path.length-1], prev=path[path.length-2];
+      const angle=Math.atan2(end[1]-prev[1],end[0]-prev[0]), head=6*unit;
+      const left=[end[0]-head*Math.cos(angle-.5),end[1]-head*Math.sin(angle-.5)];
+      const right=[end[0]-head*Math.cos(angle+.5),end[1]-head*Math.sin(angle+.5)];
+      content+=`<path d="M ${path.map(p=>p.join(',')).join(' L ')}"/><path class="flow-arrow-head" d="M ${left.join(',')} L ${end.join(',')} L ${right.join(',')}"/>`;
+    }
+    content+='</g>';
+    content += `<path class="map-island" d="M ${MAP_CATALOG.island_outline_m.map(p=>p.join(',')).join(' L ')} Z"/>`;
     content += text(0,15,'神子元島','#f2ead8',13);
     if (hypothesisOn) {
       content = ellipse(h.lee,'hypothesis-lee') + ellipse(h.zone,'hypothesis-zone') + content;
@@ -2195,7 +2297,15 @@ function createMapController() {
     const scale = MapGeometry.scaleBar(view.w,s.w);
     $('#map-scale-line').style.width = scale.pixels+'px';
     $('#map-scale-label').textContent = `概略 ${scale.metres} m`;
-    $('#map-zone-status').textContent = !hypothesisOn ? '局所流・予想域の仮説は非表示' :
+    const flowKey=$('#map-flow-key');
+    flowKey.className='map-flow-key'+(flowMode==='local'?' is-local':'');
+    flowKey.hidden=flowMode==='off';
+    flowKey.textContent=!current?'海流データなし':current.kt<.2?'弱い流れ · 矢印を省略':flowMode==='local'?'回り込みの仮説':'広域の表面流';
+    $('#map-flow-description').textContent=flowMode==='off'?'流れの矢印は非表示です。':!current?'選択時刻の海流データがありません。':
+      current.kt<.2?`広域の表面流 ${current.kt.toFixed(2)} kt · 0.2 kt未満のため矢印を省略しています。`:
+      flowMode==='local'?`金色の曲線は未検証の回り込みイメージです。入力の広域予報は${current.kt.toFixed(1)} kt・${hour.current_direction.toFixed(0)}°へ。地点ごとの流速予報ではありません。`:
+      `青い矢印は${hour.hour}:00の広域予報：${current.kt.toFixed(1)} kt・${hour.current_direction.toFixed(0)}°へ流れる向き。同じ予報値を繰り返し描いています。長さは流速の目安です。`;
+    $('#map-zone-status').textContent = !hypothesisOn ? '潮陰・予想域の仮説は非表示' :
       MapGeometry.contains(view,MapGeometry.ellipseBounds(h.zone)) ? '予想域は未検証の仮説です' : '予想域の一部または全体が画面外です。「予想域まで表示」で確認できます。';
     const currentLabel = `${hour.hour}:00の推奨`;
     $('#map-ranked').innerHTML = top.map((k,i)=>`<button type="button" data-select="${k}" aria-pressed="${k===selected}"><span class="map-rank">${i+1}</span><span>${escape(POINTS[k].label)}</span><b>${Math.round(scores[k]*100)}</b></button>`).join('');
@@ -2231,6 +2341,11 @@ function createMapController() {
   $('#map-reset').onclick=()=>fit();
   $('#map-fit-zone').onclick=()=>{$('#map-hypothesis').checked=true;fit(true);};
   $('#map-hypothesis').onchange=draw;$('#map-labels').onchange=draw;
+  document.querySelectorAll('[data-flow-mode]').forEach(button=>button.addEventListener('click',()=>{
+    flowMode=button.dataset.flowMode;
+    document.querySelectorAll('[data-flow-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
+    draw();
+  }));
   $('#map-fullscreen').onclick=async()=>{
     try {if(document.fullscreenElement)await document.exitFullscreen();else await $('#map-workbench').requestFullscreen();}
     catch {$('#map-zone-status').textContent='このブラウザーは全画面表示に対応していません。＋で拡大できます。';}
