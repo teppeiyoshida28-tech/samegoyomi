@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-04T08:58:40.773326+09:00",
+ "generated_at": "2026-10-04T23:13:28.053041+09:00",
  "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
  "kuroshio": {
   "updated": "2026-08-25",
@@ -21,7 +21,7 @@
   "7": 3.37,
   "8": 3.28,
   "9": 3.35,
-  "10": 3.3,
+  "10": 3.28,
   "11": 3.32,
   "12": 3.35
  },
@@ -106,12 +106,12 @@
    "rise_m": 0.49,
    "flow_label": "上げ主体",
    "flow_type": "flood",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 1.0,
    "f_ebb": 0.0,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 47.0
+   "aim_score": 43.8
   },
   {
    "date": "2026-10-05",
@@ -141,12 +141,12 @@
    "rise_m": 0.69,
    "flow_label": "上げ主体",
    "flow_type": "flood",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.398,
    "f_ebb": 0.0,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 34.9
+   "aim_score": 31.8
   },
   {
    "date": "2026-10-06",
@@ -176,12 +176,12 @@
    "rise_m": 0.74,
    "flow_label": "上げ主体",
    "flow_type": "flood",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.735,
    "f_ebb": 0.093,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 44.0
+   "aim_score": 40.8
   },
   {
    "date": "2026-10-07",
@@ -211,12 +211,12 @@
    "rise_m": 0.62,
    "flow_label": "下げ止まり8時・午後上げ",
    "flow_type": "ebbstop",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.141,
    "f_ebb": 0.22,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 35.3
+   "aim_score": 32.1
   },
   {
    "date": "2026-10-08",
@@ -246,12 +246,12 @@
    "rise_m": 0.38,
    "flow_label": "下げ止まり9時・午後上げ",
    "flow_type": "ebbstop",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.622,
    "f_ebb": 0.314,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 47.3
+   "aim_score": 44.1
   },
   {
    "date": "2026-10-09",
@@ -281,12 +281,12 @@
    "rise_m": 0.08,
    "flow_label": "動き小",
    "flow_type": "slack",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.45,
    "f_ebb": 0.347,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 44.7
+   "aim_score": 41.5
   },
   {
    "date": "2026-10-10",
@@ -316,12 +316,12 @@
    "rise_m": 0.0,
    "flow_label": "動き小",
    "flow_type": "slack",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.852,
    "f_ebb": 0.492,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 56.3,
+   "aim_score": 53.1,
    "is_top": true
   },
   {
@@ -352,12 +352,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜11時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.241,
    "f_ebb": 0.61,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 47.0
+   "aim_score": 43.9
   },
   {
    "date": "2026-10-12",
@@ -387,12 +387,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜11時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.361,
    "f_ebb": 0.619,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 49.7
+   "aim_score": 46.5
   },
   {
    "date": "2026-10-13",
@@ -422,12 +422,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜12時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.671,
    "f_ebb": 0.534,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 53.7,
+   "aim_score": 50.6,
    "is_top": true
   },
   {
@@ -458,12 +458,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜12時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.594,
    "f_ebb": 0.441,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 49.9,
+   "aim_score": 46.7,
    "is_top": true
   },
   {
@@ -494,12 +494,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜12時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.232,
    "f_ebb": 0.331,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 39.9
+   "aim_score": 36.7
   },
   {
    "date": "2026-10-16",
@@ -529,12 +529,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜13時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.103,
    "f_ebb": 0.178,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 33.5
+   "aim_score": 30.3
   },
   {
    "date": "2026-10-17",
@@ -564,12 +564,12 @@
    "rise_m": 0.0,
    "flow_label": "動き小",
    "flow_type": "slack",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.0,
    "f_ebb": 0.008,
    "f_kuroshio": 1.0,
    "kuroshio_known": true,
-   "aim_score": 27.2
+   "aim_score": 24.0
   },
   {
    "date": "2026-10-18",
@@ -599,12 +599,12 @@
    "rise_m": 0.19,
    "flow_label": "動き小",
    "flow_type": "slack",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.413,
    "f_ebb": 0.0,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 25.2
+   "aim_score": 22.1
   },
   {
    "date": "2026-10-19",
@@ -634,12 +634,12 @@
    "rise_m": 0.38,
    "flow_label": "上げ主体",
    "flow_type": "flood",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.336,
    "f_ebb": 0.0,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 23.7
+   "aim_score": 20.5
   },
   {
    "date": "2026-10-20",
@@ -669,12 +669,12 @@
    "rise_m": 0.52,
    "flow_label": "上げ主体",
    "flow_type": "flood",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.456,
    "f_ebb": 0.0,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 26.1
+   "aim_score": 22.9
   },
   {
    "date": "2026-10-21",
@@ -704,12 +704,12 @@
    "rise_m": 0.6,
    "flow_label": "上げ主体",
    "flow_type": "flood",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.332,
    "f_ebb": 0.042,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 24.7
+   "aim_score": 21.5
   },
   {
    "date": "2026-10-22",
@@ -739,12 +739,12 @@
    "rise_m": 0.59,
    "flow_label": "上げ主体",
    "flow_type": "flood",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.332,
    "f_ebb": 0.136,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 27.0
+   "aim_score": 23.8
   },
   {
    "date": "2026-10-23",
@@ -774,12 +774,12 @@
    "rise_m": 0.48,
    "flow_label": "下げ止まり9時・午後上げ",
    "flow_type": "ebbstop",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.814,
    "f_ebb": 0.229,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 39.0
+   "aim_score": 35.8
   },
   {
    "date": "2026-10-24",
@@ -809,12 +809,12 @@
    "rise_m": 0.27,
    "flow_label": "下げ止まり9時・午後上げ",
    "flow_type": "ebbstop",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.938,
    "f_ebb": 0.288,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 42.9
+   "aim_score": 39.8
   },
   {
    "date": "2026-10-25",
@@ -844,12 +844,12 @@
    "rise_m": 0.0,
    "flow_label": "動き小",
    "flow_type": "slack",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.835,
    "f_ebb": 0.305,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 41.3
+   "aim_score": 38.1
   },
   {
    "date": "2026-10-26",
@@ -879,12 +879,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜11時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.775,
    "f_ebb": 0.5,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 45.0
+   "aim_score": 41.8
   },
   {
    "date": "2026-10-27",
@@ -914,12 +914,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜11時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.241,
    "f_ebb": 0.602,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 36.8
+   "aim_score": 33.7
   },
   {
    "date": "2026-10-28",
@@ -949,12 +949,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜12時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.551,
    "f_ebb": 0.576,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 42.4
+   "aim_score": 39.2
   },
   {
    "date": "2026-10-29",
@@ -984,12 +984,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜12時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.009,
    "f_ebb": 0.517,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 30.1
+   "aim_score": 26.9
   },
   {
    "date": "2026-10-30",
@@ -1019,12 +1019,12 @@
    "rise_m": 0.0,
    "flow_label": "下げ 〜13時",
    "flow_type": "ebb",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.336,
    "f_ebb": 0.373,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 33.0
+   "aim_score": 29.8
   },
   {
    "date": "2026-10-31",
@@ -1054,12 +1054,12 @@
    "rise_m": 0.0,
    "flow_label": "動き小",
    "flow_type": "slack",
-   "f_month": 0.199,
+   "f_month": 0.109,
    "f_moon": 0.628,
    "f_ebb": 0.144,
    "f_kuroshio": 0.5,
    "kuroshio_known": false,
-   "aim_score": 33.1
+   "aim_score": 30.0
   },
   {
    "date": "2026-11-01",

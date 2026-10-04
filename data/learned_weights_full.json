@@ -1,19 +1,19 @@
 {
-  "trained_at": "2026-10-04T08:58:33.314503+09:00",
-  "n_records": 1865,
+  "trained_at": "2026-10-04T23:13:22.814336+09:00",
+  "n_records": 1866,
   "source": "phase1 full logs (hammers+ms+290 partial)",
-  "bias": 0.7607919913385378,
+  "bias": 0.7604579548556374,
   "raw_weights": {
-    "f_sst_anomaly": 0.02632257480965202,
-    "f_visibility": 0.07095095559826727,
-    "f_tropical": 0.012335436222411353,
-    "f_recent_actual": 0.0025042526062717847
+    "f_sst_anomaly": 0.02668989548534152,
+    "f_visibility": 0.07042240104779408,
+    "f_tropical": 0.011486625031273564,
+    "f_recent_actual": 0.0033262408630329787
   },
   "normalized_weights": {
-    "f_sst_anomaly": 0.23478564783784478,
-    "f_visibility": 0.6328509348084387,
-    "f_tropical": 0.11002659906124714,
-    "f_recent_actual": 0.022336818292469505
+    "f_sst_anomaly": 0.23846197679314343,
+    "f_visibility": 0.6291918592787114,
+    "f_tropical": 0.1026277271540259,
+    "f_recent_actual": 0.029718436774119356
   },
-  "mae": 0.13906665484457037
+  "mae": 0.1393838988435667
 }

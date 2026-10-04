@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-04T08:58:36.455756+09:00",
+ "generated_at": "2026-10-04T23:13:25.034983+09:00",
  "model_version": "2026-10-integrity-v1",
  "evaluation_type": "retrospective",
  "current_mode": "smoc",
@@ -39,7 +39,7 @@
    "accuracy": 0.9326,
    "balanced_accuracy": 0.5,
    "brier": 0.0661,
-   "auc": 0.5181,
+   "auc": 0.5186,
    "recall": 1.0,
    "specificity": 0.0,
    "calibration": [
@@ -117,7 +117,7 @@
     "accuracy": 0.9569,
     "balanced_accuracy": 0.5,
     "brier": 0.0423,
-    "auc": 0.6378,
+    "auc": 0.6387,
     "recall": 1.0,
     "specificity": 0.0,
     "calibration": [
@@ -16169,8 +16169,8 @@
    "date": "2026-10-03",
    "weekday": "土",
    "predicted": {
-    "seen_probability": 0.9874,
-    "large_probability": 0.6857,
+    "seen_probability": 0.9875,
+    "large_probability": 0.6884,
     "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
     "size_num": 3.33,
     "size_label": "中群(50前後)",
@@ -16187,8 +16187,8 @@
      "zabu_ne"
     ],
     "avg_anomaly": -3.37,
-    "avg_current_kmh": 2.17,
-    "max_wave": 2.04,
+    "avg_current_kmh": 2.06,
+    "max_wave": 2.1,
     "max_wind": 14.4,
     "diveable": false,
     "score": 48.8
