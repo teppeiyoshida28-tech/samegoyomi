@@ -1,10 +1,157 @@
 {
- "generated_at": "2026-10-04T23:13:37.067436+09:00",
+ "generated_at": "2026-10-05T09:03:06.001625+09:00",
  "evaluation_type": "issued",
  "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
  "method": "保存した発表時点の予報を評価。同じ対象日・予測日数では最初の発表を採用。未観測は採点しません。",
  "by_lead": {
   "0": {
+   "n_days": 2,
+   "n_evaluated": 2,
+   "n_no_report": 0,
+   "n_seen_days": 2,
+   "n_unknown_seen": 0,
+   "n_size_days": 2,
+   "n_tier_days": 2,
+   "seen_hit_rate": 0.5,
+   "seen_metrics": {
+    "n": 2,
+    "positive": 1,
+    "negative": 1,
+    "accuracy": 0.5,
+    "balanced_accuracy": 0.5,
+    "brier": 0.4734,
+    "auc": 0.0,
+    "recall": 1.0,
+    "specificity": 0.0,
+    "calibration": [
+     {
+      "n": 2,
+      "predicted": 0.961,
+      "observed": 0.5
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": {
+     "n": 2,
+     "positive": 1,
+     "negative": 1,
+     "accuracy": 0.5,
+     "balanced_accuracy": 0.5,
+     "brier": 0.5,
+     "auc": 0.5,
+     "recall": 1.0,
+     "specificity": 0.0,
+     "calibration": [
+      {
+       "n": 2,
+       "predicted": 1.0,
+       "observed": 0.5
+      }
+     ]
+    },
+    "seasonal": {
+     "n": 2,
+     "positive": 1,
+     "negative": 1,
+     "accuracy": 0.5,
+     "balanced_accuracy": 0.5,
+     "brier": 0.462,
+     "auc": 0.0,
+     "recall": 1.0,
+     "specificity": 0.0,
+     "calibration": [
+      {
+       "n": 2,
+       "predicted": 0.96,
+       "observed": 0.5
+      }
+     ]
+    },
+    "persistence": {
+     "n": 2,
+     "positive": 1,
+     "negative": 1,
+     "accuracy": 0.5,
+     "balanced_accuracy": 0.5,
+     "brier": 0.5,
+     "auc": 0.5,
+     "recall": 1.0,
+     "specificity": 0.0,
+     "calibration": [
+      {
+       "n": 2,
+       "predicted": 1.0,
+       "observed": 0.5
+      }
+     ]
+    },
+    "model_on_persistence_days": {
+     "n": 2,
+     "positive": 1,
+     "negative": 1,
+     "accuracy": 0.5,
+     "balanced_accuracy": 0.5,
+     "brier": 0.4734,
+     "auc": 0.0,
+     "recall": 1.0,
+     "specificity": 0.0,
+     "calibration": [
+      {
+       "n": 2,
+       "predicted": 0.961,
+       "observed": 0.5
+      }
+     ]
+    }
+   },
+   "large_metrics": {
+    "n": 2,
+    "positive": 0,
+    "negative": 2,
+    "accuracy": 0.5,
+    "balanced_accuracy": null,
+    "brier": 0.2214,
+    "auc": null,
+    "recall": null,
+    "specificity": 0.5,
+    "calibration": [
+     {
+      "n": 2,
+      "predicted": 0.469,
+      "observed": 0
+     }
+    ]
+   },
+   "large_baseline": {
+    "n": 2,
+    "positive": 0,
+    "negative": 2,
+    "accuracy": 1.0,
+    "balanced_accuracy": null,
+    "brier": 0.1689,
+    "auc": null,
+    "recall": null,
+    "specificity": 1.0,
+    "calibration": [
+     {
+      "n": 2,
+      "predicted": 0.411,
+      "observed": 0
+     }
+    ]
+   },
+   "tier_exact_rate": 0,
+   "tier_within1_rate": 1,
+   "size_exact_rate": 0.5,
+   "size_within1_rate": 0.5,
+   "size_correlation": null,
+   "visibility_mae_m": 1.6,
+   "water_temp_mae_c": 1.05,
+   "n_point_days": 0,
+   "point_top3_hit_rate": null
+  },
+  "1": {
    "n_days": 1,
    "n_evaluated": 1,
    "n_no_report": 0,
@@ -12,95 +159,95 @@
    "n_unknown_seen": 0,
    "n_size_days": 1,
    "n_tier_days": 1,
-   "seen_hit_rate": 1.0,
+   "seen_hit_rate": 0.0,
    "seen_metrics": {
     "n": 1,
-    "positive": 1,
-    "negative": 0,
-    "accuracy": 1.0,
+    "positive": 0,
+    "negative": 1,
+    "accuracy": 0.0,
     "balanced_accuracy": null,
-    "brier": 0.0025,
+    "brier": 0.917,
     "auc": null,
-    "recall": 1.0,
-    "specificity": null,
+    "recall": null,
+    "specificity": 0.0,
     "calibration": [
      {
       "n": 1,
-      "predicted": 0.95,
-      "observed": 1
+      "predicted": 0.958,
+      "observed": 0
      }
     ]
    },
    "baselines": {
     "always_seen": {
      "n": 1,
-     "positive": 1,
-     "negative": 0,
-     "accuracy": 1.0,
+     "positive": 0,
+     "negative": 1,
+     "accuracy": 0.0,
      "balanced_accuracy": null,
-     "brier": 0.0,
+     "brier": 1.0,
      "auc": null,
-     "recall": 1.0,
-     "specificity": null,
+     "recall": null,
+     "specificity": 0.0,
      "calibration": [
       {
        "n": 1,
        "predicted": 1.0,
-       "observed": 1
+       "observed": 0
       }
      ]
     },
     "seasonal": {
      "n": 1,
-     "positive": 1,
-     "negative": 0,
-     "accuracy": 1.0,
+     "positive": 0,
+     "negative": 1,
+     "accuracy": 0.0,
      "balanced_accuracy": null,
-     "brier": 0.0016,
+     "brier": 0.922,
      "auc": null,
-     "recall": 1.0,
-     "specificity": null,
+     "recall": null,
+     "specificity": 0.0,
      "calibration": [
       {
        "n": 1,
        "predicted": 0.96,
-       "observed": 1
+       "observed": 0
       }
      ]
     },
     "persistence": {
      "n": 1,
-     "positive": 1,
-     "negative": 0,
-     "accuracy": 1.0,
+     "positive": 0,
+     "negative": 1,
+     "accuracy": 0.0,
      "balanced_accuracy": null,
-     "brier": 0.0,
+     "brier": 1.0,
      "auc": null,
-     "recall": 1.0,
-     "specificity": null,
+     "recall": null,
+     "specificity": 0.0,
      "calibration": [
       {
        "n": 1,
        "predicted": 1.0,
-       "observed": 1
+       "observed": 0
       }
      ]
     },
     "model_on_persistence_days": {
      "n": 1,
-     "positive": 1,
-     "negative": 0,
-     "accuracy": 1.0,
+     "positive": 0,
+     "negative": 1,
+     "accuracy": 0.0,
      "balanced_accuracy": null,
-     "brier": 0.0025,
+     "brier": 0.917,
      "auc": null,
-     "recall": 1.0,
-     "specificity": null,
+     "recall": null,
+     "specificity": 0.0,
      "calibration": [
       {
        "n": 1,
-       "predicted": 0.95,
-       "observed": 1
+       "predicted": 0.958,
+       "observed": 0
       }
      ]
     }
@@ -111,14 +258,14 @@
     "negative": 1,
     "accuracy": 1.0,
     "balanced_accuracy": null,
-    "brier": 0.1833,
+    "brier": 0.2088,
     "auc": null,
     "recall": null,
     "specificity": 1.0,
     "calibration": [
      {
       "n": 1,
-      "predicted": 0.428,
+      "predicted": 0.457,
       "observed": 0
      }
     ]
@@ -143,11 +290,11 @@
    },
    "tier_exact_rate": 0,
    "tier_within1_rate": 1,
-   "size_exact_rate": 1,
-   "size_within1_rate": 1,
+   "size_exact_rate": 0,
+   "size_within1_rate": 0,
    "size_correlation": null,
-   "visibility_mae_m": 3.0,
-   "water_temp_mae_c": 0.6,
+   "visibility_mae_m": 2.5,
+   "water_temp_mae_c": 1.5,
    "n_point_days": 0,
    "point_top3_hit_rate": null
   }
@@ -228,6 +375,162 @@
     "shops_reporting": [
      "290",
      "hammers",
+     "ms"
+    ]
+   }
+  },
+  {
+   "date": "2026-10-04",
+   "lead_days": 0,
+   "predicted": {
+    "seen_probability": 0.9717,
+    "large_probability": 0.5094,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.17,
+    "size_label": "中群(50前後)",
+    "count_est": 75,
+    "visibility_m": 14.8,
+    "water_temp": 23.0,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "kado_ne",
+     "jab_ne",
+     "zabu_ne"
+    ],
+    "avg_anomaly": -3.84,
+    "avg_current_kmh": 2.66,
+    "max_wave": 2.22,
+    "max_wind": 14.3,
+    "diveable": false,
+    "score": 48.7
+   },
+   "recommendation": {
+    "best_point": "kado_ne",
+    "best_point_score": 0.449,
+    "best_point_evidence": {
+     "stats_key": "kado_ne",
+     "overall_fallback": {
+      "rate": 0.9375,
+      "n": 16
+     }
+    },
+    "top3_points": [
+     {
+      "point": "kado_ne",
+      "score": 0.449
+     },
+     {
+      "point": "jab_ne",
+      "score": 0.445
+     },
+     {
+      "point": "zabu_ne",
+      "score": 0.44
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9603960396039604,
+    "persistence": 1.0,
+    "seasonal_large": 0.41
+   },
+   "issued_at": "2026-10-04T01:25:43.701974+09:00",
+   "model_version": "2026-10-integrity-v1",
+   "actual": {
+    "hammer_seen": false,
+    "hammer_size": null,
+    "size_num": 0,
+    "hammer_points": [],
+    "visibility_hi": 15.0,
+    "visibility": "10-15m",
+    "water_temp_mean": 24.5,
+    "water_temp": "24-25℃",
+    "tier": "E",
+    "tier_label": "✕ 濁り/目撃なし",
+    "shops_reporting": [
+     "290",
+     "ms"
+    ]
+   }
+  },
+  {
+   "date": "2026-10-04",
+   "lead_days": 1,
+   "predicted": {
+    "seen_probability": 0.9576,
+    "large_probability": 0.457,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.17,
+    "size_label": "中群(50前後)",
+    "count_est": 75,
+    "visibility_m": 12.5,
+    "water_temp": 23.0,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "kado_ne",
+     "jab_ne",
+     "zabu_ne"
+    ],
+    "avg_anomaly": -3.86,
+    "avg_current_kmh": 2.59,
+    "max_wave": 2.34,
+    "max_wind": 14.4,
+    "diveable": false,
+    "score": 48.4
+   },
+   "recommendation": {
+    "best_point": "kado_ne",
+    "best_point_score": 0.449,
+    "best_point_evidence": {
+     "stats_key": "kado_ne",
+     "overall_fallback": {
+      "rate": 0.9375,
+      "n": 16
+     }
+    },
+    "top3_points": [
+     {
+      "point": "kado_ne",
+      "score": 0.449
+     },
+     {
+      "point": "jab_ne",
+      "score": 0.445
+     },
+     {
+      "point": "zabu_ne",
+      "score": 0.44
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   },
+   "issued_at": "2026-10-03T00:06:09.259326+09:00",
+   "model_version": "2026-10-integrity-v1",
+   "actual": {
+    "hammer_seen": false,
+    "hammer_size": null,
+    "size_num": 0,
+    "hammer_points": [],
+    "visibility_hi": 15.0,
+    "visibility": "10-15m",
+    "water_temp_mean": 24.5,
+    "water_temp": "24-25℃",
+    "tier": "E",
+    "tier_label": "✕ 濁り/目撃なし",
+    "shops_reporting": [
+     "290",
      "ms"
     ]
    }
