@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-10-05T09:03:21.367400+09:00",
+ "generated_at": "2026-10-06T10:49:22.979154+09:00",
  "evaluation_type": "issued",
  "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
  "method": "保存した発表時点の予報を評価。同じ対象日・予測日数では最初の発表を採用。未観測は採点しません。",
@@ -152,11 +152,11 @@
    "point_top3_hit_rate": null
   },
   "1": {
-   "n_days": 1,
-   "n_evaluated": 1,
+   "n_days": 2,
+   "n_evaluated": 2,
    "n_no_report": 0,
    "n_seen_days": 1,
-   "n_unknown_seen": 0,
+   "n_unknown_seen": 1,
    "n_size_days": 1,
    "n_tier_days": 1,
    "seen_hit_rate": 0.0,
@@ -295,6 +295,111 @@
    "size_correlation": null,
    "visibility_mae_m": 2.5,
    "water_temp_mae_c": 1.5,
+   "n_point_days": 0,
+   "point_top3_hit_rate": null
+  },
+  "2": {
+   "n_days": 1,
+   "n_evaluated": 1,
+   "n_no_report": 0,
+   "n_seen_days": 0,
+   "n_unknown_seen": 1,
+   "n_size_days": 0,
+   "n_tier_days": 0,
+   "seen_hit_rate": null,
+   "seen_metrics": {
+    "accuracy": null,
+    "balanced_accuracy": null,
+    "brier": null,
+    "auc": null,
+    "recall": null,
+    "specificity": null,
+    "n": 0,
+    "positive": 0,
+    "negative": 0,
+    "calibration": []
+   },
+   "baselines": {
+    "always_seen": {
+     "accuracy": null,
+     "balanced_accuracy": null,
+     "brier": null,
+     "auc": null,
+     "recall": null,
+     "specificity": null,
+     "n": 0,
+     "positive": 0,
+     "negative": 0,
+     "calibration": []
+    },
+    "seasonal": {
+     "accuracy": null,
+     "balanced_accuracy": null,
+     "brier": null,
+     "auc": null,
+     "recall": null,
+     "specificity": null,
+     "n": 0,
+     "positive": 0,
+     "negative": 0,
+     "calibration": []
+    },
+    "persistence": {
+     "accuracy": null,
+     "balanced_accuracy": null,
+     "brier": null,
+     "auc": null,
+     "recall": null,
+     "specificity": null,
+     "n": 0,
+     "positive": 0,
+     "negative": 0,
+     "calibration": []
+    },
+    "model_on_persistence_days": {
+     "accuracy": null,
+     "balanced_accuracy": null,
+     "brier": null,
+     "auc": null,
+     "recall": null,
+     "specificity": null,
+     "n": 0,
+     "positive": 0,
+     "negative": 0,
+     "calibration": []
+    }
+   },
+   "large_metrics": {
+    "accuracy": null,
+    "balanced_accuracy": null,
+    "brier": null,
+    "auc": null,
+    "recall": null,
+    "specificity": null,
+    "n": 0,
+    "positive": 0,
+    "negative": 0,
+    "calibration": []
+   },
+   "large_baseline": {
+    "accuracy": null,
+    "balanced_accuracy": null,
+    "brier": null,
+    "auc": null,
+    "recall": null,
+    "specificity": null,
+    "n": 0,
+    "positive": 0,
+    "negative": 0,
+    "calibration": []
+   },
+   "tier_exact_rate": null,
+   "tier_within1_rate": null,
+   "size_exact_rate": null,
+   "size_within1_rate": null,
+   "size_correlation": null,
+   "visibility_mae_m": null,
+   "water_temp_mae_c": null,
    "n_point_days": 0,
    "point_top3_hit_rate": null
   }
@@ -531,6 +636,164 @@
     "tier_label": "✕ 濁り/目撃なし",
     "shops_reporting": [
      "290",
+     "ms"
+    ]
+   }
+  },
+  {
+   "date": "2026-10-05",
+   "lead_days": 1,
+   "predicted": {
+    "seen_probability": 0.9729,
+    "large_probability": 0.5161,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.2,
+    "size_label": "中群(50前後)",
+    "count_est": 78,
+    "visibility_m": 15.1,
+    "water_temp": 22.8,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "C",
+    "tier_label": "◆ 中規模群",
+    "points": [
+     "zabu_ne",
+     "kado_ne",
+     "jab_ne"
+    ],
+    "avg_anomaly": -3.86,
+    "avg_current_kmh": 2.97,
+    "max_wave": 2.66,
+    "max_wind": 15.6,
+    "diveable": false,
+    "score": 63.8
+   },
+   "recommendation": {
+    "best_point": "zabu_ne",
+    "best_point_score": 0.454,
+    "best_point_evidence": {
+     "stats_key": "zabu_ne",
+     "tide_name": {
+      "name": "長潮",
+      "rate": 1.0,
+      "n": 10
+     }
+    },
+    "top3_points": [
+     {
+      "point": "zabu_ne",
+      "score": 0.454
+     },
+     {
+      "point": "kado_ne",
+      "score": 0.45
+     },
+     {
+      "point": "jab_ne",
+      "score": 0.44
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9603960396039604,
+    "persistence": 1.0,
+    "seasonal_large": 0.41
+   },
+   "issued_at": "2026-10-04T01:25:43.701974+09:00",
+   "model_version": "2026-10-integrity-v1",
+   "actual": {
+    "hammer_seen": null,
+    "hammer_size": null,
+    "size_num": null,
+    "hammer_points": [],
+    "visibility_hi": null,
+    "visibility": null,
+    "water_temp_mean": null,
+    "water_temp": null,
+    "tier": null,
+    "tier_label": "観測不足",
+    "shops_reporting": [
+     "hammers",
+     "ms"
+    ]
+   }
+  },
+  {
+   "date": "2026-10-05",
+   "lead_days": 2,
+   "predicted": {
+    "seen_probability": 0.9581,
+    "large_probability": 0.4577,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.19,
+    "size_label": "中群(50前後)",
+    "count_est": 77,
+    "visibility_m": 12.7,
+    "water_temp": 22.9,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "zabu_ne",
+     "kado_ne",
+     "jab_ne"
+    ],
+    "avg_anomaly": -3.79,
+    "avg_current_kmh": 2.61,
+    "max_wave": 2.66,
+    "max_wind": 16.4,
+    "diveable": false,
+    "score": 48.5
+   },
+   "recommendation": {
+    "best_point": "zabu_ne",
+    "best_point_score": 0.455,
+    "best_point_evidence": {
+     "stats_key": "zabu_ne",
+     "tide_name": {
+      "name": "長潮",
+      "rate": 1.0,
+      "n": 10
+     }
+    },
+    "top3_points": [
+     {
+      "point": "zabu_ne",
+      "score": 0.455
+     },
+     {
+      "point": "kado_ne",
+      "score": 0.449
+     },
+     {
+      "point": "jab_ne",
+      "score": 0.442
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9601990049751243,
+    "persistence": 1.0,
+    "seasonal_large": 0.4120603015075377
+   },
+   "issued_at": "2026-10-03T00:06:09.259326+09:00",
+   "model_version": "2026-10-integrity-v1",
+   "actual": {
+    "hammer_seen": null,
+    "hammer_size": null,
+    "size_num": null,
+    "hammer_points": [],
+    "visibility_hi": null,
+    "visibility": null,
+    "water_temp_mean": null,
+    "water_temp": null,
+    "tier": null,
+    "tier_label": "観測不足",
+    "shops_reporting": [
+     "hammers",
      "ms"
     ]
    }
