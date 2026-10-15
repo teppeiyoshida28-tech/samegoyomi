@@ -1,20 +1,9 @@
 {
-  "generated_at": "2026-10-14T09:26:43.095247+09:00",
+  "generated_at": "2026-10-16T08:44:52.632242+09:00",
   "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
   "n_days": 193,
   "window_days": 365,
   "entries": [
-    {
-      "date": "2026-09-24",
-      "moon_age": 12.1,
-      "phase": "満月大潮",
-      "seen": true,
-      "size": "large",
-      "size_num": 4,
-      "vis_hi": 10.0,
-      "wt_hi": 25.0,
-      "tropical_count": 0
-    },
     {
       "date": "2026-09-26",
       "moon_age": 14.1,
@@ -179,6 +168,17 @@
       "vis_hi": 20.0,
       "wt_hi": 27.0,
       "tropical_count": 2
+    },
+    {
+      "date": "2026-10-15",
+      "moon_age": 3.6,
+      "phase": "中潮",
+      "seen": true,
+      "size": "large",
+      "size_num": 4,
+      "vis_hi": 15.0,
+      "wt_hi": 25.0,
+      "tropical_count": 3
     }
   ],
   "phase_summary": [
@@ -220,11 +220,11 @@
       "days": 60,
       "seen_days": 57,
       "encounter_rate": 0.95,
-      "avg_size": 3.2542372881355934,
+      "avg_size": 3.2711864406779663,
       "n_known_size": 59,
-      "weighted_size": 2.87,
-      "large_days": 26,
-      "large_rate": 0.441
+      "weighted_size": 2.9,
+      "large_days": 27,
+      "large_rate": 0.458
     },
     {
       "phase": "小潮",
