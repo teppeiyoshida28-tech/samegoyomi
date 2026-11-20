@@ -1,48 +1,48 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-21T04:02:20+09:00",
+  "generated_at": "2026-11-21T04:19:36+09:00",
   "sources": {
     "hammers": {
-      "checked_at": "2026-11-21T03:59:46+09:00",
+      "checked_at": "2026-11-21T04:19:20+09:00",
       "listing_status": "ok",
       "status": "ok",
-      "discovered_count": 32,
-      "new_url_count": 21,
-      "article_attempted": 21,
-      "article_succeeded": 21,
+      "discovered_count": 16,
+      "new_url_count": 0,
+      "article_attempted": 0,
+      "article_succeeded": 0,
       "article_failed": 0,
-      "latest_article_date": "2026-11-16",
       "unresolved_url_count": 0,
       "latest_discovered_article_date": "2026-11-16",
-      "listing_regressed": false
+      "listing_regressed": false,
+      "latest_article_date": "2026-11-16"
     },
     "ms": {
-      "checked_at": "2026-11-21T03:59:55+09:00",
+      "checked_at": "2026-11-21T04:19:30+09:00",
       "listing_status": "ok",
       "status": "ok",
       "discovered_count": 37,
-      "new_url_count": 9,
-      "article_attempted": 9,
-      "article_succeeded": 9,
+      "new_url_count": 0,
+      "article_attempted": 0,
+      "article_succeeded": 0,
       "article_failed": 0,
-      "latest_article_date": "2026-11-14",
       "unresolved_url_count": 0,
       "latest_discovered_article_date": "2026-11-14",
-      "listing_regressed": false
+      "listing_regressed": false,
+      "latest_article_date": "2026-11-14"
     },
     "290": {
-      "checked_at": "2026-11-21T04:00:03+09:00",
+      "checked_at": "2026-11-21T04:19:36+09:00",
       "listing_status": "ok",
       "status": "ok",
-      "discovered_count": 27,
-      "new_url_count": 15,
-      "article_attempted": 15,
-      "article_succeeded": 15,
+      "discovered_count": 18,
+      "new_url_count": 0,
+      "article_attempted": 0,
+      "article_succeeded": 0,
       "article_failed": 0,
-      "latest_article_date": "2026-11-14",
       "unresolved_url_count": 0,
       "latest_discovered_article_date": "2026-11-14",
-      "listing_regressed": false
+      "listing_regressed": false,
+      "latest_article_date": "2026-11-14"
     }
   }
 }
