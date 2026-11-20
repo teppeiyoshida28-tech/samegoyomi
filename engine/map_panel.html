@@ -1,74 +1,48 @@
-<!-- ISLAND MAP: schematic positions shared with the scoring engine -->
-<section class="section-title">
-  <h2>神子元島 <em>ポイント予報</em></h2>
-  <div class="subtitle">南側の予測対象ポイント · 位置と地形は概略</div>
-</section>
-<div class="island-fullwidth">
-  <div class="map-workbench" id="map-workbench">
-    <div class="map-heading">
-      <div><p class="map-eyebrow">MIKOMOTO / SOUTH AREA</p><h3>潮と、今日の狙い目。</h3></div>
-      <div class="map-day-tabs" id="map-day-tabs" aria-label="予報日"></div>
-    </div>
-    <div id="map-sea-status" class="map-sea-status"></div>
-    <div id="today-reco" class="today-reco"></div>
-    <div class="island-hour-controls" id="hour-controls" aria-label="予報時刻"></div>
-    <div class="map-conditions" id="map-conditions"></div>
-    <div class="map-layout">
-      <div class="map-main">
-        <div class="map-toolbar" role="group" aria-label="地図操作">
-          <button type="button" id="map-zoom-in" aria-label="地図を拡大">＋</button>
-          <button type="button" id="map-zoom-out" aria-label="地図を縮小">−</button>
-          <button type="button" id="map-reset">対象地点に戻す</button>
-          <button type="button" id="map-fullscreen">全画面</button>
-        </div>
-        <div class="map-flow-controls" role="group" aria-label="流れの表示">
-          <button type="button" data-flow-mode="regional" aria-pressed="true">広域海流</button>
-          <button type="button" data-flow-mode="local" aria-pressed="false">回り込み（仮説）</button>
-          <button type="button" data-flow-mode="off" aria-pressed="false">非表示</button>
-        </div>
-        <div class="map-canvas" id="map-canvas">
-          <svg id="forecast-map" tabindex="0" role="group" aria-label="神子元島南側の概略地図。地点を選択、矢印キーで移動できます。" aria-describedby="map-help" viewBox="-500 -200 1000 1200"></svg>
-          <div class="map-north" aria-hidden="true">↑<br>N</div>
-          <div class="map-scale"><div id="map-scale-line"></div><span id="map-scale-label"></span></div>
-          <span class="map-schematic">概略図・位置未校正</span>
-          <div class="map-flow-key" id="map-flow-key"></div>
-        </div>
-        <p class="map-flow-description" id="map-flow-description" role="status"></p>
-        <p class="map-flow-source">海流データ：<a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener">Open-Meteo</a> / <a href="https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description" target="_blank" rel="noopener">Copernicus Marine（SMOC）</a> · 表面流・約8km格子</p>
-        <p class="map-help" id="map-help">ドラッグで移動 · ＋/−で拡大縮小 · 地点を選ぶと詳細表示</p>
-        <div class="map-layers">
-          <label><input type="checkbox" id="map-labels"> 全地点の名前</label>
-          <label><input type="checkbox" id="map-hypothesis"> 潮陰・予想域の仮説</label>
-          <button type="button" id="map-fit-zone">予想域まで表示</button>
-        </div>
-        <p id="map-zone-status" class="map-help" role="status"></p>
-      </div>
-      <aside class="map-sidebar" aria-label="地点の詳細">
-        <h4 id="map-ranked-title">選択時刻の推奨</h4>
-        <div id="map-ranked"></div>
-        <label class="point-select-label" for="point-select">全26地点から選ぶ</label>
-        <select id="point-select"></select>
-        <div id="map-point-detail" aria-live="polite"></div>
-        <div class="map-score-legend"><span></span><div>0 <b>地点スコア</b> 100</div></div>
-        <p class="map-help">色の目盛りは全日・全地点で共通です。番号は選択時刻の上位3地点。スコアは遭遇確率ではありません。</p>
-        <div class="map-current-references">
-          <h4>公開海流図と見比べる</h4>
-          <a href="https://www.eorc.jaxa.jp/ptree/ocean_model/index_j.html" target="_blank" rel="noopener">JAMSTEC・JAXA 海中天気予報 ↗<small>約1km格子 · 水深を選択可能</small></a>
-          <a href="https://www.data.jma.go.jp/kaikyou/kaikyou/tile/jp/index_subsfct.html" target="_blank" rel="noopener">気象庁 海流予想図 ↗<small>50m深の海流 · 30日先まで</small></a>
-          <p>比較するときは日時・水深を確認してください。こちらの2サイトの数値は本図に合成していません。</p>
-        </div>
-      </aside>
-    </div>
-    <details class="map-provenance">
-      <summary>地図と予測の根拠・限界</summary>
-      <p>島・根の形状と位置は公式ポイント案内を参考にした概略です。GPS座標・測深による校正は未完了で、航行や潜水経路の判断には使えません。実測に基づかない等深線は表示していません。</p>
-      <p>青い矢印はOpen-Meteo経由のCopernicus Marine SMOC表面流予報（約8km格子、1時間値）です。選択時刻の同じ広域予報を繰り返し描き、各地点で別々に計測した流れではありません。矢印は流れていく向き、長さは流速の目安（4ktで上限）を示します。0.2kt未満は向きを強調しないため矢印を描きません。潮汐・波浪の成分を既に含むため、独自の潮汐流を再加算していません。</p>
-      <p>金色の「回り込み（仮説）」は同じ広域流向から、島を円形の障害物とみなして描いた模式図です。海底地形や根ごとの加速・反流を再現した予報ではなく、局所流速の数値には使いません。北側には流れのイラストを追加していません。海面水温も海中の水温分布とは異なります。</p>
-      <p>潮陰とハンマー予想域は現地知見をもとにした未検証の仮説です。地点順位は潮流・地形の仮説と訪問記事の統計に基づき、行先選択・記載・透明度による観測バイアスがあります。</p>
-      <p>オーナー指定により南側のみを予測・推奨の対象にしています。北側の潜水可否を判定する表示ではありません。</p>
-      <a href="https://maps.gsi.go.jp/#16/34.5717/138.9433/&amp;base=std&amp;ls=std&amp;disp=1" target="_blank" rel="noopener">島の位置を地理院地図で確認 ↗</a>
-      <a href="https://www.mikomoto.com/about/location.html" target="_blank" rel="noopener">公式ポイント案内 ↗</a>
-      <a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener">海流データの仕様 ↗</a>
-    </details>
+<!-- The source-image chart and ocean-current timeline are independent of point scores. -->
+<div id="samegoyomi-current" style="--flow-color:#9dcf7b">
+ <section class="sc-product" aria-label="神子元島南側の海流予報と地形">
+  <header class="sc-head"><div><p class="sc-brand">鮫暦 AI · OCEAN MAP</p><h2>潮を、地形と読む。</h2><p class="sc-sub">神子元島 南側 · 海面の広域予報と回り込みの模式図</p></div></header>
+  <div class="sc-time-controls">
+   <div id="ocean-day-tabs" class="sc-day-tabs" role="group" aria-label="海流の予測日"></div>
+   <div id="ocean-hour-controls" class="sc-hours" role="group" aria-label="海流の予測時刻、日本時間"></div>
+   <p id="sc-target-time" class="sc-target-time">海流データを確認しています</p>
   </div>
+  <div class="sc-example"><div><p id="sc-data-status" class="sc-example-label">広域の海面流予報</p><div class="sc-reading" aria-live="polite"><span id="sc-direction" class="sc-direction">—</span><span id="sc-speed" class="sc-speed">未取得</span></div></div><p id="sc-explanation" class="sc-explanation">流速は南側全体に共通の一つの値です</p></div>
+  <div class="sc-map-wrap">
+   <div class="sc-map">
+    <canvas id="sc-particles" aria-hidden="true"></canvas>
+    <svg id="sc-svg" viewBox="165 270 756 1086" role="img" aria-labelledby="sc-title sc-description">
+     <title id="sc-title">神子元島と南側の根、海流イメージ</title><desc id="sc-description">提供図をトレースした島・露出岩と水中根。予報の流速・流向を入力とし、島沿いの曲がり方は模式表現です。</desc>
+     <defs><clipPath id="sc-extent"><rect x="165" y="270" width="756" height="1086"/></clipPath></defs>
+     <g clip-path="url(#sc-extent)"><g id="sc-reefs"></g><g id="sc-open"></g><g id="sc-land"></g><g id="sc-review"></g><g id="sc-symbols"></g><g id="sc-depths"></g><g id="sc-names"></g></g>
+    </svg>
+    <div class="sc-map-badge"><span id="sc-mode-badge">回り込み · 模式</span><span class="sc-north">原図の北 ↑</span></div>
+    <div class="sc-map-foot"><span>流れは南側のみ</span><span>提供図の形状 · GPS未校正</span></div>
+   </div>
+   <div class="sc-legend"><span><i class="sc-swatch"></i>海上の島・岩</span><span><i class="sc-swatch reef"></i>海底の根</span><span><i class="sc-swatch flow"></i><span id="sc-flow-legend">回り込みのイメージ</span></span></div>
+  </div>
+  <div class="sc-controls">
+   <div class="sc-strength">
+    <div class="sc-strength-heading"><span>広域予報の流速 <small>· 南側一律</small></span><output id="sc-strength-value" aria-live="polite">未取得</output></div>
+    <div class="sc-scale" aria-label="流速の色：0から6ノット。青、水色、緑、黄、赤の順に強くなる">
+     <div id="sc-strength-gradient" class="sc-color-band"><span id="sc-strength-marker" hidden></span></div>
+     <div class="sc-ticks" aria-hidden="true"><span>0</span><span>1.5</span><span>3</span><span>4.5</span><span>6 kt以上</span></div>
+    </div>
+    <div class="sc-tail-examples" aria-label="線の長さ：1ノットは短く、3ノットは中程度、6ノットは長い"><span><canvas data-tail-example="1" aria-hidden="true"></canvas>1 kt</span><span><canvas data-tail-example="3" aria-hidden="true"></canvas>3 kt</span><span><canvas data-tail-example="6" aria-hidden="true"></canvas>6 kt</span></div>
+    <p id="sc-strength-status" class="sc-strength-status">色と線の長さが流速に連動</p>
+   </div>
+   <div class="sc-modes" role="group" aria-label="流れの見せ方"><button type="button" data-mode="schematic" aria-pressed="true">回り込み（模式）</button><button type="button" data-mode="regional" aria-pressed="false">広域予報の向き</button></div>
+   <div class="sc-bottom-controls"><label class="sc-check"><input id="sc-depth-toggle" type="checkbox" checked>原図の深度</label><button id="sc-play" type="button" aria-pressed="true">一時停止</button></div>
+   <p id="sc-caption" class="sc-caption">島沿いの曲がりは模式表示です。地点・深度ごとの流れを予報するものではありません。</p>
+  </div>
+  <div class="sc-source" aria-label="海流データの出典と時刻"><p id="sc-source-label"></p><dl id="sc-source-times"></dl></div>
+  <details class="sc-detail"><summary>海流データと地形の扱い</summary>
+   <p>数値はOpen-Meteo経由のCopernicus Marine SMOC海面流予報です。単一の広域予報値を南側に一律で描き、色と線の長さが流速を表します。6 ktを超える場合も数値はそのまま表示し、色と線の長さは6 ktで上限になります。潮汐・波浪成分を含むため、自前の潮汐流は加えていません。</p>
+   <p>「回り込み（模式）」は島・露出岩の輪郭に沿う方向場へ広域予報の流向を与えたイメージです。根ごとの流速差・反流・水深別の海流を予測していません。水中の根は陸地のような遮蔽物にはせず、粒子の移動速度は漂流速度を表しません。「広域予報の向き」は同じ流向を一様に示します。</p>
+   <p>0.2 kt未満で方向を描かないのは描画上の基準で、潮止まりや安全を意味しません。欠測・期限切れは0 ktと区別し、流れを描きません。更新期限は取得から36時間の運用上の基準で、予報の精度を保証するものではありません。</p>
+   <p>地形・灯台・深度は提供図の画像座標を保持しています。GPS・水深場への校正は未実施で、航行や潜水経路の判断には使えません。方位は原図の北表示に従う概略です。金色の短い点線は文字に隠れた輪郭の仮接続です。小さい画面では重なる地名や深度を間引きます。北側を対象外としており、北側の潜水可否を判定する表示ではありません。</p>
+   <p><a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener noreferrer">Open-Meteo Marine API</a> · <a href="https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description" target="_blank" rel="noopener noreferrer">Copernicus Marine</a> · <a href="https://www.eorc.jaxa.jp/ptree/ocean_model/index_j.html" target="_blank" rel="noopener noreferrer">JAMSTEC・JAXA（比較用）</a> · <a href="https://www.data.jma.go.jp/kaikyou/kaikyou/tile/jp/index_subsfct.html" target="_blank" rel="noopener noreferrer">気象庁50m深海流（比較用）</a></p>
+  </details>
+  <footer class="sc-foot">地形原図：MIKOMOTO HAMMERS / MAKS Co., Ltd.（ユーザー提供） · 位置・深度は原図の記載、GPS未校正</footer>
+ </section>
 </div>

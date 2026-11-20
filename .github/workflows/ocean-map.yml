@@ -1,0 +1,103 @@
+name: ocean-current-map
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'engine/fetch_ocean_current.py'
+      - 'engine/ocean_current.js'
+      - 'engine/ocean_map.css'
+      - 'engine/map_ui.js'
+      - 'engine/map_panel.html'
+      - 'engine/map_trace.json'
+      - 'engine/map_flow_field.json'
+      - 'engine/forecast_freshness.js'
+      - 'engine/validate_ocean_publication.py'
+      - 'engine/build_html.py'
+      - 'engine/index.html'
+      - 'tests/*ocean*'
+      - 'tests/forecast_freshness.test.js'
+      - '.github/workflows/ocean-map.yml'
+  schedule:
+    - cron: '35 21 * * *' # 06:35 JST, independent of blog/Kuroshio availability
+  workflow_dispatch: {}
+
+env:
+  TZ: Asia/Tokyo
+  PYTHONUTF8: '1'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Serialize the complete read/build/push/deploy transaction with daily.yml.
+concurrency:
+  group: daily-forecast
+  cancel-in-progress: false
+
+jobs:
+  publish-ocean-map:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+      - name: Regression checks
+        run: |
+          python3 -m unittest discover -s tests -v
+          node --test tests/*.test.js
+      - name: Fetch and validate the ocean forecast
+        run: |
+          python3 engine/fetch_ocean_current.py
+          python3 engine/fetch_ocean_current.py --validate-only
+      - name: Build the ocean map with the previously published forecast
+        run: |
+          python3 engine/build_html.py
+          cp engine/mikomoto_forecast.html docs/index.html
+          cp engine/mikomoto_map.html docs/map/index.html
+          cp engine/mikomoto_aim.html docs/aim/index.html
+          python3 engine/validate_ocean_publication.py --marine-only
+      - name: Preserve validated release inputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocean-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: engine/ocean_current_forecast.json
+          retention-days: 14
+      - name: Commit validated ocean update
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add engine/ocean_current_forecast.json engine/mikomoto_forecast.html engine/mikomoto_map.html engine/mikomoto_aim.html docs/index.html docs/map/index.html docs/aim/index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Update ocean map $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')"
+            git push origin HEAD:main
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+      - name: Deploy validated ocean map
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Preserve successfully published ocean snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: ocean-published-${{ github.run_id }}-${{ github.run_attempt }}
+          path: engine/ocean_current_forecast.json
+          retention-days: 90
+      # Do not run forecast_archive.py --save here: this release does not issue
+      # a new hammer prediction or change its historical evaluation records.

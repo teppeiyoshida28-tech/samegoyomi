@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "traceSourceSha256": "3259495d6cfb35c08e1116c469f810e7e28c8be4a7fd2a54412275021aa1e8bc",
+  "exposedGeometrySha256": "d0aa10334fc4195aa7d41b994ff404ce43697a07d12c0ed4544fa17f7ad6897a",
+  "exposedPolygonCount": 17,
+  "exposedPointCount": 562,
+  "grid": {
+    "origin": [
+      0,
+      0
+    ],
+    "spacing": 6.0,
+    "nx": 155,
+    "ny": 227,
+    "order": "row-major"
+  },
+  "bases": {
+    "ne": {
+      "scale": 6977.07799186417,
+      "bytesSha256": "81ccae81d1403a9dd86e8bedb8828c2d53309e0cfcb6d48cafcc3a878a155dc4"
+    },
+    "west": {
+      "scale": 8180.348726516951,
+      "bytesSha256": "8df2f4c45981b1984e60902d3f479c8989f9accbb3fd1602ee50e7c575acc5b7"
+    }
+  },
+  "offlineDependencies": {
+    "numpy": "2.3.5",
+    "opencv-python-headless": "5.1.0.95"
+  }
+}

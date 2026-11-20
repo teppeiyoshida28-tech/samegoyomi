@@ -32,6 +32,8 @@ jobs:
     timeout-minutes: 110
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
       - uses: actions/setup-python@v5
         with:
@@ -48,7 +50,7 @@ jobs:
           node-version: '22'
 
       - name: Map geometry checks
-        run: node --test tests/map_geometry.test.js
+        run: node --test tests/*.test.js
 
       - name: Incremental scrape (shop blogs)
         working-directory: data
@@ -128,6 +130,8 @@ jobs:
       - name: Build HTML -> docs/
         run: |
           cd engine
+          python3 fetch_ocean_current.py
+          python3 fetch_ocean_current.py --validate-only
           python3 build_html.py
           python3 forecast_archive.py
           python3 build_history_html.py
@@ -154,7 +158,9 @@ jobs:
           EOF
 
       - name: Validate before publishing
-        run: python3 engine/monitor.py
+        run: |
+          python3 engine/monitor.py
+          python3 engine/validate_ocean_publication.py
 
       - name: Commit & push updates
         run: |

@@ -59,4 +59,16 @@ GitHub Actions + GitHub Pages へ完全移行済み。外部サーバーは一�
 
 ## 詳細
 
+### 海流マップの独立更新（2026-11-21）
+
+承認済みの地形・粒子表示を`engine/map_panel.html`、`map_ui.js`、`ocean_map.css`へ実装。
+`ocean_current.js`は流速換算・0〜6kt表示・任意流向の合成・鮮度判定を担う。
+新しい`ocean-map.yml`は毎朝06:35 JSTに海流だけを取得・検査・ビルド・直接公開する。
+既存dailyと同じconcurrency groupで直列化し、ハンマー予報の検査や発表記録は迂回しない。
+海流のみの公開は`ocean-published-*` artifact（90日）に保存し、`forecast_archive.py --save`を実行しない。
+
+黒潮資料とショップログに依存する旧予報は依然として独自の更新条件を持つ。
+`forecast_freshness.js`が期限切れのスコア・推奨・長期カレンダーを隠し、更新待ちと明示する。
+海流の取得成功を旧予報全体の復旧と解釈しないこと。
+
 セットアップ手順・パイプライン構成・ドメイン知識・未完了タスクは README.md を参照。
