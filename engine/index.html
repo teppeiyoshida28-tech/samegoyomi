@@ -1391,6 +1391,14 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
   transition: all 0.6s ease;
 }
 /*__UI_REFRESH__*/
+/*__OCEAN_MAP_CSS__*/
+.forecast-availability {max-width:1200px;margin:22px auto;padding:16px 22px;border-left:3px solid var(--gold);background:#172d43;color:var(--foam);font-size:14px;line-height:1.8;}
+.forecast-availability[hidden] {display:none;}
+.forecast-availability a {color:#a9dce8;text-decoration:underline;}
+body.forecast-expired .hero, body.forecast-expired [data-legacy-forecast], body.longrange-expired [data-legacy-longrange], body.map-mode [data-legacy-forecast] {display:none!important;}
+body.forecast-expired .pulse-dot {background:#9aaabf;animation:none;}
+body.aim-mode #samegoyomi-current {display:none;}
+@media(max-width:700px){.forecast-availability{margin:14px 10px;padding:12px 14px;}}
 </style>
 </head>
 <body>
@@ -1410,6 +1418,7 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
   </div>
   <nav class="site-nav" id="site-nav"></nav>
 </header>
+<div id="forecast-availability" class="forecast-availability" role="status" hidden></div>
 
 <!-- HERO: TODAY -->
 <section class="hero">
@@ -1454,11 +1463,11 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
 <!--__MAP_PANEL__-->
 
 <!-- HOURLY STRIP -->
-<section class="section-title">
+<section class="section-title" data-legacy-forecast>
   <h2><em id="hourly-title-day">今日</em> の時間帯別予報</h2>
   <div class="subtitle">ダイビング時間帯 · 08:00 → 14:00</div>
 </section>
-<div class="hourly-panel">
+<div class="hourly-panel" data-legacy-forecast>
   <div class="hourly-strip">
     <div class="hourly-grid" id="hourly-grid"></div>
   </div>
@@ -1519,11 +1528,11 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
   </div>
 </div>
 
-<section class="section-title hide-in-map" id="aim">
+<section class="section-title hide-in-map" id="aim" data-legacy-longrange>
   <h2 id="lr-title">半年先 <em>狙い目カレンダー</em></h2>
   <div class="subtitle" id="lr-subtitle">◉ フル予報 / ◇ 月齢×潮×季節×黒潮の長期見込み — スコアは遭遇確率ではありません</div>
 </section>
-<div class="lr-wrap">
+<div class="lr-wrap" data-legacy-longrange>
   <div class="lr-kuro" id="lr-kuro"></div>
   <div class="lr-monthnav" id="lr-monthnav"></div>
   <p class="lr-calendar-hint">◉ フル予報 / ◇ 長期見込み · 日付を選ぶと海況と推薦の詳細を表示します。</p>
@@ -1572,6 +1581,11 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
 // === DATA (embedded) ===
 const FORECAST = /*__FORECAST_JSON__*/ null;
 const LONGRANGE = /*__LONGRANGE_JSON__*/ null;
+const OCEAN_CURRENT = /*__OCEAN_CURRENT__*/ null;
+const MAP_TRACE = /*__MAP_TRACE__*/ null;
+const MAP_FLOW = /*__MAP_FLOW__*/ null;
+/*__OCEAN_CURRENT_JS__*/
+/*__FORECAST_FRESHNESS_JS__*/
 
 // === helpers ===
 const $ = (s) => document.querySelector(s);
@@ -1750,8 +1764,9 @@ function renderDayTabs(data) {
 }
 
 function renderHourControls(data) {
-  const hrs = todayHourly(data);
   const el = $('#hour-controls');
+  if (!el) return;
+  const hrs = todayHourly(data);
   el.innerHTML = hrs.map((h, i) => `
     <button class="hour-btn ${i===selectedHourIdx?'active':''}" aria-pressed="${i===selectedHourIdx}" data-i="${i}">${h.hour.toString().padStart(2,'0')}:00</button>
   `).join('');
@@ -2144,25 +2159,36 @@ function renderNavLinks() {
     `<a href="${base}history/"><span class="nav-long">◇ 検証ログ</span><span class="nav-short">検証ログ</span></a>`;
 }
 
-// === BOOT ===
-if (FORECAST) {
-  if (MAP_MODE) document.body.classList.add('map-mode');
-  if (AIM_MODE) document.body.classList.add('aim-mode');
-  renderNavLinks();
-  renderHero(FORECAST);
-  if (!AIM_MODE) {
-    renderDayTabs(FORECAST);
-    renderHourControls(FORECAST);
-    renderIsland(FORECAST);
-    renderHourlyStrip(FORECAST);
-    renderModelPanel(FORECAST);
-    renderTideHeatmap(FORECAST);
-
+// A marine-only release never reissues a historical hammer forecast.
+if (MAP_MODE) document.body.classList.add('map-mode');
+if (AIM_MODE) document.body.classList.add('aim-mode');
+renderNavLinks();
+function refreshForecastAvailability() {
+  const now=Date.now(),fresh=ForecastFreshness.forecast(FORECAST,now),longFresh=fresh&&ForecastFreshness.longrange(LONGRANGE,now);
+  document.body.classList.toggle('forecast-expired',!fresh);
+  document.body.classList.toggle('longrange-expired',!longFresh);
+  const banner=$('#forecast-availability');
+  banner.hidden=fresh&&(MAP_MODE||longFresh);
+  if(!banner.hidden){
+    banner.replaceChildren(document.createTextNode(!fresh?'ハンマー予報は更新待ちです。期限を過ぎたスコア・推奨・長期カレンダーの表示を停止しています。':'長期カレンダーは更新待ちです。'));
+    if(!AIM_MODE)banner.append(document.createTextNode(' 海流マップは独立して更新し、取得日時と有効期限を表示します。'));
+    else {const a=document.createElement('a');a.href='../map/';a.textContent=' 海流予報マップを見る';banner.append(a);}
   }
-  renderLongrange();
-} else {
-  document.body.innerHTML = '<div style="padding:48px;color:#ff5566;font-family:monospace;">forecast_data.json が埋め込まれていません。build_html.py を実行してください。</div>';
+  if(!fresh||MAP_MODE){
+    $('#today-date').textContent=ForecastFreshness.jstDate(now).replaceAll('-','/');
+    $('#updated-at').textContent='海流の取得日時はマップに表示';
+  }
 }
+refreshForecastAvailability();
+if (!MAP_MODE && ForecastFreshness.forecast(FORECAST,Date.now())) {
+  renderHero(FORECAST);
+  if(!AIM_MODE&&!MAP_MODE){renderHourlyStrip(FORECAST);renderModelPanel(FORECAST);renderTideHeatmap(FORECAST);}
+}
+if(ForecastFreshness.forecast(FORECAST,Date.now())&&ForecastFreshness.longrange(LONGRANGE,Date.now()))renderLongrange();
+if(!AIM_MODE)renderIsland(FORECAST);
+setInterval(refreshForecastAvailability,60000);
+document.addEventListener('visibilitychange',refreshForecastAvailability);
+window.addEventListener('pageshow',refreshForecastAvailability);
 </script>
 </body>
 </html>

@@ -1,178 +1,222 @@
-/* Schematic forecast map. The source registry is shared with Python scoring. */
+/* Source-image chart. The ocean forecast has an independent timeline and no point-score overlays. */
 let mapController;
-function renderIsland(data) {
-  renderTodayReco(data);
-  const hours = todayHourly(data), hour = hours[selectedHourIdx] || hours[0];
-  if (!hour) return;
-  if (!mapController) mapController = createMapController();
-  mapController.update(hour, data.daily[selectedDayIdx]);
+function renderIsland() {
+  const root = document.getElementById('samegoyomi-current');
+  if (!root) return;
+  if (mapController) { mapController.refresh(); return; }
+  try { mapController = createMapController(root); }
+  catch (error) {
+    root.querySelector('#sc-data-status').textContent = '地図データを表示できません';
+    root.querySelector('#sc-caption').textContent = 'データの整合性を確認できないため、流れの表示を保留しています。';
+    root.querySelector('#sc-play').disabled = true;
+    console.error('Ocean map initialization failed', error);
+  }
 }
-
-function createMapController() {
-  const svg = $('#forecast-map'), canvas = $('#map-canvas');
-  const points = Object.entries(POINTS);
-  const baseBounds = MapGeometry.union([
-    ...points.map(([,p]) => ({left:p.pos[0]-40,right:p.pos[0]+40,top:p.pos[1]-40,bottom:p.pos[1]+40})),
-    ...MAP_CATALOG.island_outline_m.map(([x,y]) => ({left:x,right:x,top:y,bottom:y}))
-  ]);
-  let view, hour, day, selected = null, drag = null, suppressClick = false, flowMode = 'regional';
-  const escape = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const size = () => ({w:canvas.clientWidth || 320,h:canvas.clientHeight || 480});
-  function fit(includeHypothesis = false) {
-    const s = size();
-    let bounds = baseBounds;
-    if (includeHypothesis && hour) {
-      const h = MapGeometry.hypothesis(MAP_CATALOG.shelf_radii_m, hour.current_direction, hour.current_velocity_kmh);
-      bounds = MapGeometry.union([bounds,MapGeometry.ellipseBounds(h.zone),MapGeometry.ellipseBounds(h.lee)]);
+function createMapController(root) {
+  const A = OceanCurrent, data = MAP_TRACE, flow = MAP_FLOW, forecast = OCEAN_CURRENT;
+  if (!data?.features || data.source?.sha256 !== flow?.source?.traceSha256) throw new Error('Chart / field source mismatch');
+  const fields = A.decodeFields(flow), box = flow.viewBox, bounds = flow.drawBounds;
+  const svg = root.querySelector('#sc-svg'), canvas = root.querySelector('#sc-particles'), ctx = canvas.getContext('2d');
+  const get = id => root.querySelector('#' + id), NS = 'http://www.w3.org/2000/svg';
+  const node = (tag, attrs = {}) => { const e = document.createElementNS(NS, tag); Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,String(v))); return e; };
+  const state = { mode:'schematic', depths:true, running:true, day:null, hour:8 };
+  let prepared = A.prepare(forecast), current, destroyed = false, particles = [], raf = 0, resizeRaf = 0, last = 0, visible = true;
+  let scale = 1, ratio = 1, offsetX = 0, offsetY = 0, width = 0, height = 0, seed = 21017, simTime = 0;
+  let checkedDate = A.jstDate(Date.now()), checkedStatus = A.bundleStatus(forecast), checkedPast = false;
+  const motion = window.matchMedia('(prefers-reduced-motion: reduce)'), cleanups = [];
+  const hitCtx = document.createElement('canvas').getContext('2d'); hitCtx.lineWidth = 6;
+  const obstacles = data.features.filter(f => f.kind === 'exposed').map(f => ({shape:new Path2D(f.path), bbox:f.bbox}));
+  const appearance = () => A.strengthStyle(current?.kt,width);
+  const rgb = (s,alpha) => `rgba(${s.rgb.join(',')},${alpha})`, waterAlpha = .36;
+  const random = () => { seed = (Math.imul(seed,1664525)+1013904223)>>>0; return seed/4294967296; };
+  const listen = (target, event, callback) => { target.addEventListener(event,callback); cleanups.push(() => target.removeEventListener(event,callback)); };
+  function save() { try { sessionStorage.setItem('samegoyomi-ocean-v1',JSON.stringify(state)); } catch {} }
+  function initialSelection() {
+    state.day = prepared.days[0] || null; state.hour = 8;
+    const now = Date.now();
+    for (const day of prepared.days) for (const hour of A.HOURS) {
+      const key = A.targetTime(day,hour);
+      if (A.validRecord(prepared.records.get(key)) && A.timestamp(key) >= now) { state.day=day; state.hour=hour; return; }
     }
-    view = MapGeometry.fit(bounds,s.w,s.h);
-    draw();
+    if (state.day) state.hour = A.HOURS.find(hour => A.validRecord(prepared.records.get(A.targetTime(state.day,hour)))) || 8;
   }
-  function choose(key, center = false) {
-    selected = key;
-    $('#point-select').value = key;
-    if (center) {
-      const p = POINTS[key].pos;
-      view = MapGeometry.zoom(view, Math.min(1,700/view.w));
-      view.x = p[0]-view.w/2; view.y = p[1]-view.h/2;
+  initialSelection();
+  try {
+    const saved = JSON.parse(sessionStorage.getItem('samegoyomi-ocean-v1') || 'null');
+    if (saved) {
+      if (['schematic','regional'].includes(saved.mode)) state.mode=saved.mode;
+      if (typeof saved.depths==='boolean') state.depths=saved.depths;
+      if (typeof saved.running==='boolean') state.running=saved.running;
+      if (prepared.days.includes(saved.day) && A.HOURS.includes(saved.hour)) { state.day=saved.day; state.hour=saved.hour; }
     }
-    draw();
+  } catch {}
+  svg.setAttribute('viewBox',box.join(' '));
+  for (const f of data.features) {
+    const p=node('path',{d:f.path,class:f.kind,'data-source-feature':f.id});
+    get(f.kind==='submerged'?'sc-reefs':f.kind==='exposed'?'sc-land':'sc-open').append(p);
+    for (const [a,b] of f.occlusion_links || []) get('sc-review').append(node('path',{d:`M${a.join(',')} L${b.join(',')}`,fill:'none',stroke:'#f0c776','stroke-width':1.7,'stroke-dasharray':'2.5 3','vector-effect':'non-scaling-stroke'}));
   }
-  function draw() {
-    if (!hour || !view) return;
-    const s = size(), unit = view.w / s.w;
-    const scores = hour.point_scores;
-    const ranked = Object.keys(scores).filter(k => POINTS[k]).sort((a,b)=>scores[b]-scores[a]);
-    const top = ranked.slice(0,3);
-    const h = MapGeometry.hypothesis(MAP_CATALOG.shelf_radii_m,hour.current_direction,hour.current_velocity_kmh);
-    const hypothesisOn = $('#map-hypothesis').checked;
-    const allNames = $('#map-labels').checked;
-    const current = MapGeometry.currentVector(hour.current_direction,hour.current_velocity_kmh);
-    const ellipse = (e,cls) => `<ellipse class="${cls}" cx="${e.x}" cy="${e.y}" rx="${e.rx}" ry="${e.ry}" transform="rotate(${e.rotation} ${e.x} ${e.y})"/>`;
-    const text = (x,y,label,color='#f2ead8',font=12) => `<text x="${x}" y="${y}" text-anchor="middle" fill="${color}" font-size="${font*unit}" class="map-label">${escape(label)}</text>`;
-    const arrows=MapGeometry.flowArrows(view,s.w,hour.current_direction,hour.current_velocity_kmh,MAP_CATALOG.island_outline_m,flowMode);
-    let content='<g class="map-current-arrows '+(flowMode==='local'?'is-local':'')+'" aria-hidden="true">';
-    for(const path of arrows) {
-      const end=path[path.length-1], prev=path[path.length-2];
-      const angle=Math.atan2(end[1]-prev[1],end[0]-prev[0]), head=6*unit;
-      const left=[end[0]-head*Math.cos(angle-.5),end[1]-head*Math.sin(angle-.5)];
-      const right=[end[0]-head*Math.cos(angle+.5),end[1]-head*Math.sin(angle+.5)];
-      content+=`<path d="M ${path.map(p=>p.join(',')).join(' L ')}"/><path class="flow-arrow-head" d="M ${left.join(',')} L ${end.join(',')} L ${right.join(',')}"/>`;
-    }
-    content+='</g>';
-    content += `<path class="map-island" d="M ${MAP_CATALOG.island_outline_m.map(p=>p.join(',')).join(' L ')} Z"/>`;
-    content += text(0,15,'神子元島','#f2ead8',13);
-    if (hypothesisOn) {
-      content = ellipse(h.lee,'hypothesis-lee') + ellipse(h.zone,'hypothesis-zone') + content;
-      content += text(h.zone.x,h.zone.y,'ハンマー予想域（仮説）','#8bd1bf',12);
-      content += text(h.lee.x,h.lee.y,'潮陰（仮説）','#abc4d8',12);
-    }
-    const placed = [];
-    const order = [...new Set([selected,...top,...ranked].filter(Boolean))];
-    for (const key of order) {
-      const p = POINTS[key], [x,y] = p.pos, rank = top.indexOf(key)+1;
-      const visible = x>=view.x && x<=view.x+view.w && y>=view.y && y<=view.y+view.h;
-      if (!visible) continue;
-      const active = selected===key, radius = (active?9:rank?8:5)*unit;
-      const color = MapGeometry.scoreColor(scores[key] || 0);
-      const label = `${p.label} ${Math.round((scores[key]||0)*100)}`;
-      content += `<g class="map-point" role="button" tabindex="0" data-point="${key}" aria-label="${escape(label)}" aria-pressed="${active}">`;
-      content += `<title>${escape(label)}</title><circle cx="${x}" cy="${y}" r="${14*unit}" fill="transparent"/>`;
-      content += `<circle cx="${x}" cy="${y}" r="${radius}" fill="${color}" stroke="${active?'#fff':'#071727'}" stroke-width="${2*unit}"/>`;
-      if (rank) content += text(x,y+4*unit,rank,'#071727',11);
-      content += '</g>';
-      if (rank || active || allNames) {
-        const labelText = p.label;
-        const width = [...labelText].reduce((n,c)=>n+(c.charCodeAt(0)>255?12:7),0)*unit;
-        const height = 16*unit;
-        let target;
-        for (const [dx,dy] of [[0,-21],[0,29],[width/2/unit+15,5],[-width/2/unit-15,5],[0,-43],[0,51]]) {
-          const cx=x+dx*unit, cy=y+dy*unit;
-          const box = {l:cx-width/2-3*unit,r:cx+width/2+3*unit,t:cy-height,b:cy+3*unit};
-          if (box.l<view.x || box.r>view.x+view.w || box.t<view.y || box.b>view.y+view.h) continue;
-          if (placed.some(b=>box.l<b.r&&box.r>b.l&&box.t<b.b&&box.b>b.t)) continue;
-          placed.push(box); target=[cx,cy]; break;
-        }
-        if (target) {
-          content += `<line x1="${x}" y1="${y}" x2="${target[0]}" y2="${target[1]-6*unit}" stroke="${color}" stroke-width="${unit}" opacity=".6"/>`;
-          content += text(...target,labelText,active?'#fff':'#dfebec');
-        }
+  get('sc-symbols').append(node('circle',{cx:504,cy:508,r:7,fill:'#f1d7a0',stroke:'#0a2336','stroke-width':2}));
+  for (const t of [{text:'灯台',anchor:[530,508],id:'lighthouse'},{text:'神子元島',anchor:[430,420],id:'island'}]) {
+    const e=node('text',{x:t.anchor[0],y:t.anchor[1],'dominant-baseline':'central','text-anchor':t.id==='island'?'middle':'start','data-symbol':t.id}); e.textContent=t.text; get('sc-symbols').append(e);
+  }
+  for (const label of data.labels) {
+    const e=node('text',{x:label.anchor[0],y:label.anchor[1],'text-anchor':'middle','dominant-baseline':'central','data-related':label.related_id});e.textContent=label.text;get('sc-names').append(e);
+  }
+  for (const depth of data.depths) {
+    const e=node('text',{x:depth.anchor[0],y:depth.anchor[1],'text-anchor':'middle','dominant-baseline':'central',class:'depth','data-depth':depth.id});e.textContent=depth.text;get('sc-depths').append(e);
+  }
+  function onLand(x,y) {
+    for (const o of obstacles) {const b=o.bbox;if(x<b[0]-4||y<b[1]-4||x>b[0]+b[2]+4||y>b[1]+b[3]+4)continue;if(hitCtx.isPointInPath(o.shape,x,y)||hitCtx.isPointInStroke(o.shape,x,y))return true;}return false;
+  }
+  function sample(x,y) {
+    if (current?.status!=='available'||x<bounds[0]||y<bounds[1]||x>bounds[0]+bounds[2]||y>bounds[1]+bounds[3]||onLand(x,y)) return null;
+    return state.mode==='regional' ? A.vector(current.direction) : A.sampleField(flow,fields,x,y,current.direction);
+  }
+  function spawn(p,initial=false) {
+    for(let i=0;i<90;i++){const x=bounds[0]+random()*bounds[2],y=bounds[1]+2+random()*(bounds[3]-4);if(sample(x,y)){p.x=x;p.y=y;p.life=5+random()*7;p.age=initial?random()*p.life:0;p.tone=random();p.trail=[];return true;}}p.age=100;p.life=0;p.trail=[];return false;
+  }
+  function clear(){ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,canvas.width,canvas.height);}
+  function advance(dt) {
+    if(!width||!height)return;
+    simTime+=dt;clear();ctx.globalCompositeOperation='source-over';ctx.setTransform(scale*ratio,0,0,scale*ratio,offsetX*ratio,offsetY*ratio);
+    ctx.save();ctx.beginPath();ctx.rect(...bounds);ctx.clip();ctx.lineCap='round';
+    const style=appearance();ctx.fillStyle=rgb(style,style.valid?waterAlpha:.1);ctx.fillRect(...bounds);
+    const buckets=Array.from({length:8},()=>new Path2D()),heads=new Path2D();
+    const travel=style.speed*dt/scale,steps=Math.max(1,Math.ceil(travel/1.8)),ds=travel/steps;
+    for(const p of particles){
+      if(p.age>=p.life){spawn(p);continue;}p.age+=dt;
+      const alpha=Math.max(0,Math.min(1,p.age/.45,(p.life-p.age)/.65));if(alpha===0)continue;
+      if(!p.trail.length)p.trail.push({x:p.x,y:p.y,t:simTime-dt});let blocked=false;
+      for(let s=0;s<steps;s++){
+        const v=sample(p.x,p.y);if(!v){blocked=true;break;}
+        const mx=p.x+v[0]*ds/2,my=p.y+v[1]*ds/2,mid=sample(mx,my);if(!mid){blocked=true;break;}
+        const nx=p.x+mid[0]*ds,ny=p.y+mid[1]*ds;
+        if(!sample(nx,ny)||onLand((p.x+nx)/2,(p.y+ny)/2)){blocked=true;break;}
+        p.x=nx;p.y=ny;p.trail.push({x:nx,y:ny,t:simTime-dt+(s+1)*dt/steps});
       }
+      while(p.trail.length>1&&simTime-p.trail[0].t>style.time)p.trail.shift();
+      for(let j=1;j<p.trail.length;j++){const a=p.trail[j-1],b=p.trail[j],fade=Math.exp(-(simTime-b.t)/(style.time/2))*alpha*(.8+p.tone*.2),bucket=Math.min(7,Math.floor(fade*8));if(bucket===0)continue;buckets[bucket].moveTo(a.x,a.y);buckets[bucket].lineTo(b.x,b.y);}
+      if(!blocked&&alpha>.65&&p.tone>.76&&p.trail.length>2){const v=sample(p.x,p.y);if(v){const arm=2.6/scale,wing=1.35/scale;heads.moveTo(p.x-v[0]*arm-v[1]*wing,p.y-v[1]*arm+v[0]*wing);heads.lineTo(p.x,p.y);heads.lineTo(p.x-v[0]*arm+v[1]*wing,p.y-v[1]*arm-v[0]*wing);}}
+      if(blocked)p.age=p.life;
     }
-    svg.setAttribute('viewBox',`${view.x} ${view.y} ${view.w} ${view.h}`);
-    svg.innerHTML = content;
-    const scale = MapGeometry.scaleBar(view.w,s.w);
-    $('#map-scale-line').style.width = scale.pixels+'px';
-    $('#map-scale-label').textContent = `概略 ${scale.metres} m`;
-    const flowKey=$('#map-flow-key');
-    flowKey.className='map-flow-key'+(flowMode==='local'?' is-local':'');
-    flowKey.hidden=flowMode==='off';
-    flowKey.textContent=!current?'海流データなし':current.kt<.2?'弱い流れ · 矢印を省略':flowMode==='local'?'回り込みの仮説':'広域の表面流';
-    $('#map-flow-description').textContent=flowMode==='off'?'流れの矢印は非表示です。':!current?'選択時刻の海流データがありません。':
-      current.kt<.2?`広域の表面流 ${current.kt.toFixed(2)} kt · 0.2 kt未満のため矢印を省略しています。`:
-      flowMode==='local'?`金色の曲線は未検証の回り込みイメージです。入力の広域予報は${current.kt.toFixed(1)} kt・${hour.current_direction.toFixed(0)}°へ。地点ごとの流速予報ではありません。`:
-      `青い矢印は${hour.hour}:00の広域予報：${current.kt.toFixed(1)} kt・${hour.current_direction.toFixed(0)}°へ流れる向き。同じ予報値を繰り返し描いています。長さは流速の目安です。`;
-    $('#map-zone-status').textContent = !hypothesisOn ? '潮陰・予想域の仮説は非表示' :
-      MapGeometry.contains(view,MapGeometry.ellipseBounds(h.zone)) ? '予想域は未検証の仮説です' : '予想域の一部または全体が画面外です。「予想域まで表示」で確認できます。';
-    const currentLabel = `${hour.hour}:00の推奨`;
-    $('#map-ranked').innerHTML = top.map((k,i)=>`<button type="button" data-select="${k}" aria-pressed="${k===selected}"><span class="map-rank">${i+1}</span><span>${escape(POINTS[k].label)}</span><b>${Math.round(scores[k]*100)}</b></button>`).join('');
-    $('#map-ranked-title').textContent = currentLabel;
-    const p = POINTS[selected];
-    $('#map-point-detail').innerHTML = `<strong>${escape(p.label)}</strong><span>地点スコア ${Math.round(scores[selected]*100)} / 100</span><p>${escape(p.note || '地点の詳細は現地ガイドに確認してください。')}</p><p>参考水深 ${escape(p.depth==='-'?'不明':p.depth)} · 位置・形状は未校正</p>`;
+    for(let b=1;b<8;b++){ctx.lineWidth=1.9/scale;ctx.strokeStyle=rgb(style,b/8*.9);ctx.stroke(buckets[b]);ctx.lineWidth=.85/scale;ctx.strokeStyle=`rgba(238,248,249,${b/8*.86})`;ctx.stroke(buckets[b]);}
+    ctx.lineWidth=.85/scale;ctx.strokeStyle='rgba(238,248,249,.74)';ctx.stroke(heads);
+    // Remove the complete tails and antialiased caps, not only particle heads.
+    ctx.globalCompositeOperation='destination-out';ctx.fillStyle='#000';ctx.strokeStyle='#000';ctx.lineWidth=6;
+    for(const o of obstacles){ctx.fill(o.shape);ctx.stroke(o.shape);}ctx.restore();ctx.globalCompositeOperation='source-over';
   }
-  $('#point-select').innerHTML = points.map(([key,p])=>`<option value="${key}">${escape(p.label)}</option>`).join('');
-  $('#point-select').addEventListener('change',e=>choose(e.target.value,true));
-  $('#map-ranked').addEventListener('click',e=>{const b=e.target.closest('[data-select]');if(b)choose(b.dataset.select,true);});
-  svg.addEventListener('click',e=>{if(suppressClick){suppressClick=false;return;}const p=e.target.closest('[data-point]');if(p)choose(p.dataset.point);});
-  svg.addEventListener('keydown',e=>{
-    const p=e.target.closest('[data-point]');
-    if(p && ['Enter',' '].includes(e.key)){e.preventDefault();choose(p.dataset.point);$('#point-select').focus();return;}
-    const moves={ArrowLeft:[-.2,0],ArrowRight:[.2,0],ArrowUp:[0,-.2],ArrowDown:[0,.2]};
-    if(moves[e.key]){e.preventDefault();view.x+=moves[e.key][0]*view.w;view.y+=moves[e.key][1]*view.h;draw();}
-  });
-  svg.addEventListener('pointerdown',e=>{
-    if(e.button!==0 || drag)return;
-    drag={id:e.pointerId,x:e.clientX,y:e.clientY,view:{...view},moved:false};
-    suppressClick=false;
-  });
-  svg.addEventListener('pointermove',e=>{
-    if(!drag||e.pointerId!==drag.id)return;
-    const dx=e.clientX-drag.x,dy=e.clientY-drag.y;
-    if(Math.hypot(dx,dy)>4 && !drag.moved){drag.moved=true;svg.setPointerCapture(e.pointerId);}
-    if(drag.moved){const s=size();view={...drag.view,x:drag.view.x-dx*drag.view.w/s.w,y:drag.view.y-dy*drag.view.h/s.h};draw();}
-  });
-  function stopDrag(e){if(drag&&e.pointerId===drag.id){suppressClick=drag.moved;drag=null;}}
-  svg.addEventListener('pointerup',stopDrag);svg.addEventListener('pointercancel',stopDrag);
-  $('#map-zoom-in').onclick=()=>{view=MapGeometry.zoom(view,.65);draw();};
-  $('#map-zoom-out').onclick=()=>{view=MapGeometry.zoom(view,1/.65);draw();};
-  $('#map-reset').onclick=()=>fit();
-  $('#map-fit-zone').onclick=()=>{$('#map-hypothesis').checked=true;fit(true);};
-  $('#map-hypothesis').onchange=draw;$('#map-labels').onchange=draw;
-  document.querySelectorAll('[data-flow-mode]').forEach(button=>button.addEventListener('click',()=>{
-    flowMode=button.dataset.flowMode;
-    document.querySelectorAll('[data-flow-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));
-    draw();
-  }));
-  $('#map-fullscreen').onclick=async()=>{
-    try {if(document.fullscreenElement)await document.exitFullscreen();else await $('#map-workbench').requestFullscreen();}
-    catch {$('#map-zone-status').textContent='このブラウザーは全画面表示に対応していません。＋で拡大できます。';}
-  };
-  document.addEventListener('fullscreenchange',()=>{
-    $('#map-fullscreen').textContent=document.fullscreenElement?'全画面を終了':'全画面';
-  });
-  new ResizeObserver(()=>{if(view){const s=size(),h=view.w*s.h/s.w;view.y+=(view.h-h)/2;view.h=h;draw();}}).observe(canvas);
-  return {update(h,d){
-    const changed=hour?.time!==h.time;
-    hour=h;day=d;
-    const ranked=Object.keys(h.point_scores).filter(k=>POINTS[k]).sort((a,b)=>h.point_scores[b]-h.point_scores[a]);
-    if(changed||!selected)selected=ranked[0];
-    $('#point-select').value=selected;
-    $('#map-conditions').innerHTML=`<div><span>選択中</span><b>${escape(h.time.slice(0,10))} ${h.hour}:00</b></div>`+
-      `<div><span>広域海流予報</span><b><i class="flow-bearing" style="transform:rotate(${h.current_direction}deg)">↑</i> ${(h.current_velocity_kmh/1.852).toFixed(1)} kt</b><small>${h.current_direction.toFixed(0)}°へ流れる · 約8km格子</small></div>`+
-      `<div><span>海面水温（補正後）</span><b>${h.sst.toFixed(1)}℃</b><small>平年偏差 ${h.sst_anomaly>0?'+':''}${h.sst_anomaly.toFixed(1)}℃</small></div>`;
-    const danger=d.diveable===false;
-    $('#map-sea-status').className='map-sea-status'+(danger?' is-danger':'');
-    $('#map-sea-status').textContent=`${d.sea_status} · この日の最大 波${d.max_wave.toFixed(1)}m / 風${d.max_wind.toFixed(1)}m/s`;
-    if(!view)fit();else draw();
-  }};
+  function resetParticles() {
+    clear();seed=21017;simTime=0;const style=appearance(),count=style.moving?Math.round(Math.max(170,Math.min(760,bounds[2]*bounds[3]*scale*scale/650))):0;
+    particles=Array.from({length:count},()=>{const p={};spawn(p,true);return p;});
+    canvas.dataset.particleCount=String(count);canvas.dataset.renderer='continuous-field-rk2';canvas.dataset.tailLength=style.length.toFixed(2);canvas.dataset.strength=style.valid?String(style.kt):'missing';canvas.dataset.color=style.rgb.join(',');canvas.dataset.status=current.status;
+    if(!count){advance(0);return;}for(let i=0;i<30;i++)advance(1/30);
+  }
+  function strengthLegend() {
+    const style=appearance();get('sc-strength-gradient').style.background='linear-gradient(to right,'+A.COLOR_STOPS.map(([k])=>rgb(A.strengthStyle(k,width),waterAlpha)+' '+(k/A.MAX_KT*100)+'%').join(',')+'),#0a2336';
+    get('sc-strength-marker').hidden=!style.valid;get('sc-strength-marker').style.left=Math.min(100,(style.kt||0)/A.MAX_KT*100)+'%';
+    for(const c of root.querySelectorAll('[data-tail-example]')){
+      const s=A.strengthStyle(Number(c.dataset.tailExample),width),p=c.getContext('2d'),d=Math.min(window.devicePixelRatio||1,2),w=c.getBoundingClientRect().width||90;
+      c.width=Math.round(w*d);c.height=18*d;p.scale(d,d);const end=w-5,x=end-s.length;
+      const fade=p.createLinearGradient(x,0,end,0);fade.addColorStop(0,rgb(s,.12));fade.addColorStop(1,rgb(s,1));p.strokeStyle=fade;p.lineWidth=1.9;p.lineCap='round';p.beginPath();p.moveTo(x,9);p.lineTo(end,9);p.stroke();p.strokeStyle='rgba(238,248,249,.8)';p.lineWidth=.85;p.beginPath();p.moveTo(end-2.6,7.65);p.lineTo(end,9);p.lineTo(end-2.6,10.35);p.stroke();
+    }
+  }
+  function labelLayout() {
+    const small=width<500,primary=['Aポイント','ザブ西','ザブ根','カメ根','プレート','ハンマーズロック','三つ目の高根'],keyDepth=['a_near','zabu_west','north_rock','plate','hammers','eagleray','third_high15','third_high18'];
+    const texts=[...svg.querySelectorAll('text')],placed=[],priority=e=>e.dataset.symbol?0:e.classList.contains('depth')?2:primary.includes(e.textContent)?1:3;
+    texts.sort((a,b)=>priority(a)-priority(b)).forEach(e=>{
+      e.style.display='';e.style.fontSize=(e.dataset.symbol==='island'?14:12)/scale+'px';e.style.strokeWidth=3.8/scale+'px';
+      const isDepth=e.classList.contains('depth'),allowed=(!isDepth||state.depths)&&(!small||e.dataset.symbol||(isDepth?keyDepth.includes(e.dataset.depth):primary.includes(e.textContent)));
+      const q=e.getBBox(),pad=2/scale,r={x:q.x-pad,y:q.y-pad,w:q.width+2*pad,h:q.height+2*pad};
+      const inside=r.x>=box[0]+3/scale&&r.x+r.w<=box[0]+box[2]-3/scale&&r.y>=box[1]+42/scale&&r.y+r.h<=box[1]+box[3]-3/scale;
+      if(!allowed||!inside||placed.some(p=>r.x<p.x+p.w&&r.x+r.w>p.x&&r.y<p.y+p.h&&r.y+r.h>p.y))e.style.display='none';else placed.push(r);
+    });
+  }
+  function layout() {
+    if(destroyed)return;const w=svg.getBoundingClientRect().width;if(!w)return;
+    const h=Math.min(w<500?600:820,w*box[3]/box[2]),dpr=Math.min(window.devicePixelRatio||1,2);svg.style.height=h+'px';
+    const changed=Math.abs(width-w)>.5||Math.abs(height-h)>.5||ratio!==dpr;
+    width=w;height=h;ratio=dpr;scale=Math.min(w/box[2],h/box[3]);offsetX=(w-box[2]*scale)/2-box[0]*scale;offsetY=(h-box[3]*scale)/2-box[1]*scale;
+    if(changed){canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);canvas.style.width=w+'px';canvas.style.height=h+'px';resetParticles();last=0;}
+    labelLayout();strengthLegend();
+  }
+  function playing(){return !destroyed&&appearance().moving&&state.running&&visible&&!document.hidden&&!motion.matches&&root.isConnected;}
+  function syncPlayback() {
+    const active=playing(),moving=appearance().moving,requested=state.running&&!motion.matches&&moving;
+    get('sc-play').disabled=motion.matches||!moving;get('sc-play').textContent=motion.matches||!moving?'静止表示':requested?'一時停止':'再生';get('sc-play').setAttribute('aria-pressed',String(requested));canvas.dataset.playing=String(active);
+    cancelAnimationFrame(raf);raf=0;last=0;if(active)raf=requestAnimationFrame(frame);
+  }
+  function frame(t) {
+    if(A.bundleStatus(forecast)!==checkedStatus){refresh();return;}
+    if(!playing()){syncPlayback();return;}const dt=last?Math.min((t-last)/1000,.05):1/60;last=t;advance(dt);raf=requestAnimationFrame(frame);
+  }
+  function formatTime(value) {
+    const time=A.timestamp(value);return Number.isFinite(time)?new Intl.DateTimeFormat('ja-JP',{timeZone:'Asia/Tokyo',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(time)+' JST':'不明';
+  }
+  function timeControls() {
+    const focused=document.activeElement,focusDay=focused?.dataset.oceanDay,focusHour=focused?.dataset.oceanHour;
+    get('ocean-day-tabs').replaceChildren();get('ocean-hour-controls').replaceChildren();
+    for(const day of prepared.days){
+      const count=A.HOURS.filter(hour=>A.validRecord(prepared.records.get(A.targetTime(day,hour)))).length;
+      const b=document.createElement('button');b.type='button';b.dataset.oceanDay=day;b.setAttribute('aria-pressed',String(day===state.day));
+      const date=new Date(A.timestamp(`${day}T12:00:00+09:00`));b.textContent=new Intl.DateTimeFormat('ja-JP',{timeZone:'Asia/Tokyo',month:'numeric',day:'numeric',weekday:'short'}).format(date);
+      if(count<7){const small=document.createElement('small');small.textContent=`有効 ${count}/7時刻`;b.append(document.createElement('br'),small);}b.setAttribute('aria-label',`${day}、有効${count}/7時刻`);get('ocean-day-tabs').append(b);
+    }
+    for(const hour of state.day?A.HOURS:[]){
+      const reading=A.select(forecast,prepared,state.day,hour),b=document.createElement('button');b.type='button';b.dataset.oceanHour=String(hour);b.setAttribute('aria-pressed',String(hour===state.hour));b.textContent=hour+':00';
+      if(reading.status!=='available'){const small=document.createElement('small');small.textContent=reading.status==='expired'?'期限切れ':'欠測';b.append(small);}get('ocean-hour-controls').append(b);
+    }
+    if(focusDay)get('ocean-day-tabs').querySelector(`[data-ocean-day="${focusDay}"]`)?.focus({preventScroll:true});
+    if(focusHour)get('ocean-hour-controls').querySelector(`[data-ocean-hour="${focusHour}"]`)?.focus({preventScroll:true});
+  }
+  function sourceLabels() {
+    const source=forecast?.source||{},label=get('sc-source-label');label.replaceChildren();
+    const provider=typeof source.provider==='string'?source.provider:'出典未取得',model=typeof source.model==='string'?source.model:'モデル不明';
+    const link=document.createElement('a');let validUrl=false;try{validUrl=new URL(source.source_url).protocol==='https:';}catch{}
+    if(validUrl){link.href=source.source_url;link.target='_blank';link.rel='noopener noreferrer';link.textContent=provider;label.append(link);}else label.append(provider);
+    const resolution=typeof source.resolution_km==='number'?`約${source.resolution_km} km格子`:'格子解像度不明';
+    label.append(` / ${model} · 海面流 · ${resolution}`);
+    const rows=[['予測対象',current.time?formatTime(current.time):'対象時刻なし'],['データ取得',formatTime(forecast?.retrieved_at)],['モデル発表',Number.isFinite(A.timestamp(source.model_run_at))?formatTime(source.model_run_at):'不明（APIから未提供）'],['表示の更新期限',formatTime(forecast?.expires_at)]];
+    const coords=value=>value&&Number.isFinite(value.latitude)&&Number.isFinite(value.longitude)?`${value.latitude.toFixed(4)}, ${value.longitude.toFixed(4)}`:null;
+    if(coords(source.grid_coordinates))rows.push(['予報格子の座標',coords(source.grid_coordinates)]);
+    const dl=get('sc-source-times');dl.replaceChildren();for(const [term,value] of rows){const dt=document.createElement('dt'),dd=document.createElement('dd');dt.textContent=term;dd.textContent=value;dl.append(dt,dd);}
+  }
+  function render() {
+    if(destroyed)return;current=A.select(forecast,prepared,state.day,state.hour);checkedPast=current.isPast;
+    const regional=state.mode==='regional',style=appearance(),missing=current.status!=='available';
+    root.style.setProperty('--flow-color',rgb(style,1));root.dataset.currentStatus=current.status;
+    root.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));get('sc-depth-toggle').checked=state.depths;
+    const direction=style.moving?`${['北','北東','東','南東','南','南西','西','北西'][Math.round(current.direction/45)%8]}へ ${Math.round(current.direction)}°`:'方向の描画なし';
+    const value=style.valid?style.kt.toFixed(2)+' kt':current.status==='expired'?'期限切れ':'未取得';
+    get('sc-direction').textContent=direction;get('sc-speed').textContent=value;get('sc-strength-value').textContent=value;
+    get('sc-data-status').textContent=missing?(current.status==='expired'?'更新期限を過ぎたため表示を保留':'選択時刻の海流データがありません'):'広域の海面流予報';get('sc-data-status').dataset.state=current.status;
+    get('sc-target-time').textContent=current.time?formatTime(current.time)+(current.isPast?' · 対象時刻を過ぎた予報':''):'現在選択できる予報時刻がありません';
+    get('sc-explanation').textContent=missing?'欠測・期限切れは0 ktと区別します':'流速は南側全体に共通の一つの値です';
+    get('sc-strength-status').textContent=missing?'流れの表示を保留しています':style.kt<.2?'0.2 kt未満：方向の描画を省略':style.kt>6?'6 kt以上：色と線の長さは6 ktを上限に表示':'色と線の長さが広域予報の流速に連動';
+    get('sc-description').textContent='提供図をトレースした神子元島と南側の根。'+(current.time?formatTime(current.time)+'。':'')+value+'。'+(style.moving?direction+(regional?'への一様な流れ。':'へ島沿いに曲がる模式的な流れ。'):'方向は描画しません。')+'地点・深度ごとの流れの予報ではありません。';
+    get('sc-mode-badge').textContent=(regional?'広域予報の向き':'回り込み · 模式')+' / '+value;get('sc-flow-legend').textContent=regional?'広域予報の向き':'島沿いの回り込み（模式）';
+    get('sc-caption').textContent=regional?'海面の広域予報を一様に表示しています。根ごとの流速差・水中の流れは表していません。':'広域予報の向きと流速を入力に、島沿いの曲がりを模式表示しています。地点・深度ごとの流れを予報するものではありません。';
+    timeControls();sourceLabels();layout();resetParticles();syncPlayback();
+  }
+  function refresh() {
+    if(destroyed)return;if(!root.isConnected){destroy();return;}
+    const date=A.jstDate(Date.now()),status=A.bundleStatus(forecast),past=current?.time?A.timestamp(current.time)<Date.now():false;
+    if(date!==checkedDate){checkedDate=date;prepared=A.prepare(forecast);if(!prepared.days.includes(state.day))initialSelection();checkedStatus=status;render();}
+    else if(status!==checkedStatus||past!==checkedPast){checkedStatus=status;render();}
+    else syncPlayback();
+  }
+  listen(get('ocean-day-tabs'),'click',event=>{const b=event.target.closest('[data-ocean-day]');if(!b)return;state.day=b.dataset.oceanDay;render();save();});
+  listen(get('ocean-hour-controls'),'click',event=>{const b=event.target.closest('[data-ocean-hour]');if(!b)return;state.hour=Number(b.dataset.oceanHour);render();save();});
+  for(const button of root.querySelectorAll('[data-mode]'))listen(button,'click',()=>{state.mode=button.dataset.mode;render();save();});
+  listen(get('sc-depth-toggle'),'change',event=>{state.depths=event.target.checked;labelLayout();save();});
+  listen(get('sc-play'),'click',()=>{state.running=!state.running;syncPlayback();save();});
+  listen(document,'visibilitychange',refresh);listen(motion,'change',refresh);listen(window,'pageshow',refresh);
+  const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;refresh();},{threshold:0}):null;intersection?.observe(svg);
+  const resize=new ResizeObserver(()=>{if(resizeRaf||destroyed)return;resizeRaf=requestAnimationFrame(()=>{resizeRaf=0;refresh();layout();});});resize.observe(svg);
+  const timer=setInterval(refresh,30000);
+  const untilExpiry=A.timestamp(forecast?.expires_at)-Date.now();
+  const expiryTimer=Number.isFinite(untilExpiry)&&untilExpiry>0?setTimeout(refresh,Math.min(untilExpiry+1,2147483647)):null;
+  function destroy(){destroyed=true;cancelAnimationFrame(raf);cancelAnimationFrame(resizeRaf);clearInterval(timer);clearTimeout(expiryTimer);intersection?.disconnect();resize.disconnect();cleanups.forEach(remove=>remove());clear();}
+  render();
+  return { refresh, destroy };
 }

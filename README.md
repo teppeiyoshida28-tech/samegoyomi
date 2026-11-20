@@ -5,6 +5,7 @@
 
 - **公開URL**: https://teppeiyoshida28-tech.github.io/samegoyomi/
 - **自動更新**: 毎日 JST 6:30（UTC 21:30）に `.github/workflows/daily.yml` が実行
+- **海流マップ**: 毎日 JST 6:35（UTC 21:35）に `ocean-map.yml` が独立更新。全体予報の停止中も有効な海流だけ提供し、期限切れの旧スコアは非表示
 
 ## ディレクトリ構成
 
@@ -126,11 +127,30 @@ Actions のジョブが失敗すると GitHub から自動でメール通知が�
 
 ## マップの読み方
 
-南側の概略図で、実測等深線や航行用地図ではない。地理院地図で島の位置を確認できるが、地点は未測量のため実地図へ重ねていない。
-拡大・ドラッグ移動・矢印キー移動・全画面に対応。上位3地点以外も地図または選択欄から詳細を確認できる。
-「潮陰・予想域の仮説」をオンにすると未検証の仮説領域を表示する。画面外の領域は移動せず、「予想域まで表示」で全体を見る。
-広域海流と水温は選択した日付・時刻の値。地図の色は地点スコア0〜100の固定目盛りで、遭遇確率ではない。
-青い流れの矢印はOpen-Meteo経由のCopernicus Marine SMOC表面流（約8km格子）を表示。各矢印が別の観測点を表すわけではない。
-「回り込み（仮説）」へ切り替えると金色の模式的な流れを表示し、「非表示」で消せる。島の北側・陸上・0.2kt未満の弱流には矢印を描かない。
-JAMSTEC・JAXAの約1km格子海中天気予報と気象庁の50m深海流予想図への比較リンクもある。数値は本図に合成していない。調査出典と検証範囲は`analysis/REPORT_current_visualization.md`を参照。
-カレンダーは日付を押すと、フル予報では海況・推奨地点、長期見込みでは潮・黒潮の前提を表示する。
+神子元島南側の、ユーザー提供図をトレースした地図です。海上の島・露出岩と海底の根を別色で表し、灯台と原図の深度を保持しています。GPS・測深による校正は未実施で、航行用地図ではありません。ポイント拡大はありません。
+
+日付と時刻を選ぶと、Open-Meteo経由のCopernicus Marine SMOC表面流（約8km格子）の流速・流向に切り替わります。色と線の長さは0〜6ktの固定凡例。6kt超も数値は実値のままで、色・長さだけが上限になります。0.2kt未満では方向を描きません。欠測を0ktに置き換えません。
+
+「回り込み（模式）」は、広域の予報方向を島・露出岩に沿わせたイメージです。根ごとの流速・反流・水深別の予報ではなく、海底根を陸として扱いません。「広域予報の向き」では入力の流向を一様に示します。北側は対象外。旧モデルの地点スコアと未校正のトレース座標を結合していません。
+
+対象時刻・取得時刻・取得データの有効期限・返却格子中心を表示します。モデル発表時刻はAPIから取得できず「不明」。取得後36時間で表示を失効させ、古い流速や粒子を描き続けません。取得の鮮度はモデル自体の更新や予報精度の保証ではありません。
+
+JAMSTEC・JAXAの海中天気予報と気象庁の50m深海流予想図は比較用リンクです。数値を本図へ合成せず、SMOCに潮汐流を再加算しません。詳細は`analysis/REPORT_live_ocean_map.md`を参照。
+
+### 海流だけの更新・公開
+
+```bash
+python engine/fetch_ocean_current.py
+python engine/fetch_ocean_current.py --validate-only
+python engine/build_html.py
+cp engine/mikomoto_forecast.html docs/index.html
+cp engine/mikomoto_map.html docs/map/index.html
+cp engine/mikomoto_aim.html docs/aim/index.html
+python engine/validate_ocean_publication.py --marine-only
+```
+
+`ocean-map.yml`は毎朝06:35 JSTと関連コードのmainへのpushで実行します。既存dailyと公開処理を直列化し、取り込み失敗・欠測・48時間先までの有効範囲不足・埋め込み不一致では公開しません。既存full予報のmonitorは維持し、海流専用経路から未発表のハンマー予報を公開しないことを発表記録のハッシュで検査します。
+
+海流の公開成功後は`ocean-published-*` Actions artifactへ90日保存。ハンマー予報アーカイブを追記しません。旧ハンマー予報や長期資料が期限切れならスコア・推奨・カレンダーを隠し、更新待ちと明示します。海流が復旧しても、旧予測モデル全体の更新停止が解消したことにはなりません。
+
+回帰検査は `python -m unittest discover -s tests -v` と `node --test tests/*.test.js`。Windowsでは `PYTHONUTF8=1` を設定してください。

@@ -13,10 +13,18 @@ tpl = (ROOT / "index.html").read_text(encoding="utf-8")
 for marker, filename in [("<!--__MAP_PANEL__-->", "map_panel.html"),
                          ("/*__MAP_GEOMETRY__*/", "map_geometry.js"),
                          ("/*__MAP_UI__*/", "map_ui.js"),
+                         ("/*__OCEAN_CURRENT_JS__*/", "ocean_current.js"),
+                         ("/*__FORECAST_FRESHNESS_JS__*/", "forecast_freshness.js"),
+                         ("/*__OCEAN_MAP_CSS__*/", "ocean_map.css"),
                          ("/*__UI_REFRESH__*/", "ui_refresh.css")]:
     tpl = tpl.replace(marker, (ROOT / filename).read_text(encoding="utf-8"))
 from point_catalog import CATALOG
 tpl = tpl.replace("/*__MAP_CATALOG__*/ null", json.dumps(CATALOG, ensure_ascii=False, allow_nan=False).replace("<", "\\u003c"))
+for marker, filename in [("OCEAN_CURRENT", "ocean_current_forecast.json"),
+                         ("MAP_TRACE", "map_trace.json"),
+                         ("MAP_FLOW", "map_flow_field.json")]:
+    payload = json.loads((ROOT / filename).read_text(encoding="utf-8"))
+    tpl = tpl.replace(f"/*__{marker}__*/ null", json.dumps(payload, ensure_ascii=False, allow_nan=False, separators=(",", ":")).replace("<", "\\u003c"))
 data = json.loads((ROOT / "forecast_data.json").read_text(encoding="utf-8"))
 lr_path = ROOT / "longrange_data.json"
 lr_text = lr_path.read_text(encoding="utf-8") if lr_path.exists() else "null"
@@ -49,6 +57,6 @@ def build(page_mode, fc, lr, title, outname):
 
 build("", slim(data, 2), lr_text, None, "mikomoto_forecast.html")
 build("map", slim(data, 5), "null",
-      "予測マップ (4日先まで) — 鮫暦AI 神子元ハンマー潮予報", "mikomoto_map.html")
+      "海流予報マップ — 鮫暦AI 神子元ハンマー潮予報", "mikomoto_map.html")
 build("aim", slim(data, 1), lr_text,
       "狙い目カレンダー (半年先) — 鮫暦AI 神子元ハンマー潮予報", "mikomoto_aim.html")

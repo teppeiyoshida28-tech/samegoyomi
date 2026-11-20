@@ -1,0 +1,3 @@
+# Offline field regeneration only; not part of the daily forecast requirements.
+numpy==2.3.5
+opencv-python-headless==5.1.0.95
