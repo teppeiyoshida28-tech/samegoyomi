@@ -10,7 +10,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 JST = timezone(timedelta(hours=9), name="JST")
-MODEL_VERSION = "2026-10-integrity-v1"
+MODEL_VERSION = "2026-11-fresh-inputs-v2"
 BIAS_NOTE = ("ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。"
              "目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。")
 SIZE_NUM = {"large": 4, "medium": 3, "small": 2, "single": 1}

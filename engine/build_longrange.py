@@ -6,7 +6,7 @@
   3. 日中下げ潮 (調和分解モデル tide_model.json による8-13時の潮位下降量。
      海流は長期予測不能のため使わず、天文潮汐のみ)
   4. 黒潮長期予測 (JAMSTEC 黒潮親潮ウォッチ: 手動更新の設定ファイル
-     kuroshio_forecast.json — 予測有効期限つき。期限後は「不明(中立)」)
+     kuroshio_forecast.json — 予測有効期限つき。未評価・期限後は公開値null、計算上のみ中立0.5)
 
 出力: 各日 {date, weekday, moon_age, lunar_day, tide_name, phase_icon,
              f_month, f_moon, f_ebb, f_kuroshio, aim_score, kuroshio_known,
@@ -19,33 +19,49 @@ from pathlib import Path
 from domain import today_jst, now_jst, size_target, BIAS_NOTE
 
 import tide_predict
+from fetch_kuroshio import atomic_write
+from longrange_contract import CALENDAR_DAYS, finite, kuroshio_state, validate_calendar, validate_kuroshio
 
 ROOT = Path(__file__).parent
 PH1 = ROOT.parent / "data"
 OUT = ROOT / "longrange_data.json"
-DAYS = 183
+DAYS = CALENDAR_DAYS
 
 SIZE_NUM = {"large": 4, "medium": 3, "small": 2, "single": 1}
 
 
-def main():
-    moon = json.load(open(PH1 / "moon_tide_calendar.json"))["calendar"]
+def build_data(today=None):
+    today = today or today_jst()
+    moon = json.loads((PH1 / "moon_tide_calendar.json").read_text(encoding="utf-8"))["calendar"]
+    expected = [(today + timedelta(days=n)).isoformat() for n in range(DAYS)]
+    missing_moon = [day for day in expected if not isinstance(moon.get(day), dict)]
+    if missing_moon:
+        raise ValueError(f"月齢カレンダーの{DAYS}日カバレッジが不足: {missing_moon[0]} (欠け{len(missing_moon)}日)。再生成してから公開してください")
+    for day in expected:
+        row = moon[day]
+        if (not finite(row.get("moon_age")) or not 0 <= row["moon_age"] < 30
+                or type(row.get("lunar_day")) is not int or not 1 <= row["lunar_day"] <= 30
+                or row.get("tide_name") not in {"大潮", "中潮", "小潮", "長潮", "若潮"}):
+            raise ValueError(f"月齢カレンダーの値が不正: {day}")
     obs = {s["date"]: s for s in
-           json.load(open(ROOT / "dive_logs_structured.json"))["daily_summary"]}
+           json.loads((ROOT / "dive_logs_structured.json").read_text(encoding="utf-8"))["daily_summary"]}
 
     # ---- 黒潮長期予測 (手動更新設定) ----
     kfile = ROOT / "kuroshio_forecast.json"
     if not kfile.exists():
         raise FileNotFoundError("黒潮予測の設定がありません。古い仮定で自動生成せず停止します")
-    kuro = json.load(open(kfile))
+    kuro = json.loads(kfile.read_text(encoding="utf-8"))
+    errors = validate_kuroshio(kuro)
+    if errors:
+        raise ValueError("黒潮資料の形式が不正: " + "; ".join(errors))
 
     # ---- 潮汐調和モデル (なければフィット) ----
     tm_path = ROOT / "tide_model.json"
     if tm_path.exists():
-        tide_model = json.load(open(tm_path))
+        tide_model = json.loads(tm_path.read_text(encoding="utf-8"))
     else:
         tide_model = tide_predict.fit()
-        json.dump(tide_model, open(tm_path, "w"))
+        atomic_write(tm_path, tide_model)
 
     # ---- 1. 月別気候値 (12年) : 平均規模クラス ----
     month_sizes = {m: [] for m in range(1, 13)}
@@ -64,7 +80,6 @@ def main():
     f_month = {m: (v - mn) / (mx - mn) if mx > mn else 0.5 for m, v in month_avg.items()}
 
     # ---- 2. 月齢因子 (過去1年, 月齢1日ビン, 円環移動平均±1) ----
-    today = today_jst()
     yr_start = today - timedelta(days=365)
     age_bins = {b: [] for b in range(30)}
     for d_str, s in obs.items():
@@ -145,15 +160,11 @@ def main():
     emin, emax = min(ebbs), max(ebbs)
 
     # ---- 4. 日別合成 ----
-    kuro_until = kuro.get("valid_until", "1900-01-01")
-    kuro_score = float(kuro.get("score", 0.5))
     days = []
     for n in range(DAYS):
         d = today + timedelta(days=n)
         d_str = d.isoformat()
-        mo = moon.get(d_str)
-        if not mo:
-            continue
+        mo = moon[d_str]
         age = mo["moon_age"]
         b = min(29, int(age))
         m = d.month
@@ -163,8 +174,9 @@ def main():
         # 午前下げ因子: 「朝に下げ進行中 + 昼まで継続」を正規化。
         # 8-9時下げ止まり(ebbstop)は ebb_m が小さくなるので自然に低評価される
         fe = (td["ebb_m"] - emin) / (emax - emin) if emax > emin else 0.5
-        known = d_str <= kuro_until
-        fk = kuro_score if known else 0.5
+        kstate = kuroshio_state(kuro, d, today)
+        known = kstate["known"]
+        fk = kstate["calculation_factor"]
         # 重み: 季節 35% / 日中下げ潮 25% / 黒潮 20% / 月齢 20%
         aim = 100 * (0.35 * fm + 0.25 * fe + 0.20 * fk + 0.20 * fmo)
         days.append({
@@ -186,8 +198,9 @@ def main():
             "f_month": round(fm, 3),
             "f_moon": round(fmo, 3),
             "f_ebb": round(fe, 3),
-            "f_kuroshio": round(fk, 3),
+            "f_kuroshio": round(fk, 3) if known else None,
             "kuroshio_known": known,
+            "kuroshio_state": kstate["reason"],
             "aim_score": round(aim, 1),
         })
 
@@ -200,21 +213,37 @@ def main():
             x["is_top"] = True
 
     out = {
+        "schema_version": 2,
         "generated_at": now_jst().isoformat(),
+        "coverage": {"start": expected[0], "end": expected[-1], "days": DAYS, "complete": True},
+        "calendar_kind": "astronomical_seasonal_reference",
         "observation_bias_note": BIAS_NOTE,
         "kuroshio": kuro,
+        "kuroshio_unknown_note": "黒潮未評価（計算上は中立0.5）。資料の取得可否と黒潮条件を評価できることは別です。",
         "month_climatology": {str(m): round(month_avg[m], 2) for m in range(1, 13)},
         "moon_smooth": {str(b): round(smooth[b], 2) for b in range(30)},
         "tide_hours": list(range(6, 17)),
         "weights": {"month": 0.35, "ebb": 0.25, "kuroshio": 0.20, "moon": 0.20},
-        "tide_note": ("潮位は調和分解(主要8分潮)による天文潮予測。検証MAE≈0.09m。"
+        "tide_note": ("潮位は主要8分潮の調和近似による天文潮の参考値。風・気圧等の気象効果は含めず、"
+                      "将来期間の独立した精度検証は未実施。"
                       "下げ因子=「朝(8時)に下げ進行中×昼まで継続」。未明からの下げは加点、"
                       "8-9時下げ止まりは低評価。流れのタイムラグを考慮し昼過ぎ以降の下げは要求しない。"),
         "days": days,
     }
-    json.dump(out, open(OUT, "w"), ensure_ascii=False, indent=1)
-    print(f"Wrote {OUT} ({len(days)} days)")
+    errors = validate_calendar(days, today)
+    if errors:
+        raise ValueError("; ".join(errors))
+    return out
+
+
+def main():
+    out = build_data()
+    atomic_write(OUT, out)
+    print(f"Wrote {OUT} ({len(out['days'])} days)")
     # 月別トップ日を表示
+    by_month = {}
+    for row in out["days"]:
+        by_month.setdefault(row["date"][:7], []).append(row)
     for ym in sorted(by_month):
         tops = [x for x in by_month[ym] if x.get("is_top")]
         tops.sort(key=lambda v: -v["aim_score"])

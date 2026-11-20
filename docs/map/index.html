@@ -1665,10 +1665,15 @@ button:focus-visible, a:focus-visible, select:focus-visible, summary:focus-visib
 .forecast-availability {max-width:1200px;margin:22px auto;padding:16px 22px;border-left:3px solid var(--gold);background:#172d43;color:var(--foam);font-size:14px;line-height:1.8;}
 .forecast-availability[hidden] {display:none;}
 .forecast-availability a {color:#a9dce8;text-decoration:underline;}
+.observation-status {max-width:1200px;margin:12px auto;padding:10px 22px;color:var(--pelagic);font-size:12px;line-height:1.8;}
+.observation-status[hidden],body.map-mode .observation-status {display:none;}
+.lr-kuro a {color:#a9dce8;text-decoration:underline;}
+.cal-kuro {font-size:10px;line-height:1.35;}
 body.forecast-expired .hero, body.forecast-expired [data-legacy-forecast], body.longrange-expired [data-legacy-longrange], body.map-mode [data-legacy-forecast] {display:none!important;}
 body.forecast-expired .pulse-dot {background:#9aaabf;animation:none;}
 body.aim-mode #samegoyomi-current {display:none;}
 @media(max-width:700px){.forecast-availability{margin:14px 10px;padding:12px 14px;}}
+@media(max-width:700px){#lr-title{font-size:clamp(22px,6vw,30px);}.cal-kuro{font-size:9px;}}
 </style>
 </head>
 <body>
@@ -1689,6 +1694,7 @@ body.aim-mode #samegoyomi-current {display:none;}
   <nav class="site-nav" id="site-nav"></nav>
 </header>
 <div id="forecast-availability" class="forecast-availability" role="status" hidden></div>
+<div id="observation-status" class="observation-status" hidden></div>
 
 <!-- HERO: TODAY -->
 <section class="hero">
@@ -1857,11 +1863,11 @@ body.aim-mode #samegoyomi-current {display:none;}
   <div id="lr-day-detail" class="lr-day-detail" aria-live="polite"></div>
   <div class="lr-legend">
     スコア = 季節35% + <b>午前下げ潮25%</b> + 黒潮20% + 月齢20%。
-    午前下げ潮 = 朝(8時)→昼(12時)の下げ幅＋未明からの下げ加点。下げ幅が大きい＝流れが強いほど高スコア。
-    昼ごろまで下げが続けば2・3本目まで期待。⤵＝8-9時で下げ止まり（低評価・午後の上げ待ち）。
+    午前下げ潮 = 朝(8時)→昼(12時)の下げ幅＋未明からの下げ加点。潮位差は島周辺の海流の強さを直接表すものではありません。
+    朝から昼の下げ潮を重視する仮説に基づく参考値です。
     ミニグラフ = 6〜16時の予測潮位（網掛け帯がコアタイム 8-13時）、↓下げ/↑上げ/→動き小。
-    潮位は調和分解（主要8分潮・検証MAE±0.09m）による天文潮。海流は長期予測困難のため含みません。
-    ★=長期見込みの月内Top3。黒潮予測の有効期限後は中立値。目撃記録には行先選択・透明度・記載頻度による観測バイアスがあります。◉フル予報のある日だけ短期予報を優先してください。欠損日は長期見込みです。
+    潮位は主要8分潮の調和近似による天文潮の参考値で、風・気圧の影響は含みません。将来期間の独立した精度検証は未実施です。海流・出航可否の長期予測ではありません。
+    黒潮を日別に評価できない期間は計算上だけ中立値0.5を使用します。目撃記録には行先選択・透明度・記載頻度による観測バイアスがあります。◉フル予報のある日だけ短期予報を優先してください。欠損日は長期見込みです。
   </div>
 </div>
 
@@ -2042,7 +2048,17 @@ const MAP_FLOW = {"schemaVersion":2,"purpose":"linear_2d_illustration_basis_not_
     return Boolean(data&&recent(data.generated_at,now)&&Array.isArray(data.daily)&&data.daily[0]?.date===jstDate(now));
   }
   function longrange(data,now=Date.now()){
-    return Boolean(data&&recent(data.generated_at,now)&&Array.isArray(data.days)&&data.days.some(d=>d.date===jstDate(now))&&typeof data.kuroshio?.valid_until==='string'&&data.kuroshio.valid_until>jstDate(now));
+    // Astronomy is not made stale by missing short-range weather or an unassessed
+    // Kuroshio path. The calendar's own generation and complete coverage are gates.
+    if(!data||data.schema_version!==2||!recent(data.generated_at,now)||!Array.isArray(data.days)||data.days.length!==183)return false;
+    const c=data.coverage;
+    if(!c||c.complete!==true||c.days!==183||c.start!==data.days[0]?.date||c.end!==data.days[182]?.date)return false;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(c.start))return false;
+    const first=Date.parse(c.start+'T00:00:00+09:00');
+    if(!Number.isFinite(first)||jstDate(first)!==c.start)return false;
+    for(let i=0;i<183;i++)if(data.days[i]?.date!==jstDate(first+i*86400000))return false;
+    const today=jstDate(now);
+    return c.start<=today&&today<=c.end;
   }
   return {jstDate,recent,forecast,longrange};
 });
@@ -2203,11 +2219,11 @@ function renderHero(data) {
       <small>まず海況を確認</small><strong>${today.sea_status.split('・')[0]}</strong>
       <p>波 ${today.max_wave.toFixed(1)}m / 風 ${today.max_wind.toFixed(1)}m/s（8〜14時の最大）<br>出航・潜水は現地ショップの判断に従ってください。</p>
     </div>
-    <div class="decision-point"><small>今日の推奨 · ${today.best_hour}:00</small>
-      <strong>${best}</strong><p>地点スコア ${Math.round(today.best_point_score*100)} / 100 · 根拠は下のポイント予報へ<br>スコアは遭遇確率ではありません。</p></div>`;
+    <div class="decision-point"><small>${today.diveable===false?'潜水できる場合の参考地点':'今日の推奨'} · ${today.best_hour}:00</small>
+      <strong>${best}</strong><p>地点スコア ${Math.round(today.best_point_score*100)} / 100 · 潮流・地形の仮説と記事実績に基づく推奨<br>スコアは遭遇確率ではありません。</p></div>`;
 
-  $('#today-date').textContent = fmtFullDate(now);
-  $('#updated-at').textContent = `Updated ${now.getHours()}:${now.getMinutes().toString().padStart(2,'0')} JST`;
+  $('#today-date').textContent = today.date.replaceAll('-','/');
+  $('#updated-at').textContent = `予報更新 ${now.toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})} JST`;
   $('#hero-date').textContent = fmtFullDate(today.date);
   $('#hero-score').textContent = today.score.toFixed(0);
   $('#hero-tier').innerHTML = `${today.tier}<span class="tier-omikuji">${OMIKUJI[today.tier] || ''}</span>`;
@@ -2828,7 +2844,7 @@ function renderLrCal() {
   const days = LONGRANGE.days.filter(d => d.date.slice(0, 7) === lrMonth);
   if (!days.length) { $('#lr-cal').innerHTML = ''; return; }
   if (!days.some(d => d.date === selectedCalendarDate)) selectedCalendarDate = days[0].date;
-  const fcMap = Object.fromEntries((FORECAST.daily || []).filter(d => d.forecast_kind === 'full').map(d => [d.date, d]));
+  const fcMap = Object.fromEntries(currentFullForecasts().map(d => [d.date, d]));
   const cells = ['月','火','水','木','金','土','日'].map(d => `<div class="lr-dow">${d}</div>`);
   for (let i=0; i<days[0].weekday; i++) cells.push('<div class="lr-day empty" aria-hidden="true"></div>');
   for (const d of days) {
@@ -2840,6 +2856,7 @@ function renderLrCal() {
       <span class="d ${d.weekday===5?'sat':d.weekday===6?'sun':''}">${Number(d.date.slice(8))}</span>
       <span class="cal-kind">${fc?'◉':'◇'}<span class="kind-text"> ${kind}</span></span>
       <span class="cal-score" style="color:${lrColor(score)}">${Math.round(score)}</span>
+      ${!fc&&!d.kuroshio_known?'<span class="cal-kind cal-kuro">黒潮<br>未評価</span>':''}
       <span class="cal-sea ${fc?.diveable===false?'danger':''}">${sea}</span></button>`);
   }
   $('#lr-cal').innerHTML=cells.join('');
@@ -2852,18 +2869,26 @@ function renderLrCal() {
   $('#lr-day-detail').innerHTML=`<h3>${fmtDate(d.date)}（${DOW_JA[(d.weekday+1)%7]}） ${fc?'◉ フル予報':'◇ 長期見込み'}</h3>
     <div class="detail-score">${Math.round(score)} <small>/100</small></div>
     ${fc?`<p class="${fc.diveable===false?'is-danger':''}">${fc.sea_status}<br>波 ${fc.max_wave.toFixed(1)}m / 風 ${fc.max_wind.toFixed(1)}m/s</p>
-      <p>推奨 ${POINT_JA[fc.best_point] || fc.best_point} · ${fc.best_hour}:00<br>広域海流 ${(fc.avg_current_kmh/1.852).toFixed(1)} kt（8〜14時平均）</p>`:
+      <p>${fc.diveable===false?'潜水できる場合の参考地点':'推奨'} ${POINT_JA[fc.best_point] || fc.best_point} · ${fc.best_hour}:00<br>広域海流 ${(fc.avg_current_kmh/1.852).toFixed(1)} kt（8〜14時平均）</p>`:
       '<p>海況データがない期間の見込みです。出航可否は予測していません。</p>'}
     <p>${d.phase_icon} ${d.tide_name} · ${d.flow_label}</p>${lrSpark(d)}
-    <p>${d.kuroshio_known?'黒潮予測の有効期間内':'黒潮予測の有効期間外 · 黒潮条件は未確定'}<br>スコアは遭遇確率ではありません。</p>`;
+    <p>${fc?'最新の海況・気象を使用':d.kuroshio_known?'黒潮条件を評価済み':'黒潮未評価（計算上は中立）'}<br>スコアは遭遇確率ではありません。</p>`;
 }
 function renderLongrange() {
   if (!LONGRANGE) { const w = document.querySelector('.lr-wrap'); if (w) w.style.display = 'none'; return; }
   const k = LONGRANGE.kuroshio || {};
-  $('#lr-kuro').innerHTML =
-    `◆ 黒潮長期予測: <b class="status">${k.status || '?'}</b> — ${k.label || ''}　` +
-    `<span style="color:var(--pelagic)">有効期限 ${k.valid_until || '?'}まで / 出典: ${k.source || ''} (${k.updated || ''}取得)</span>` +
-    (k.note ? `<br><span style="color:var(--pelagic);font-size:12px">${k.note}</span>` : '');
+  const kuroBox=$('#lr-kuro');
+  kuroBox.replaceChildren();
+  const title=document.createElement('strong');
+  title.textContent=LONGRANGE.days.some(d=>d.kuroshio_known)?`◆ 黒潮条件: ${k.label}`:'◆ 黒潮未評価（計算上は中立）';
+  kuroBox.append(title,document.createElement('br'));
+  kuroBox.append(document.createTextNode(`資料の発表日 ${k.issued_on || '不明'} / 予測対象 ${k.valid_until || '不明'}まで / 取得 ${k.retrieved_at ? new Date(k.retrieved_at).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'})+' JST' : k.updated || '不明'}。`));
+  if(k.source_url&&/^https:\/\/www\.jamstec\.go\.jp\//.test(k.source_url)){
+    const source=document.createElement('a');source.href=k.source_url;source.target='_blank';source.rel='noopener noreferrer';source.textContent=' JAMSTECの原資料';kuroBox.append(source);
+  }
+  const note=document.createElement('p');
+  note.textContent=k.note||'日ごとの黒潮流路は自動判定していません。季節・月齢・天文潮汐を中心とした参考見込みです。';
+  kuroBox.append(note);
   if (AIM_MODE) {
     // 専用ページ: 月ナビ + フルカレンダー (URLハッシュ #2026-09 で月指定可)
     const ms = lrMonths();
@@ -2884,15 +2909,16 @@ function renderLrDigest() {
   const tt = $('#lr-title');
   if (tt) tt.innerHTML = '直近の <em>狙い目</em>';
   const st = $('#lr-subtitle');
-  const fcLast = (FORECAST.daily && FORECAST.daily.length) ? FORECAST.daily[FORECAST.daily.length - 1].date : null;
+  const currentDays=currentFullForecasts();
+  const fcLast = currentDays.length ? currentDays[currentDays.length-1].date : null;
   const fcLastLabel = fcLast ? `${parseInt(fcLast.slice(5, 7), 10)}/${parseInt(fcLast.slice(8), 10)}` : '';
-  if (st) st.textContent = `明日からの7日間 + その先の狙い目ベスト5 — ◉フル予報は気象データのある${fcLastLabel ? fcLastLabel + 'まで' : '範囲'} / ◇はそれ以降の長期見込み(月齢×潮×季節×黒潮)`;
+  if (st) st.textContent = `明日からの7日間 + その先の参考候補 — ◉フル予報は気象データのある${fcLastLabel ? fcLastLabel + 'まで' : '範囲'} / ◇は長期見込み（月齢・天文潮汐・季節。黒潮未評価時は中立値）`;
   const wd = ['日','月','火','水','木','金','土'];
   const fmtD = dt => `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
-  const today = (FORECAST.daily && FORECAST.daily[0]) ? FORECAST.daily[0].date : LONGRANGE.days[0].date;
+  const today = ForecastFreshness.jstDate(Date.now());
   const t0 = new Date(today + 'T00:00:00');
   const dstr = off => fmtD(new Date(t0.getTime() + off * 86400000));
-  const fcMap = {}; (FORECAST.daily || []).filter(d => d.forecast_kind === 'full').forEach(d => { fcMap[d.date] = d; });
+  const fcMap = {}; currentDays.forEach(d => { fcMap[d.date] = d; });
   const lrMap = {}; (LONGRANGE.days || []).forEach(d => { lrMap[d.date] = d; });
 
   function digestCard(date) {
@@ -2920,7 +2946,7 @@ function renderLrDigest() {
         <div class="ld-badge lrng">◇ 長期見込み</div>
         ${dateHtml}
         <div class="ld-score">${sc}</div>
-        <div class="ld-tags">${tideLine}<br>${lr.flow_label || ''}</div>
+        <div class="ld-tags">${tideLine}<br>${lr.flow_label || ''}${!lr.kuroshio_known?'<br>黒潮未評価':''}</div>
       </a>`;
     }
     // データなし (フォールバック)
@@ -2939,7 +2965,11 @@ function renderLrDigest() {
 
   // 下段: その先 (today+8 〜 today+56) の aim_score ベスト5 → 日付順
   const from = dstr(8), to = dstr(56);
-  const bestDays = LONGRANGE.days.filter(d => d.date >= from && d.date <= to)
+  // Compare like-for-like evidence. Unknown and assessed Kuroshio conditions
+  // must not compete silently in the same ranking.
+  const candidates=LONGRANGE.days.filter(d => d.date >= from && d.date <= to);
+  const sameEvidence=candidates.some(d=>!d.kuroshio_known)?candidates.filter(d=>!d.kuroshio_known):candidates;
+  const bestDays = sameEvidence
     .sort((a, b) => b.aim_score - a.aim_score).slice(0, 5)
     .sort((a, b) => a.date.localeCompare(b.date));
   const bestCards = bestDays.map(d => digestCard(d.date)).join('');
@@ -2949,7 +2979,7 @@ function renderLrDigest() {
   lc.innerHTML =
     `<div class="ld-rowtitle">▸ 明日からの7日間</div>
      <div class="lr-digest">${weekCards}</div>
-     <div class="ld-rowtitle">▸ その先の狙い目 ベスト5<span class="ld-rowsub">(8〜56日先)</span></div>
+     <div class="ld-rowtitle">▸ その先の参考候補 5日<span class="ld-rowsub">(8〜56日先・同じ黒潮評価条件で比較)</span></div>
      <div class="lr-digest">${bestCards}</div>
      <div class="lr-more"><a href="aim/">◆ 半年分のカレンダーを月別に見る →</a></div>`;
 }
@@ -2970,28 +3000,42 @@ function renderNavLinks() {
 if (MAP_MODE) document.body.classList.add('map-mode');
 if (AIM_MODE) document.body.classList.add('aim-mode');
 renderNavLinks();
+function currentFullForecasts(){
+  return ForecastFreshness.forecast(FORECAST,Date.now())?(FORECAST.daily||[]).filter(d=>d.forecast_kind==='full'):[];
+}
+function renderObservationStatus(){
+  const latest=(FORECAST.recent_observations||[]).map(d=>d.date).sort().at(-1);
+  const el=$('#observation-status');
+  el.hidden=MAP_MODE||!latest||!ForecastFreshness.forecast(FORECAST,Date.now());
+  if(!el.hidden)el.textContent=`現地報告の最新日: ${latest.replaceAll('-','/')}。予報の更新日時と現地観測日は異なります。新しい報告がない日は、欠航や非目撃と判定していません。ショップの行先・透明度・記事掲載による偏りがあります。`;
+}
+let previousAvailability=null;
 function refreshForecastAvailability() {
-  const now=Date.now(),fresh=ForecastFreshness.forecast(FORECAST,now),longFresh=fresh&&ForecastFreshness.longrange(LONGRANGE,now);
+  const now=Date.now(),fresh=ForecastFreshness.forecast(FORECAST,now),longFresh=ForecastFreshness.longrange(LONGRANGE,now);
   document.body.classList.toggle('forecast-expired',!fresh);
   document.body.classList.toggle('longrange-expired',!longFresh);
   const banner=$('#forecast-availability');
-  banner.hidden=fresh&&(MAP_MODE||longFresh);
+  banner.hidden=MAP_MODE||(AIM_MODE?longFresh:fresh&&longFresh);
   if(!banner.hidden){
-    banner.replaceChildren(document.createTextNode(!fresh?'ハンマー予報は更新待ちです。期限を過ぎたスコア・推奨・長期カレンダーの表示を停止しています。':'長期カレンダーは更新待ちです。'));
+    banner.replaceChildren(document.createTextNode(!fresh?'ハンマー予報は更新待ちです。期限を過ぎたスコア・推奨の表示を停止しています。'+(longFresh?' 長期カレンダーは天文潮汐・季節の参考見込みとして表示します。':' 長期カレンダーも更新待ちです。'):'長期カレンダーは更新待ちです。'));
     if(!AIM_MODE)banner.append(document.createTextNode(' 海流マップは独立して更新し、取得日時と有効期限を表示します。'));
     else {const a=document.createElement('a');a.href='../map/';a.textContent=' 海流予報マップを見る';banner.append(a);}
   }
   if(!fresh||MAP_MODE){
     $('#today-date').textContent=ForecastFreshness.jstDate(now).replaceAll('-','/');
-    $('#updated-at').textContent='海流の取得日時はマップに表示';
+    $('#updated-at').textContent=MAP_MODE?'海流の取得日時はマップに表示':longFresh?`カレンダー更新 ${new Date(LONGRANGE.generated_at).toLocaleString('ja-JP',{timeZone:'Asia/Tokyo',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})} JST`:'予報の更新待ち';
   }
+  const availability=`${fresh}/${longFresh}/${ForecastFreshness.jstDate(now)}`;
+  if(previousAvailability!==null&&previousAvailability!==availability&&longFresh)renderLongrange();
+  previousAvailability=availability;
+  renderObservationStatus();
 }
 refreshForecastAvailability();
 if (!MAP_MODE && ForecastFreshness.forecast(FORECAST,Date.now())) {
   renderHero(FORECAST);
   if(!AIM_MODE&&!MAP_MODE){renderHourlyStrip(FORECAST);renderModelPanel(FORECAST);renderTideHeatmap(FORECAST);}
 }
-if(ForecastFreshness.forecast(FORECAST,Date.now())&&ForecastFreshness.longrange(LONGRANGE,Date.now()))renderLongrange();
+if(ForecastFreshness.longrange(LONGRANGE,Date.now()))renderLongrange();
 if(!AIM_MODE)renderIsland(FORECAST);
 setInterval(refreshForecastAvailability,60000);
 document.addEventListener('visibilitychange',refreshForecastAvailability);

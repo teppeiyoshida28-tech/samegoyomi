@@ -27,9 +27,11 @@ NEG_PATTERNS = [
     r"見つけられ(ず|ません|なかった)", r"逢え(ず|ません|なかった)",
     r"遭遇でき(ず|ません|なかった)", r"ノーハンマー", r"no\s*hammer",
     r"空振り", r"振られ", r"すかされ", r"externals?み(られ)?ず",
-    r"駄目|ダメでした", r"残念ながら", r"叶(わず|いません)", r"お預け",
+    r"駄目|ダメでした", r"叶(わず|いません)", r"お預け",
     r"ハンマー不在", r"はずれ", r"ハズレ", r"惨敗", r"撃沈",
     r"狙(い|う)ましたが", r"探し(ました|た)が",
+    r"(?<![0-9０-９])(?:0|０|ゼロ)\s*(?:匹|個体)", r"(?:遭遇|確認|目撃)[はが]ありません",
+    r"見つけることができ(?:ず|ません)", r"お休みでした",
 ]
 NEG_RE = re.compile("|".join(NEG_PATTERNS))
 
@@ -74,6 +76,13 @@ POINT_MAP = {
 
 TIDE_MEMO_RE = re.compile(r"(大潮|中潮|小潮|長潮|若潮)")
 FLOW_RE = re.compile(r"(上げ潮|下げ潮|上り潮|下り潮|激流|爆流|緩(い|め|やか)|流れ(なし|無し|ゆるめ|強め))")
+FUTURE_RE = re.compile(r"明日|明後日|あす|次回|次の出航|来週|来月|今後|(?:に|を)期待(?:し|する|！|!|$)|願[いっう]|ますように")
+PAST_RE = re.compile(r"昨日|一昨日|先日|先週|先月|昨年|ここ最近|ここ数日")
+OTHER_FISH_RE = re.compile(r"イサキ|タカベ|カンパチ|イナダ|ヒラマサ|タカサゴ|ムロアジ|メジナ|ニザダイ|シラコダイ|オオニベ")
+OBSERVATION_RE = re.compile(
+    r"見(?:れ|られ|え)(?:ました|た)|見(?:れて|られて|えて)(?:います|ます)|会え(?:ました|た)|出会え(?:ました|た)|"
+    r"遭遇(?:しました|した|でき|[はもが]?続いて)|登場|出現|ゲット|ヒット|"
+    r"いました|出ました|現れ(?:ました|た)|観察|確認|発見|健在")
 
 
 def split_sentences(text):
@@ -108,44 +117,83 @@ def strip_shop_names(text):
     return SHOPNAME_RE.sub("", text)
 
 
+def observation_clauses(body, title=""):
+    """Discard plans/history before assigning an article's observation labels.
+
+    Comma clauses keep 'saw sharks, but no photographs' from becoming a negative
+    sighting. Unrelated fish or tomorrow's hopes must not supply a shark size.
+    """
+    text = strip_shop_names((title or "") + "。" + (body or ""))
+    text = re.sub(r"#[^\s。！!？?\n]+", "", text)
+    for sentence in split_sentences(text):
+        if FUTURE_RE.search(sentence):
+            continue
+        if PAST_RE.search(sentence) and not re.search(r"今日|本日", sentence):
+            continue
+        for clause in re.split(r"、", sentence):
+            if clause.strip():
+                yield clause.strip()
+
+
+def observed_hammer_clause(clause):
+    if not HAMMER_KW.search(clause):
+        return None
+    if NEG_RE.search(clause):
+        return False
+    if POS_STRONG.search(clause) and not OTHER_FISH_RE.search(clause):
+        return True
+    if OBSERVATION_RE.search(clause):
+        return True
+    # Short reporting phrases can assert an encounter without a complete verb,
+    # but searching for a group is not observing it. Bare counts of other fish
+    # elsewhere in the article are never sufficient.
+    if not re.search(r"狙|探し|捜索", clause) and re.search(
+            r"ハンマー(?:リバー|の?大群|川|シャワー|玉|渦|づくし|三昧)|"
+            r"ハンマー(?:[がはをと]*)(?:単体|数匹|数十匹|数百匹|\d+\s*匹)", clause):
+        return True
+    return None
+
+
 def detect_hammer(body, title=""):
     """否定文脈を考慮したハンマー目撃判定
     返り値: (seen: bool|None, evidence: str)"""
-    text = strip_shop_names((title or "") + "。" + (body or ""))
-    if not HAMMER_KW.search(text):
-        return None, None  # 言及なし
-    if POS_STRONG.search(text):
-        m = POS_STRONG.search(text)
-        return True, m.group(0)
-    pos_votes, neg_votes = 0, 0
-    pos_ev, neg_ev = None, None
-    for sent in split_sentences(text):
-        if not HAMMER_KW.search(sent):
-            continue
-        if NEG_RE.search(sent):
-            neg_votes += 1
-            if not neg_ev:
-                neg_ev = sent.strip()[:80]
-        else:
-            # 肯定的動詞
-            if re.search(r"(見れ|見られ|会え|出会え|遭遇|登場|出現|現れ|ゲット|いました|出ました|見えました|ヒット|観察|確認)", sent):
-                pos_votes += 1
-                if not pos_ev:
-                    pos_ev = sent.strip()[:80]
-    if pos_votes > 0 and pos_votes >= neg_votes:
-        return True, pos_ev
-    if neg_votes > 0:
-        return False, neg_ev
+    negative = None
+    for clause in observation_clauses(body, title):
+        result = observed_hammer_clause(clause)
+        if result is True:
+            return True, clause[:80]
+        if result is False and negative is None:
+            negative = clause[:80]
+    if negative is not None:
+        return False, negative
     # 言及はあるが判定不能 -> None (曖昧)
     return None, None
 
 
 def detect_size(body, title=""):
-    text = strip_shop_names((title or "") + " " + (body or ""))
-    for pat, size in SIZE_PATTERNS:
-        if re.search(pat, text):
-            return size
-    return None
+    candidates, context_remaining = [], 0
+    for clause in observation_clauses(body, title):
+        mentions = HAMMER_KW.search(clause) is not None
+        if OTHER_FISH_RE.search(clause) and not mentions:
+            context_remaining = 0
+            continue
+        if mentions:
+            context_remaining = 6
+        else:
+            context_remaining -= 1
+        if not mentions and not (context_remaining >= 0 and OBSERVATION_RE.search(clause)):
+            continue
+        if NEG_RE.search(clause):
+            continue
+        if OTHER_FISH_RE.search(clause):
+            # Ambiguous mixed-species clause: do not guess which group is sharks.
+            continue
+        for pattern, size in SIZE_PATTERNS:
+            if re.search(pattern, clause):
+                candidates.append(size)
+                break
+    rank = {"single": 0, "small": 1, "medium": 2, "large": 3}
+    return max(candidates, key=rank.get) if candidates else None
 
 
 def points_in(text):
@@ -244,7 +292,7 @@ def structure():
         entry["mentioned_points"] = point_names(sorted(pts))
         entry["visited_points"] = points_in(str(entry.get("points_raw", "")))
         entry["sighting_points"] = sighting_points(body) if seen is True else []
-        entry["label_version"] = 2
+        entry["label_version"] = 3
         trop = set()
         for jp, key in TROPICAL_SPECIES:
             if jp in body:

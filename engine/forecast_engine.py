@@ -14,8 +14,9 @@ import statistics
 import time
 from datetime import date, datetime, timedelta
 
-import requests
 from domain import current_vector, sea_safety, now_jst, MODEL_VERSION, BIAS_NOTE, write_json
+from environment_inputs import (fetch_marine, fetch_weather, indexed_hours, finite,
+                                INPUT_VERSION)
 
 LAT, LON = 34.5717, 138.9433  # 神子元島
 TZ = "Asia/Tokyo"
@@ -51,44 +52,7 @@ def dot_norm(u1, v1, u2, v2):
     return (u1 * u2 + v1 * v2) / (n1 * n2)
 
 
-# ---------- data fetch ----------
-def fetch_marine():
-    url = "https://marine-api.open-meteo.com/v1/marine"
-    params = {
-        "latitude": LAT,
-        "longitude": LON,
-        "hourly": ",".join([
-            "sea_surface_temperature",
-            "ocean_current_velocity",
-            "ocean_current_direction",
-            "wave_height",
-            "wave_period",
-            "sea_level_height_msl",
-        ]),
-        "forecast_days": 14,
-        "timezone": TZ,
-        "cell_selection": "sea",
-    }
-    r = requests.get(url, params=params, timeout=60)
-    r.raise_for_status()
-    return r.json()
-
-
-def fetch_weather():
-    url = "https://api.open-meteo.com/v1/forecast"
-    params = {
-        "latitude": LAT,
-        "longitude": LON,
-        "hourly": "wind_speed_10m,wind_direction_10m,visibility,precipitation",
-        "forecast_days": 14,
-        "timezone": TZ,
-        "wind_speed_unit": "ms",
-    }
-    r = requests.get(url, params=params, timeout=60)
-    r.raise_for_status()
-    return r.json()
-
-
+# ---------- local sources ----------
 def load_climatology():
     with open(CLIM_PATH) as f:
         return json.load(f)
@@ -101,6 +65,14 @@ def load_blog_observations():
     with open(BLOG_PATH) as f:
         data = json.load(f)
     return {s["date"]: s for s in data.get("daily_summary", [])}
+
+
+def recent_observation_items(observations, target_day, days):
+    """Calendar days before the target, never merely the last N reports."""
+    target = date.fromisoformat(target_day)
+    start = (target - timedelta(days=days)).isoformat()
+    return [(day, observations[day]) for day in sorted(observations)
+            if start <= day < target_day]
 
 
 # エンジンPOINTSキー → 実績統計(point_stats.json)キー の対応
@@ -524,7 +496,8 @@ def run():
     print("Fetching weather data...")
     weather = fetch_weather()
     clim = load_climatology()
-    observations = load_blog_observations()
+    observations = {day: obs for day, obs in load_blog_observations().items()
+                    if day <= issued_at[:10]}
     weights = load_learned_weights()
     point_stats = load_point_stats()
     moon_tide = load_moon_tide_calendar()
@@ -551,7 +524,7 @@ def run():
         return pri, det
 
     m_h = marine["hourly"]
-    w_h = weather["hourly"]
+    weather_by_time = indexed_hours(weather)
 
     times = m_h["time"]
     ssts = m_h["sea_surface_temperature"]
@@ -559,20 +532,22 @@ def run():
     cur_d = m_h["ocean_current_direction"]  # °
     waves = m_h["wave_height"]
     sea_lvl = m_h["sea_level_height_msl"]
-    winds = w_h["wind_speed_10m"]
-    wind_dir = w_h["wind_direction_10m"]
-    precips = w_h["precipitation"]
+    # Join independently returned timelines, never assume equal array offsets.
+    winds = [weather_by_time.get(t, {}).get("wind_speed_10m") for t in times]
+    wind_dir = [weather_by_time.get(t, {}).get("wind_direction_10m") for t in times]
+    precips = [weather_by_time.get(t, {}).get("precipitation") for t in times]
 
-    # SST欠損値の補完 + 現地ブログ実測での補正
+    # 同日実測または直近の対応日によるSST補正。欠測は補完しない。
     #  - 実測がある日: 実測の水温平均を優先
     #  - Open-Meteoは沖合8km格子で神子元近辺の冷水塊を捉えられないため、
     #    実測は補正の精度を大きく上げる
     #  - 未来日: Open-Meteoを使用しつつ、直近の実測との乖離ぶんをオフセット補正
-    last_valid = None
     ssts_filled = []
     # 直近実測水温 (最新5日平均)
     recent_obs_temps = []
-    for d, s in sorted(observations.items())[-5:]:
+    recent_temp_items = recent_observation_items(
+        observations, (date.fromisoformat(issued_at[:10]) + timedelta(days=1)).isoformat(), 5)
+    for d, s in recent_temp_items:
         if s.get("water_temp_lo") is not None and s.get("water_temp_hi") is not None:
             recent_obs_temps.append((s["water_temp_lo"] + s["water_temp_hi"]) / 2)
     # 現地実測 vs Open-Meteo予測 の差(オフセット)
@@ -580,7 +555,8 @@ def run():
     if recent_obs_temps:
         # 過去5日のOpen-Meteoの平均を計算 (ssts の最初の日々)
         recent_om_temps = []
-        obs_dates = sorted(observations.keys())[-5:]
+        obs_dates = [d for d, s in recent_temp_items
+                     if s.get("water_temp_lo") is not None and s.get("water_temp_hi") is not None]
         for i_t, t in enumerate(times):
             date_only = t[:10]
             if date_only in obs_dates:
@@ -588,7 +564,10 @@ def run():
                     recent_om_temps.append(ssts[i_t])
         if recent_om_temps:
             om_avg = statistics.mean(recent_om_temps)
-            obs_avg = statistics.mean(recent_obs_temps)
+            matched_days = {t[:10] for i_t, t in enumerate(times)
+                            if t[:10] in obs_dates and ssts[i_t] is not None}
+            obs_avg = statistics.mean((s["water_temp_lo"] + s["water_temp_hi"]) / 2
+                                      for d, s in recent_temp_items if d in matched_days)
             obs_om_offset = obs_avg - om_avg
             print(f"  観測平均SST={obs_avg:.2f}℃, Open-Meteo平均={om_avg:.2f}℃, offset={obs_om_offset:+.2f}℃")
 
@@ -604,14 +583,8 @@ def run():
         if s is not None:
             corrected = s + obs_om_offset  # 実測との乖離を全体に適用
             ssts_filled.append(corrected)
-            last_valid = corrected
-        elif last_valid is not None:
-            ssts_filled.append(last_valid)
         else:
-            dt = datetime.fromisoformat(times[i])
-            key = f"{dt.month:02d}-{dt.day:02d}"
-            fallback = clim["daily_climatology"].get(key, {}).get("mean", 22.0)
-            ssts_filled.append(fallback)
+            ssts_filled.append(None)
 
     # 海面高度の変化は潮汐フェーズにのみ使用。SMOC海流への潮汐再加算はしない。
     def sea_level_derivative(i):
@@ -636,7 +609,7 @@ def run():
         required = {"sst": ssts[i], "current_speed": cur_v[i], "current_direction": cur_d[i],
                     "wave": waves[i], "sea_level": sea_lvl[i], "wind": winds[i],
                     "wind_direction": wind_dir[i], "precipitation": precips[i]}
-        missing = [k for k, v in required.items() if v is None]
+        missing = [k for k, v in required.items() if not finite(v)]
         if missing:
             missing_hours[t] = missing
             continue  # 欠損をゼロや平年値でフル予報に見せない
@@ -770,6 +743,7 @@ def run():
         actual_hammer_points = []
         actual_tropical = []
         actual_segments = []
+        recent_items = recent_observation_items(observations, d, 3)
         if obs:
             f_vis = score_visibility(obs.get("visibility_hi"))
             actual_hammer = obs.get("hammer_seen")
@@ -785,7 +759,7 @@ def run():
             # 未来日は直近3日の透明度・南方系プロキシを prior として使用
             recent_vis = []
             recent_trop = []
-            for obs_d, s in sorted(observations.items())[-3:]:
+            for obs_d, s in recent_items:
                 if s.get("visibility_hi") is not None:
                     recent_vis.append(s["visibility_hi"])
                 recent_trop.append(min(1.0, s.get("tropical_count", 0) / 3.0))
@@ -901,6 +875,9 @@ def run():
             "actual_hammer_points": actual_hammer_points,
             "actual_tropical": actual_tropical,
             "actual_segments": actual_segments,
+            "recent_observation_dates": [obs_d for obs_d, _ in recent_items],
+            "visibility_prior_observation_dates": [obs_d for obs_d, s in recent_items
+                                                   if s.get("visibility_hi") is not None],
             "note": build_daily_note(avg_anom, avg_cur, max_wave, max_wind, best_point,
                                      actual_vis, actual_hammer, actual_notes),
         })
@@ -936,8 +913,11 @@ def run():
         "issued_at": issued_at,
         "model_version": MODEL_VERSION,
         "current_method": "smoc (潮汐込み・再加算なし、島周辺の局所流は未校正)",
+        "input_pipeline_version": INPUT_VERSION,
+        "input_sources": {"marine": marine["source_metadata"], "weather": weather["source_metadata"]},
         "observation_bias_note": BIAS_NOTE,
-        "data_quality": {"missing_hours": missing_hours, "full_day_requires_hours": list(range(8, 15))},
+        "data_quality": {"missing_hours": missing_hours, "full_day_requires_hours": list(range(8, 15)),
+                         "latest_observation_date": max(observations, default=None)},
         "location": {"lat": LAT, "lon": LON, "name": "神子元島"},
         "climatology_source": clim["source"],
         "climatology_years": clim["years_used"],

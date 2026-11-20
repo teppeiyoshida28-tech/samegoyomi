@@ -12,6 +12,10 @@ on:
       - 'engine/map_trace.json'
       - 'engine/map_flow_field.json'
       - 'engine/forecast_freshness.js'
+      - 'engine/fetch_kuroshio.py'
+      - 'engine/longrange_contract.py'
+      - 'engine/build_longrange.py'
+      - 'engine/verify_publication.py'
       - 'engine/validate_ocean_publication.py'
       - 'engine/build_html.py'
       - 'engine/index.html'
@@ -19,7 +23,7 @@ on:
       - 'tests/forecast_freshness.test.js'
       - '.github/workflows/ocean-map.yml'
   schedule:
-    - cron: '35 21 * * *' # 06:35 JST, independent of blog/Kuroshio availability
+    - cron: '35 21 * * *' # 06:35 JST, ocean + astronomical calendar independently
   workflow_dispatch: {}
 
 env:
@@ -66,6 +70,8 @@ jobs:
           python3 engine/fetch_ocean_current.py --validate-only
       - name: Build the ocean map with the previously published forecast
         run: |
+          python3 engine/fetch_kuroshio.py || echo '::warning::Kuroshio source refresh failed; retained source dates remain visible'
+          python3 engine/build_longrange.py
           python3 engine/build_html.py
           cp engine/mikomoto_forecast.html docs/index.html
           cp engine/mikomoto_map.html docs/map/index.html
@@ -75,13 +81,16 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ocean-candidate-${{ github.run_id }}-${{ github.run_attempt }}
-          path: engine/ocean_current_forecast.json
+          path: |
+            engine/ocean_current_forecast.json
+            engine/longrange_data.json
+            engine/kuroshio_forecast.json
           retention-days: 14
       - name: Commit validated ocean update
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add engine/ocean_current_forecast.json engine/mikomoto_forecast.html engine/mikomoto_map.html engine/mikomoto_aim.html docs/index.html docs/map/index.html docs/aim/index.html
+          git add engine/ocean_current_forecast.json engine/longrange_data.json engine/kuroshio_forecast.json engine/mikomoto_forecast.html engine/mikomoto_map.html engine/mikomoto_aim.html docs/index.html docs/map/index.html docs/aim/index.html
           if ! git diff --cached --quiet; then
             git commit -m "Update ocean map $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')"
             git push origin HEAD:main
@@ -93,11 +102,16 @@ jobs:
       - name: Deploy validated ocean map
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify served publication
+        run: python3 engine/verify_publication.py
       - name: Preserve successfully published ocean snapshot
         uses: actions/upload-artifact@v4
         with:
           name: ocean-published-${{ github.run_id }}-${{ github.run_attempt }}
-          path: engine/ocean_current_forecast.json
+          path: |
+            engine/ocean_current_forecast.json
+            engine/longrange_data.json
+            engine/kuroshio_forecast.json
           retention-days: 90
       # Do not run forecast_archive.py --save here: this release does not issue
       # a new hammer prediction or change its historical evaluation records.
