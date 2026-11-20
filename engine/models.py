@@ -14,8 +14,6 @@ import statistics
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
-import requests
-
 import forecast_engine as fe
 import weight_learner as wl
 from domain import (size_target, observed_points, point_names, current_vector,
@@ -102,12 +100,16 @@ def fit_probability(X, y):
 
 
 class EnvModels:
-    def __init__(self, future_days=16, quiet=False, fetch_live=True, current_mode="smoc", persist_env=False):
+    def __init__(self, future_days=16, quiet=False, fetch_live=True, current_mode="smoc", persist_env=False,
+                 require_fresh=False):
         self.quiet = quiet
         self.current_mode = current_mode
+        self.require_fresh = require_fresh
+        self.live_start = today_jst().isoformat()
+        self.live_sources = {}
         self._log("Loading env hindcast...")
-        m = json.load(open(PH1 / "hindcast_marine.json"))["hourly"]
-        w = json.load(open(PH1 / "hindcast_weather.json"))["hourly"]
+        m = read_json(PH1 / "hindcast_marine.json")["hourly"]
+        w = read_json(PH1 / "hindcast_weather.json")["hourly"]
         self.M, self.W = {}, {}
         for i, t in enumerate(m["time"]):
             self.M[t] = (m["sea_surface_temperature"][i], m["ocean_current_velocity"][i],
@@ -121,19 +123,18 @@ class EnvModels:
         cache = read_json(cache_path) if cache_path.exists() else {"marine": {}, "weather": {}}
         self.M.update(cache["marine"])
         self.W.update(cache["weather"])
+        if fetch_live:
+            # Historical storage may not stand in for a newly fetched forecast.
+            self.M = {t: rec for t, rec in self.M.items() if t[:10] < self.live_start}
+            self.W = {t: rec for t, rec in self.W.items() if t[:10] < self.live_start}
         fresh_m, fresh_w = {}, {}
         # API で直近ギャップ + 未来を補完
         try:
             if not fetch_live:
                 raise RuntimeError("offline evaluation")
-            r = requests.get("https://marine-api.open-meteo.com/v1/marine", params={
-                "latitude": fe.LAT, "longitude": fe.LON,
-                "hourly": "sea_surface_temperature,ocean_current_velocity,ocean_current_direction,"
-                          "wave_height,sea_level_height_msl",
-                "past_days": 31, "forecast_days": future_days, "timezone": fe.TZ,
-                "cell_selection": "sea"}, timeout=60)
-            r.raise_for_status()
-            h = r.json()["hourly"]
+            marine = fe.fetch_marine(past_days=31, forecast_days=future_days)
+            h = marine["hourly"]
+            self.live_sources["marine"] = marine["source_metadata"]
             for i, t in enumerate(h["time"]):
                 self.M[t] = (h["sea_surface_temperature"][i], h["ocean_current_velocity"][i],
                              h["ocean_current_direction"][i], h["wave_height"][i],
@@ -144,18 +145,19 @@ class EnvModels:
         try:
             if not fetch_live:
                 raise RuntimeError("offline evaluation")
-            r = requests.get("https://api.open-meteo.com/v1/forecast", params={
-                "latitude": fe.LAT, "longitude": fe.LON,
-                "hourly": "wind_speed_10m,wind_direction_10m,precipitation",
-                "past_days": 31, "forecast_days": future_days, "timezone": fe.TZ,
-                "wind_speed_unit": "ms"}, timeout=60)
-            r.raise_for_status()
-            h = r.json()["hourly"]
+            weather = fe.fetch_weather(past_days=31, forecast_days=future_days)
+            h = weather["hourly"]
+            self.live_sources["weather"] = weather["source_metadata"]
             for i, t in enumerate(h["time"]):
                 self.W[t] = (h["wind_speed_10m"][i], h["wind_direction_10m"][i], h["precipitation"][i])
                 fresh_w[t] = self.W[t]
         except Exception as e:
             self._log(f"  weather fetch failed: {e}")
+
+        self.live_marine_times = set(fresh_m)
+        self.live_weather_times = set(fresh_w)
+        if require_fresh and (not fetch_live or not fresh_m or not fresh_w):
+            raise RuntimeError("最新の海況・気象を取得できません。過去キャッシュによる予報更新を停止します。")
 
         if persist_env and fresh_m and fresh_w:
             for key, incoming in (("marine", fresh_m), ("weather", fresh_w)):
@@ -163,14 +165,15 @@ class EnvModels:
                                    if t[:10] < today_jst().isoformat() and all(v is not None for v in rec)})
             cache["updated_at"] = now_jst().isoformat()
             cache["source"] = "Open-Meteo past_days API; past environment estimates, not original issued forecasts"
+            cache["live_sources"] = self.live_sources
             write_json(cache_path, cache, indent=None)
 
         self.clim = fe.load_climatology()
-        self.obs = fe.load_blog_observations()
+        self.obs = {d: obs for d, obs in fe.load_blog_observations().items() if d <= self.live_start}
         self.obs_dates = sorted(self.obs.keys())
         self.obs_temp_days = [(d, (s["water_temp_lo"] + s["water_temp_hi"]) / 2)
                               for d, s in sorted(self.obs.items())
-                              if s.get("water_temp_lo") is not None]
+                              if s.get("water_temp_lo") is not None and s.get("water_temp_hi") is not None]
         self.temp_dates = [x[0] for x in self.obs_temp_days]
         # OM 日平均 SST (8-14時)
         acc = {}
@@ -192,11 +195,14 @@ class EnvModels:
         recs = []
         for h in range(8, 15):
             t = f"{d}T{h:02d}:00"
+            if (getattr(self, "require_fresh", False) and d >= self.live_start
+                    and (t not in self.live_marine_times or t not in self.live_weather_times)):
+                return None
             if t not in self.M or t not in self.W:
                 return None
             sst, cv, cd, wave, lvl = self.M[t]
             wind, wdir, pr = self.W[t]
-            if any(v is None for v in (sst, cv, cd, wave, lvl, wind, pr)):
+            if any(not fe.finite(v) for v in (sst, cv, cd, wave, lvl, wind, wdir, pr)):
                 return None
             tm = datetime.fromisoformat(t)
             lp = self.M.get((tm + timedelta(hours=1)).isoformat(timespec="minutes"), (None,) * 5)[4]
@@ -223,9 +229,10 @@ class EnvModels:
     def sst_offset(self, d):
         i = bisect.bisect_left(self.temp_dates, d)
         diffs = []
+        earliest = (date.fromisoformat(d) - timedelta(days=5)).isoformat()
         for j in range(max(0, i - 5), i):
             rd, ot = self.obs_temp_days[j]
-            if rd in self.om_daily:
+            if rd >= earliest and rd in self.om_daily:
                 diffs.append(ot - self.om_daily[rd])
         return statistics.mean(diffs) if diffs else 0.0
 
@@ -284,7 +291,8 @@ class EnvModels:
     def hist_features(self, d):
         d_dt = date.fromisoformat(d)
         i = bisect.bisect_left(self.obs_dates, d)
-        recent = [self.obs[self.obs_dates[j]] for j in range(max(0, i - 3), i)]
+        recent_items = fe.recent_observation_items(self.obs, d, 3)
+        recent = [obs for _, obs in recent_items]
         vis_vals = [s["visibility_hi"] for s in recent if s.get("visibility_hi") is not None]
         vis3 = statistics.mean(vis_vals) if vis_vals else 10.0
         trop3 = statistics.mean(min(1.0, s.get("tropical_count", 0) / 3.0) for s in recent) if recent else 0.3
@@ -323,7 +331,9 @@ class EnvModels:
             obs_age = float((d_dt - date.fromisoformat(self.obs_dates[i - 1])).days)
         return {"vis3": vis3, "trop3": trop3, "size3": size3, "streak3": streak3,
                 "seen14": seen14, "last_vis": last_vis, "last_age": last_age,
-                "obs_age": obs_age}
+                "obs_age": obs_age,
+                "recent_observation_dates": [day for day, _ in recent_items],
+                "latest_observation_date": self.obs_dates[i - 1] if i > 0 else None}
 
     # ---------- feature vectors ----------
     def x_size(self, d, agg, hf):
@@ -432,5 +442,8 @@ class EnvModels:
             "max_wave": round(agg["max_wave"], 2),
             "max_wind": round(agg["max_wind"], 1),
             "diveable": diveable,
+            "observation_basis": {"recent_dates": hf["recent_observation_dates"],
+                                  "latest_date": hf["latest_observation_date"],
+                                  "age_days": hf["obs_age"]},
             "hf": hf,
         }

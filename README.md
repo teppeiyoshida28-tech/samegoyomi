@@ -5,7 +5,7 @@
 
 - **公開URL**: https://teppeiyoshida28-tech.github.io/samegoyomi/
 - **自動更新**: 毎日 JST 6:30（UTC 21:30）に `.github/workflows/daily.yml` が実行
-- **海流マップ**: 毎日 JST 6:35（UTC 21:35）に `ocean-map.yml` が独立更新。全体予報の停止中も有効な海流だけ提供し、期限切れの旧スコアは非表示
+- **海流マップ・参考カレンダー**: 毎日 JST 6:35（UTC 21:35）に `ocean-map.yml` が独立更新。短期予報停止時も有効な海流・天文カレンダーを提供し、期限切れの短期スコアは非表示
 
 ## ディレクトリ構成
 
@@ -101,7 +101,7 @@ Actions のジョブが失敗すると GitHub から自動でメール通知が�
 
 ## 運用メモ
 
-- **黒潮長期予測** (`engine/kuroshio_forecast.json`) は手動更新。JAMSTEC 黒潮親潮ウォッチ（毎週水曜更新）を確認し、`valid_until` と `status` を書き換える。期限が近づくと Actions に warning が出る
+- **黒潮資料** (`engine/kuroshio_forecast.json`) は`fetch_kuroshio.py`が公式RSSから発表日・対象期間・URLを日次取得。日別流路は自動分類せず、未評価の期間は公開値null・長期計算上だけ中立0.5と明記する。本文確認なしの期限延長・接岸扱いは禁止
 - **コード修正**はローカルに clone して編集 → push（Codex / Claude Code 等の AI コーディングエージェントも可）。次回の daily run から反映される
 - 手動で即時更新したい場合: Actions タブ → daily-forecast → **Run workflow**
 
@@ -137,11 +137,13 @@ Actions のジョブが失敗すると GitHub から自動でメール通知が�
 
 JAMSTEC・JAXAの海中天気予報と気象庁の50m深海流予想図は比較用リンクです。数値を本図へ合成せず、SMOCに潮汐流を再加算しません。詳細は`analysis/REPORT_live_ocean_map.md`を参照。
 
-### 海流だけの更新・公開
+### 海流・参考カレンダーの独立更新・公開
 
 ```bash
 python engine/fetch_ocean_current.py
 python engine/fetch_ocean_current.py --validate-only
+python engine/fetch_kuroshio.py
+python engine/build_longrange.py
 python engine/build_html.py
 cp engine/mikomoto_forecast.html docs/index.html
 cp engine/mikomoto_map.html docs/map/index.html
@@ -151,6 +153,16 @@ python engine/validate_ocean_publication.py --marine-only
 
 `ocean-map.yml`は毎朝06:35 JSTと関連コードのmainへのpushで実行します。既存dailyと公開処理を直列化し、取り込み失敗・欠測・48時間先までの有効範囲不足・埋め込み不一致では公開しません。既存full予報のmonitorは維持し、海流専用経路から未発表のハンマー予報を公開しないことを発表記録のハッシュで検査します。
 
-海流の公開成功後は`ocean-published-*` Actions artifactへ90日保存。ハンマー予報アーカイブを追記しません。旧ハンマー予報や長期資料が期限切れならスコア・推奨・カレンダーを隠し、更新待ちと明示します。海流が復旧しても、旧予測モデル全体の更新停止が解消したことにはなりません。
+公開成功後は海流・長期カレンダー・黒潮資料を`ocean-published-*` Actions artifactへ90日保存。ハンマー予報アーカイブは追記しません。短期・長期それぞれの期限で表示を制御し、短期が止まっても有効な天文・季節カレンダーは利用できます。
 
 回帰検査は `python -m unittest discover -s tests -v` と `node --test tests/*.test.js`。Windowsでは `PYTHONUTF8=1` を設定してください。
+
+### 予報と長期カレンダーの復旧（2026-11-21）
+
+`environment_inputs.py`がSMOCと波・気象を明示して取得し、時刻で結合・単位検査します。最新取得に失敗した未来入力を過去キャッシュで置き換えません。観測の古さはモデル入力と画面の両方で扱います。
+
+`data/full_scraper.py --refresh-lists`は増分管理を保ち、3店の確認結果を`data/scrape_health.json`へ保存。取得・解析が正常な無投稿日は古い記事日だけで予報を止めず、取得失敗や未解決URLは公開検査で停止します。無報告を欠航・非目撃に変換しません。
+
+`longrange_contract.py`で当日から183日の連続性と因子を検査。カレンダーは短期予報から独立し、06:35の海流更新経路でも再生成します。黒潮未評価日は計算上中立として明示し、天文潮位から局所流速や出航可否を断定しません。
+
+公開後の`verify_publication.py`は3ページの実配信データを照合し、成功後だけ発表記録を保存します。旧版公開記録は保持します。詳細・限界は`analysis/REPORT_forecast_recovery.md`。

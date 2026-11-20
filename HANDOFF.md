@@ -25,10 +25,7 @@ GitHub Actions + GitHub Pages へ完全移行済み。外部サーバーは一�
   PagesのSourceは **GitHub Actions** に切り替える。標準トークンのpushでは旧ブランチ式ビルドは起動しない。
 - **手動実行**: Actions タブ → daily-forecast → Run workflow
 - **失敗監視**: ジョブ失敗時は GitHub からメール通知。`monitor.py` がデータ鮮度・ビルド結果・黒潮期限を検査して異常なら fail させる
-- **黒潮予測の更新**（手動・2〜8週に1回程度）:
-  1. https://www.jamstec.go.jp/aplinfo/kowatch/ を確認（毎週水曜更新）
-  2. `engine/kuroshio_forecast.json` の `status` / `label` / `valid_until` / `score` / `updated` を編集して push
-  - 期限切れが近いと Actions に warning、切れると monitor が error を出す
+- **黒潮資料の更新**: `engine/fetch_kuroshio.py`が公式RSSから日次取得。流路は日別の根拠がない限り未評価。資料期限後も天文・季節カレンダーは未評価を明示して継続する
 - **コード修正**: ローカルに clone して編集 → push。AI コーディングエージェント（Codex / Claude Code 等）でも可
 
 ## 著作権配慮: 生記事テキストは含まない
@@ -43,7 +40,7 @@ GitHub Actions + GitHub Pages へ完全移行済み。外部サーバーは一�
 - ショップブログ3店への増分スクレイプは **2秒間隔のレート制限を厳守**（`data/full_scraper.py` 内に実装済み）
 - GitHub Actions の IP はブロックされる可能性がゼロではない。scrape ステップは `continue-on-error` で、
   失敗しても既存データで予報生成は続行する設計
-- スクレイプが4日以上止まると monitor が error を出す（ブログ構造変更の疑い → `full_scraper.py` のパーサを確認）
+- monitorは3店の新着確認結果・解析・未解決URLを検査する。記事日が4日以上前でも正常取得が確認できれば警告で継続する
 
 ## 整合性修正（2026-10）
 
@@ -56,6 +53,16 @@ GitHub Actions + GitHub Pages へ完全移行済み。外部サーバーは一�
 スマホの月間カレンダー、地図の拡大・移動・地点詳細と、海況を先に読むトップを実装。
 北側はオーナー指定により予測対象外。実測していない等深線・局所水温分布は表示しない。
 地点のGPS校正・海底地形と局所流の実測検証は残る。詳細はAGENTS.mdのマップ節を参照。
+
+## 2026-11-21 更新待ちの復旧
+
+黒潮資料は`fetch_kuroshio.py`で公式RSSの最新号を日次確認する方式へ変更（上記手動更新手順を置換）。記事の発表日・対象期間と、黒潮流路の評価を分離し、未評価はnullで公開する。
+
+ショップ記事が4日以上前でも、`scrape_health.json`で3店の一覧と新着処理を確認できれば警告で継続する（上記の一律停止を置換）。取得エラー・未処理・一覧巻き戻りは停止。2秒以上間隔、取得済み管理、生本文の除外は維持。
+
+06:35の独立更新で海流に加えて183日分の参考カレンダーも再生成する。短期予報の有効期限とは別に表示でき、期限切れ短期スコアを重ねない。公開されたデータの照合後だけ予報を発表記録に追記する。
+
+詳細は`analysis/REPORT_forecast_recovery.md`。旧予報が停止中という以下の2026-11-21海流導入時の記録は、復旧前の経緯である。
 
 ## 詳細
 

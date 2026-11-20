@@ -10,11 +10,12 @@ Phase1: 神子元3ショップ ブログ全量スクレイパ (レジューム�
   phase1/articles.jsonl      … 記事1件=1行 (逐次追記)
   phase1/dive_logs_raw_full.json … 最終まとめ
 """
+import argparse
 import json
 import re
 import sys
 import time
-from datetime import datetime
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import requests
@@ -24,6 +25,8 @@ ROOT = Path(__file__).parent
 STATE_F = ROOT / "scrape_state.json"
 JSONL_F = ROOT / "articles.jsonl"
 OUT_F = ROOT / "dive_logs_raw_full.json"
+HEALTH_F = ROOT / "scrape_health.json"
+JST = timezone(timedelta(hours=9))
 
 SLEEP = 2.1  # seconds between requests
 HEADERS = {
@@ -62,7 +65,7 @@ def get(url, timeout=30):
 
 def load_state():
     if STATE_F.exists():
-        s = json.load(open(STATE_F))
+        s = json.loads(STATE_F.read_text(encoding="utf-8"))
         s.setdefault("url_lists", {})
         s.setdefault("done_urls", [])
         s.setdefault("failed_urls", [])
@@ -72,8 +75,59 @@ def load_state():
 
 def save_state(state):
     tmp = STATE_F.with_suffix(".tmp")
-    json.dump(state, open(tmp, "w"), ensure_ascii=False)
+    with tmp.open("w", encoding="utf-8") as stream:
+        json.dump(state, stream, ensure_ascii=False)
     tmp.replace(STATE_F)
+
+
+def timestamp():
+    return datetime.now(JST).isoformat(timespec="seconds")
+
+
+def save_health(sources):
+    """Store acquisition facts, never inferred departures or negative sightings."""
+    tmp = HEALTH_F.with_suffix(".tmp")
+    with tmp.open("w", encoding="utf-8") as stream:
+        json.dump({"schema_version": 1, "generated_at": timestamp(), "sources": sources},
+                  stream, ensure_ascii=False, indent=2, allow_nan=False)
+    tmp.replace(HEALTH_F)
+
+
+def structured_dates():
+    path = ROOT / "dive_logs_structured_full.json"
+    if not path.exists():
+        return {}, {}
+    # Corruption must not be silently converted into an empty history.
+    rows = json.loads(path.read_text(encoding="utf-8"))["logs"]
+    latest, by_url = {}, {}
+    for row in rows:
+        if row.get("shop") and row.get("date"):
+            latest[row["shop"]] = max(latest.get(row["shop"], ""), row["date"])
+            if row.get("url"):
+                by_url[row["url"]] = row["date"]
+    return latest, by_url
+
+
+def finish_source_health(row, discovered, done, article_dates, previous_latest):
+    """A discovered URL in backoff is still unresolved, never evidence of health."""
+    row["unresolved_url_count"] = len(set(discovered) - done)
+    dates = [article_dates[url] for url in discovered if article_dates.get(url)]
+    newest = max(dates) if dates else None
+    row["latest_discovered_article_date"] = newest
+    row["listing_regressed"] = bool(previous_latest and newest and newest < previous_latest)
+    if row["listing_status"] == "ok":
+        row["status"] = "partial" if (row["article_failed"] or row["unresolved_url_count"]
+                                      or row["listing_regressed"]) else "ok"
+
+
+def validate_article(rec, *, today=None):
+    if not isinstance(rec.get("date"), str):
+        raise ValueError("Article date was not parsed")
+    parsed = date.fromisoformat(rec["date"])
+    if parsed > (today or datetime.now(JST).date()):
+        raise ValueError("Article date is in the future")
+    if not rec.get("body"):
+        raise ValueError("Article body was not parsed")
 
 
 def append_article(rec):
@@ -102,7 +156,7 @@ def collect_hammers_urls(known=None, stop_after_known=8):
             r = get(url)
         except Exception as e:
             print(f"  hammers list end p{page}: {e}", flush=True)
-            break
+            raise
         soup = BeautifulSoup(r.text, "html.parser")
         found = 0
         for a in soup.select("a[href*='/divelog/']"):
@@ -143,7 +197,7 @@ def collect_290_urls(known=None, stop_after_known=10):
             r = get(url)
         except Exception as e:
             print(f"  290 list end p{page}: {e}", flush=True)
-            break
+            raise
         soup = BeautifulSoup(r.text, "html.parser")
         found = 0
         for a in soup.select("h1 a, h2 a, .entry-title a, a[rel=bookmark]"):
@@ -182,6 +236,8 @@ def collect_ms_urls(known=None, recent_months=3):
     # get month list from /logs/
     r = get("https://mikomotodivers.com/logs/")
     months = sorted(set(re.findall(r"logs/(20\d{2}/\d{2})/", r.text)))
+    if not months:
+        raise ValueError("No month links parsed from the divers listing")
     if known and len(months) > recent_months:
         months = months[-recent_months:]
     print(f"  ms months: {len(months)} ({months[0] if months else '-'}..{months[-1] if months else '-'})", flush=True)
@@ -194,7 +250,7 @@ def collect_ms_urls(known=None, recent_months=3):
             try:
                 r = get(u)
             except Exception:
-                break
+                raise
             found = 0
             for m in re.finditer(r"logs/(20\d{2}/\d{2}/\d+\.html)", r.text):
                 href = "https://mikomotodivers.com/logs/" + m.group(1)
@@ -354,27 +410,49 @@ def parse_ms_article(url, html):
 PARSERS = {"hammers": parse_hammers_article, "290": parse_290_article, "ms": parse_ms_article}
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--refresh-lists", action="store_true",
+                        help="Recheck recent listings while preserving done URLs and retry backoff")
+    args = parser.parse_args(argv)
     state = load_state()
     # 既知URL (取得済み) — あればリスト収集はインクリメンタル (新着だけ探して早期打ち切り)
     known = set(state["done_urls"]) | set(state["failed_urls"])
 
-    # Phase A: URL lists
-    if "hammers" not in state["url_lists"]:
-        print("[list] hammers (mikomoto.com)...", flush=True)
-        new_urls = collect_hammers_urls(known=known)
-        state["url_lists"]["hammers"] = sorted(set(new_urls) | {u for u in known if "mikomoto.com" in u})
-        save_state(state)
-    if "ms" not in state["url_lists"]:
-        print("[list] ms (mikomotodivers.com)...", flush=True)
-        new_urls = collect_ms_urls(known=known)
-        state["url_lists"]["ms"] = sorted(set(new_urls) | {u for u in known if "mikomotodivers.com" in u})
-        save_state(state)
-    if "290" not in state["url_lists"]:
-        print("[list] 290 (290.jp)...", flush=True)
-        new_urls = collect_290_urls(known=known)
-        state["url_lists"]["290"] = sorted(set(new_urls) | {u for u in known if "290.jp" in u})
-        save_state(state)
+    latest, article_dates = structured_dates()
+    health, discovered = {}, {}
+    # A cached list is useful for resuming downloads, but does not prove that
+    # today's source has been checked. A failed listing must stay distinguishable
+    # from a healthy source that simply has not published a new dive report.
+    for shop, collector, domain in [("hammers", collect_hammers_urls, "mikomoto.com"),
+                                    ("ms", collect_ms_urls, "mikomotodivers.com"),
+                                    ("290", collect_290_urls, "290.jp")]:
+        row = health[shop] = {"checked_at": None, "listing_status": "not_checked",
+                             "status": "not_checked", "discovered_count": 0,
+                             "new_url_count": 0, "article_attempted": 0,
+                             "article_succeeded": 0, "article_failed": 0,
+                             "unresolved_url_count": 0,
+                             "latest_discovered_article_date": None, "listing_regressed": False,
+                             "latest_article_date": latest.get(shop)}
+        if args.refresh_lists or shop not in state["url_lists"]:
+            print(f"[list] {shop} ({domain})...", flush=True)
+            try:
+                new_urls = collector(known=known)
+                if not new_urls:
+                    raise ValueError("No article URLs parsed from source listing")
+                discovered[shop] = new_urls
+                row.update(listing_status="ok", status="pending",
+                           discovered_count=len(new_urls),
+                           new_url_count=len(set(new_urls) - known))
+                # Preserve discovery order (newest first), then known history.
+                state["url_lists"][shop] = list(dict.fromkeys(new_urls + sorted(u for u in known if domain in u)))
+                save_state(state)
+            except Exception as exc:
+                row.update(listing_status="error", status="error", error_type=type(exc).__name__)
+                print(f"[list] {shop} failed: {type(exc).__name__}: {exc}", flush=True)
+            finally:
+                row["checked_at"] = timestamp()
+        save_health(health)
 
     for shop, urls in state["url_lists"].items():
         print(f"[plan] {shop}: {len(urls)} articles", flush=True)
@@ -395,15 +473,21 @@ def main():
         pending = new_urls + retries  # 全失敗URLを一斉再取得せず、1店1回10件まで
         print(f"[fetch] {shop}: {len(pending)} pending", flush=True)
         for i, u in enumerate(pending):
+            health[shop]["article_attempted"] += 1
             try:
                 r = get(u)
                 rec = PARSERS[shop](u, r.text)
+                validate_article(rec)
                 append_article(rec)
+                article_dates[u] = rec["date"]
+                health[shop]["article_succeeded"] += 1
+                health[shop]["latest_article_date"] = max(health[shop]["latest_article_date"] or "", rec["date"])
                 done.add(u)
                 failed.discard(u)
                 retry_after.pop(u, None)
                 retry_count.pop(u, None)
             except Exception as e:
+                health[shop]["article_failed"] += 1
                 print(f"    FAIL {u}: {e}", flush=True)
                 failed.add(u)
                 retry_count[u] = retry_count.get(u, 0) + 1
@@ -413,10 +497,13 @@ def main():
                 state["done_urls"] = sorted(done)
                 state["failed_urls"] = sorted(failed)
                 save_state(state)
+                save_health(health)
                 n_since_save = 0
             if (i + 1) % 100 == 0:
                 el = time.time() - t0
                 print(f"  {shop}: {i+1}/{len(pending)} elapsed {el/60:.1f}min", flush=True)
+        finish_source_health(health[shop], discovered.get(shop, []), done, article_dates, latest.get(shop))
+        save_health(health)
     state["done_urls"] = sorted(done)
     state["failed_urls"] = sorted(failed)
     save_state(state)
@@ -424,7 +511,7 @@ def main():
     # Phase C: compile jsonl -> final json (dedupe by url)
     if not JSONL_F.exists():
         print("[done] no articles.jsonl (no new articles scraped) — skip compile", flush=True)
-        return
+        return 0 if all(row["status"] == "ok" for row in health.values()) else 1
     seen = {}
     with open(JSONL_F, encoding="utf-8") as f:
         for line in f:
@@ -434,11 +521,12 @@ def main():
             rec = json.loads(line)
             seen[rec["url"]] = rec
     articles = sorted(seen.values(), key=lambda a: (a.get("date") or "", a.get("shop") or ""))
-    json.dump({"scraped_at": datetime.now().isoformat(), "n": len(articles),
-               "articles": articles},
-              open(OUT_F, "w", encoding="utf-8"), ensure_ascii=False)
+    with OUT_F.open("w", encoding="utf-8") as stream:
+        json.dump({"scraped_at": timestamp(), "n": len(articles), "articles": articles},
+                  stream, ensure_ascii=False)
     print(f"[done] {len(articles)} unique articles -> {OUT_F}", flush=True)
+    return 0 if all(row["status"] == "ok" for row in health.values()) else 1
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

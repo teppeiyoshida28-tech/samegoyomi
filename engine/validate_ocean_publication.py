@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parent
 
 
 def embedded(html, name):
-    match = re.search(rf'const {name} = (.*?);\s*\n', html)
+    match = re.search(rf'const {name} = (.*?);\s*\n', html, re.S)
     if not match:
         raise ValueError(f'Missing embedded {name}')
     return json.loads(match.group(1))
@@ -57,6 +57,7 @@ def main():
     if errors:
         raise ValueError('; '.join(errors))
     monitor.check_site_built()
+    monitor.check_longrange()
     if monitor.problems:
         raise ValueError('; '.join(monitor.problems))
     check_publication(marine_only=args.marine_only)

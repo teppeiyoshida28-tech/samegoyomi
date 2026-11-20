@@ -18,4 +18,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: node --test tests/map_geometry.test.js
+      - run: node --test tests/*.test.js

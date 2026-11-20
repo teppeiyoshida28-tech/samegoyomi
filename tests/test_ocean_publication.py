@@ -1,5 +1,6 @@
 """A map-only release cannot mix data versions or reissue unpublished forecasts."""
 import json
+import hashlib
 from pathlib import Path
 import shutil
 import sys
@@ -20,6 +21,11 @@ class OceanPublicationTests(unittest.TestCase):
             target.parent.mkdir(parents=True,exist_ok=True)
             shutil.copyfile(ROOT/relative,target)
         shutil.copytree(ROOT/'engine/forecast_archive',repo/'engine/forecast_archive')
+        # Model publication state explicitly; a regression test must not require
+        # a developer's newly generated local candidate to have been deployed.
+        forecast=json.loads((repo/'engine/forecast_data.json').read_text(encoding='utf-8'))
+        digest=hashlib.sha256(json.dumps(forecast,sort_keys=True,ensure_ascii=False).encode()).hexdigest()
+        (repo/'engine/forecast_archive/fixture.json').write_text(json.dumps({'forecast_sha256':digest}),encoding='utf-8')
         return repo
 
     def test_current_data_and_geometry_are_embedded_together(self):

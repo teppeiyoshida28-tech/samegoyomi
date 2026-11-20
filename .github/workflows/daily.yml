@@ -56,15 +56,7 @@ jobs:
         working-directory: data
         continue-on-error: true
         run: |
-          python3 - <<'EOF'
-          import json
-          p = 'scrape_state.json'
-          s = json.load(open(p))
-          s['url_lists'] = {}  # リスト再収集 (新着発見)
-          json.dump(s, open(p, 'w'), ensure_ascii=False)
-          print('[cron] url_lists reset for incremental scrape')
-          EOF
-          timeout 3600 python3 full_scraper.py || echo "::warning::scraper exited nonzero (continuing with existing data)"
+          timeout 3600 python3 full_scraper.py --refresh-lists
 
       - name: Structure logs
         working-directory: data
@@ -114,6 +106,10 @@ jobs:
           timeout 600 python3 forecast_engine.py
           timeout 1800 python3 enrich_forecast.py
 
+      - name: Refresh official Kuroshio source
+        continue-on-error: true
+        run: python3 engine/fetch_kuroshio.py
+
       - name: Tide heatmap + longrange calendar
         working-directory: engine
         run: |
@@ -142,20 +138,6 @@ jobs:
           cp engine/mikomoto_aim.html      docs/aim/index.html
           cp engine/mikomoto_history.html  docs/history/index.html
           touch docs/.nojekyll
-
-      - name: Kuroshio forecast expiry check
-        working-directory: engine
-        run: |
-          python3 - <<'EOF'
-          import json
-          from datetime import date
-          k = json.load(open('kuroshio_forecast.json'))
-          days_left = (date.fromisoformat(k['valid_until']) - date.today()).days
-          if days_left <= 14:
-              print(f"::warning::黒潮長期予測の有効期限まで残り{days_left}日! JAMSTEC黒潮親潮ウォッチ(毎週水曜更新)を確認して engine/kuroshio_forecast.json を更新してください")
-          else:
-              print(f"[cron] kuroshio forecast ok ({days_left} days left)")
-          EOF
 
       - name: Validate before publishing
         run: |
@@ -186,7 +168,9 @@ jobs:
         uses: actions/deploy-pages@v4
 
       - name: Preserve successfully published forecast
-        run: python3 engine/forecast_archive.py --save --published-at now
+        run: |
+          python3 engine/verify_publication.py
+          python3 engine/forecast_archive.py --save --published-at now
 
       - name: Back up issuance records
         uses: actions/upload-artifact@v4

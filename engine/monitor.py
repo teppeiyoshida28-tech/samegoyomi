@@ -11,9 +11,9 @@ import json
 import os
 import re
 import sys
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
-from domain import today_jst, MODEL_VERSION
+from domain import today_jst, now_jst, MODEL_VERSION
 from validation import validate_forecast
 from point_catalog import CATALOG
 
@@ -24,16 +24,51 @@ problems = []
 warnings = []
 
 
+def observation_health_errors(health, now):
+    """Publication needs evidence of successful discovery, not a recent sighting."""
+    errors = []
+    if type(health.get('schema_version')) is not int or health['schema_version'] != 1:
+        return ['ショップ取得結果の形式が無効です']
+    sources = health.get('sources', {})
+    # The configured three sources must all be checked. A missing source must
+    # not make all([]) look like a successful scrape.
+    expected = {'hammers', 'ms', '290'}
+    if not expected or set(sources) != expected:
+        return ['ショップ取得結果の対象が設定と一致しません']
+    for shop, result in sources.items():
+        try:
+            checked = datetime.fromisoformat(result['checked_at'])
+            fresh = checked.utcoffset() is not None and -timedelta(minutes=5) <= now-checked < timedelta(hours=36)
+        except (KeyError, TypeError, ValueError):
+            fresh = False
+        counts = [result.get(key) for key in ('discovered_count', 'new_url_count', 'article_attempted',
+                  'article_succeeded', 'article_failed', 'unresolved_url_count')]
+        counts_valid = all(type(value) is int and value >= 0 for value in counts)
+        if (not fresh or result.get('status') != 'ok' or result.get('listing_status') != 'ok'
+                or not counts_valid or result['discovered_count'] < 1
+                or result.get('article_failed') != 0 or result.get('unresolved_url_count') != 0
+                or result.get('listing_regressed') is not False
+                or result.get('article_attempted') != result.get('article_succeeded')
+                or result['article_succeeded'] < result['new_url_count']):
+            errors.append(f'{shop}: 新着一覧・記事の取得/解析を確認できません')
+    return errors
+
+
 def check_obs_freshness():
-    """ショップログの鮮度: 最新報告が4日以上前なら異常 (スクレイパー故障の疑い)"""
+    """Separate observation date from verified source polling, including no-post days."""
     try:
         d = json.load(open(os.path.join(BASE, "dive_logs_structured.json")))
         latest = max(s["date"] for s in d["daily_summary"])
         age = (today_jst() - date.fromisoformat(latest)).days
+        if age < 0:
+            problems.append(f'ショップログに未来の日付があります: {latest}')
+        health = json.loads(Path(REPO_ROOT, 'data', 'scrape_health.json').read_text(encoding='utf-8'))
+        problems.extend(observation_health_errors(health, now_jst()))
+        polled_latest = max((row.get('latest_article_date') or '' for row in health.get('sources', {}).values()), default='')
+        if polled_latest != latest:
+            problems.append('取得確認済みの最新記事日と構造化ログの日付が一致しません（構造化・同期を確認）')
         if age >= 4:
-            problems.append(
-                f"ショップログの最新報告が {latest} ({age}日前) — "
-                "スクレイパー故障 or ブログ構造変更の疑い。Actionsのscrapeステップのログを確認")
+            warnings.append(f"ショップログ最新: {latest} ({age}日前)。取得処理の成否と区別し、無報告を欠航・非目撃に転用しません")
         elif age >= 3:
             warnings.append(f"ショップログ最新: {latest} ({age}日前) — 海況不良なら正常")
         return latest
@@ -50,7 +85,7 @@ def check_forecast_freshness():
         if gen != today_jst().isoformat():
             problems.append(f"forecast_data.json が今日更新されていない (generated_at={gen})")
         daily = d.get("daily", [])
-        problems.extend(validate_forecast(d))
+        problems.extend(validate_forecast(d, require_fresh=True))
         if not daily or daily[0]["date"] != today_jst().isoformat():
             problems.append("本日の予報がありません")
         if daily and "ml" not in daily[0]:
@@ -91,16 +126,35 @@ def check_site_built():
 
 def check_kuroshio():
     try:
+        from longrange_contract import validate_kuroshio
         k = json.load(open(os.path.join(BASE, "kuroshio_forecast.json")))
+        problems.extend(validate_kuroshio(k))
         days_left = (date.fromisoformat(k["valid_until"]) - today_jst()).days
-        if days_left <= 0:
-            problems.append(
-                f"黒潮長期予測が期限切れ ({k['valid_until']}) — JAMSTEC黒潮親潮ウォッチ"
-                "(毎週水曜更新)を確認して engine/kuroshio_forecast.json を更新してください")
+        if days_left < 0:
+            warnings.append(f"黒潮資料の対象期間が終了 ({k['valid_until']})。長期カレンダーでは黒潮未評価として扱います")
         elif days_left <= 14:
             warnings.append(f"黒潮長期予測の残り有効期間 {days_left}日 — そろそろ更新")
+        if k.get('status') == 'unknown':
+            warnings.append('黒潮流路は未評価。資料の発表日・対象期間を表示し、計算上は中立値を使用します')
+        retrieved = datetime.fromisoformat(k.get('retrieved_at', ''))
+        if retrieved.utcoffset() is None or now_jst()-retrieved >= timedelta(hours=36):
+            warnings.append('黒潮資料の新着確認が36時間以上前です。資料の取得日を画面で確認してください')
     except Exception as e:
         problems.append(f"kuroshio_forecast.json 確認失敗: {e}")
+
+
+def check_longrange():
+    from longrange_contract import validate_longrange
+    try:
+        data = json.loads(Path(BASE, 'longrange_data.json').read_text(encoding='utf-8'))
+        problems.extend(validate_longrange(data, now=now_jst()))
+        for rel in ['index.html', 'aim/index.html']:
+            html = Path(REPO_ROOT, 'docs', rel).read_text(encoding='utf-8')
+            match = re.search(r'const LONGRANGE = (.*?);\s*\n', html, re.S)
+            if not match or json.loads(match.group(1)) != data:
+                problems.append(f'docs/{rel} の長期カレンダーが現在のデータと一致しません')
+    except Exception as e:
+        problems.append(f'長期カレンダーの検査失敗: {e}')
 
 
 def check_backtest_age():
@@ -128,6 +182,7 @@ def main():
     check_forecast_freshness()
     check_site_built()
     check_kuroshio()
+    check_longrange()
     check_backtest_age()
 
     for w in warnings:
