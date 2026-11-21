@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-11-21T18:44:29.073249+09:00",
-  "issued_at": "2026-11-21T18:44:29.073249+09:00",
+  "generated_at": "2026-11-21T18:49:07.956567+09:00",
+  "issued_at": "2026-11-21T18:49:07.956567+09:00",
   "model_version": "2026-11-fresh-inputs-v2",
   "current_method": "smoc (潮汐込み・再加算なし、島周辺の局所流は未校正)",
   "input_pipeline_version": "2026-11-explicit-smoc-v1",
@@ -10,7 +10,7 @@
         "provider": "Open-Meteo",
         "api_url": "https://marine-api.open-meteo.com/v1/marine",
         "api_model": "meteofrance_currents",
-        "retrieved_at": "2026-11-21T18:44:29.576228+09:00",
+        "retrieved_at": "2026-11-21T18:49:08.493342+09:00",
         "model_run_at": null,
         "requested_coordinates": {
           "latitude": 34.5717,
@@ -34,7 +34,7 @@
         "provider": "Open-Meteo",
         "api_url": "https://marine-api.open-meteo.com/v1/marine",
         "api_model": "best_match",
-        "retrieved_at": "2026-11-21T18:44:30.062617+09:00",
+        "retrieved_at": "2026-11-21T18:49:08.987848+09:00",
         "model_run_at": null,
         "requested_coordinates": {
           "latitude": 34.5717,
@@ -57,7 +57,7 @@
       "provider": "Open-Meteo",
       "api_url": "https://api.open-meteo.com/v1/forecast",
       "api_model": "best_match",
-      "retrieved_at": "2026-11-21T18:44:30.274324+09:00",
+      "retrieved_at": "2026-11-21T18:49:09.162658+09:00",
       "model_run_at": null,
       "requested_coordinates": {
         "latitude": 34.5717,
@@ -878,7 +878,7 @@
     2025
   ],
   "learned_weights": {
-    "trained_at": "2026-11-21T18:44:28.952933+09:00",
+    "trained_at": "2026-11-21T18:49:07.825170+09:00",
     "n_records": 1894,
     "source": "phase1 full logs (hammers+ms+290 partial)",
     "bias": 0.7587932521837979,
@@ -1083,7 +1083,7 @@
     }
   ],
   "tide_heatmap": {
-    "generated_at": "2026-11-21T18:44:33.645951+09:00",
+    "generated_at": "2026-11-21T18:49:12.684028+09:00",
     "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
     "n_days": 193,
     "window_days": 365,
@@ -20479,14 +20479,14 @@
   ],
   "ml_meta": {
     "n_train": 1034,
-    "generated_at": "2026-11-21T18:44:32.259568+09:00",
+    "generated_at": "2026-11-21T18:49:11.286639+09:00",
     "input_sources": {
       "marine": {
         "ocean": {
           "provider": "Open-Meteo",
           "api_url": "https://marine-api.open-meteo.com/v1/marine",
           "api_model": "meteofrance_currents",
-          "retrieved_at": "2026-11-21T18:44:31.021994+09:00",
+          "retrieved_at": "2026-11-21T18:49:09.901525+09:00",
           "model_run_at": null,
           "requested_coordinates": {
             "latitude": 34.5717,
@@ -20510,7 +20510,7 @@
           "provider": "Open-Meteo",
           "api_url": "https://marine-api.open-meteo.com/v1/marine",
           "api_model": "best_match",
-          "retrieved_at": "2026-11-21T18:44:31.478132+09:00",
+          "retrieved_at": "2026-11-21T18:49:10.375906+09:00",
           "model_run_at": null,
           "requested_coordinates": {
             "latitude": 34.5717,
@@ -20533,7 +20533,7 @@
         "provider": "Open-Meteo",
         "api_url": "https://api.open-meteo.com/v1/forecast",
         "api_model": "best_match",
-        "retrieved_at": "2026-11-21T18:44:31.649237+09:00",
+        "retrieved_at": "2026-11-21T18:49:10.659199+09:00",
         "model_run_at": null,
         "requested_coordinates": {
           "latitude": 34.5717,

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "retrieved_at": "2026-11-21T18:44:34+09:00",
-  "expires_at": "2026-11-23T06:44:34+09:00",
+  "retrieved_at": "2026-11-21T18:49:13+09:00",
+  "expires_at": "2026-11-23T06:49:13+09:00",
   "status": "partial",
   "source": {
     "provider": "Open-Meteo",
