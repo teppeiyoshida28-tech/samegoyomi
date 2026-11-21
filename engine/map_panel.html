@@ -17,28 +17,15 @@
      <g clip-path="url(#sc-extent)"><g id="sc-reefs"></g><g id="sc-open"></g><g id="sc-land"></g><g id="sc-review"></g><g id="sc-symbols"></g><g id="sc-depths"></g><g id="sc-names"></g></g>
     </svg>
     <div class="sc-map-badge"><span id="sc-mode-badge">回り込み · 模式</span><span class="sc-north">原図の北 ↑</span></div>
+    <button id="sc-play" class="sc-map-play" type="button" aria-label="海流アニメーションを一時停止" aria-pressed="true">Ⅱ</button>
     <div class="sc-map-foot"><span>流れは南側のみ</span><span>提供図の形状 · GPS未校正</span></div>
    </div>
    <div class="sc-legend"><span><i class="sc-swatch"></i>海上の島・岩</span><span><i class="sc-swatch reef"></i>海底の根</span><span><i class="sc-swatch flow"></i><span id="sc-flow-legend">回り込みのイメージ</span></span></div>
   </div>
-  <div class="sc-controls">
-   <div class="sc-strength">
-    <div class="sc-strength-heading"><span>広域予報の流速 <small>· 南側一律</small></span><output id="sc-strength-value" aria-live="polite">未取得</output></div>
-    <div class="sc-scale" aria-label="流速の色：0から6ノット。青、水色、緑、黄、赤の順に強くなる">
-     <div id="sc-strength-gradient" class="sc-color-band"><span id="sc-strength-marker" hidden></span></div>
-     <div class="sc-ticks" aria-hidden="true"><span>0</span><span>1.5</span><span>3</span><span>4.5</span><span>6 kt以上</span></div>
-    </div>
-    <div class="sc-tail-examples" aria-label="線の長さ：1ノットは短く、3ノットは中程度、6ノットは長い"><span><canvas data-tail-example="1" aria-hidden="true"></canvas>1 kt</span><span><canvas data-tail-example="3" aria-hidden="true"></canvas>3 kt</span><span><canvas data-tail-example="6" aria-hidden="true"></canvas>6 kt</span></div>
-    <p id="sc-strength-status" class="sc-strength-status">色と線の長さが流速に連動</p>
-   </div>
-   <div class="sc-modes" role="group" aria-label="流れの見せ方"><button type="button" data-mode="schematic" aria-pressed="true">回り込み（模式）</button><button type="button" data-mode="regional" aria-pressed="false">広域予報の向き</button></div>
-   <div class="sc-bottom-controls"><label class="sc-check"><input id="sc-depth-toggle" type="checkbox" checked>原図の深度</label><button id="sc-play" type="button" aria-pressed="true">一時停止</button></div>
-   <p id="sc-caption" class="sc-caption">島沿いの曲がりは模式表示です。地点・深度ごとの流れを予報するものではありません。</p>
-  </div>
   <div class="sc-source" aria-label="海流データの出典と時刻"><p id="sc-source-label"></p><dl id="sc-source-times"></dl></div>
   <details class="sc-detail"><summary>海流データと地形の扱い</summary>
    <p>数値はOpen-Meteo経由のCopernicus Marine SMOC海面流予報です。単一の広域予報値を南側に一律で描き、色と線の長さが流速を表します。6 ktを超える場合も数値はそのまま表示し、色と線の長さは6 ktで上限になります。潮汐・波浪成分を含むため、自前の潮汐流は加えていません。</p>
-   <p>「回り込み（模式）」は島・露出岩の輪郭に沿う方向場へ広域予報の流向を与えたイメージです。根ごとの流速差・反流・水深別の海流を予測していません。水中の根は陸地のような遮蔽物にはせず、粒子の移動速度は漂流速度を表しません。「広域予報の向き」は同じ流向を一様に示します。</p>
+   <p>島・露出岩の輪郭に沿う方向場へ広域予報の流向を与え、回り込みを模式表示しています。根ごとの流速差・反流・水深別の海流を予測していません。水中の根は陸地のような遮蔽物にはせず、粒子の移動速度は漂流速度を表しません。</p>
    <p>0.2 kt未満で方向を描かないのは描画上の基準で、潮止まりや安全を意味しません。欠測・期限切れは0 ktと区別し、流れを描きません。更新期限は取得から36時間の運用上の基準で、予報の精度を保証するものではありません。</p>
    <p>地形・灯台・深度は提供図の画像座標を保持しています。GPS・水深場への校正は未実施で、航行や潜水経路の判断には使えません。方位は原図の北表示に従う概略です。金色の短い点線は文字に隠れた輪郭の仮接続です。小さい画面では重なる地名や深度を間引きます。北側を対象外としており、北側の潜水可否を判定する表示ではありません。</p>
    <p><a href="https://open-meteo.com/en/docs/marine-weather-api" target="_blank" rel="noopener noreferrer">Open-Meteo Marine API</a> · <a href="https://data.marine.copernicus.eu/product/GLOBAL_ANALYSISFORECAST_PHY_001_024/description" target="_blank" rel="noopener noreferrer">Copernicus Marine</a> · <a href="https://www.eorc.jaxa.jp/ptree/ocean_model/index_j.html" target="_blank" rel="noopener noreferrer">JAMSTEC・JAXA（比較用）</a> · <a href="https://www.data.jma.go.jp/kaikyou/kaikyou/tile/jp/index_subsfct.html" target="_blank" rel="noopener noreferrer">気象庁50m深海流（比較用）</a></p>

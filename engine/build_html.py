@@ -11,6 +11,9 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 tpl = (ROOT / "index.html").read_text(encoding="utf-8")
 for marker, filename in [("<!--__MAP_PANEL__-->", "map_panel.html"),
+                         ("/*__HOME_CSS__*/", "home.css"),
+                         ("/*__CALENDAR_VISUALS_JS__*/", "calendar_visuals.js"),
+                         ("/*__CALENDAR_VISUALS_CSS__*/", "calendar_visuals.css"),
                          ("/*__MAP_GEOMETRY__*/", "map_geometry.js"),
                          ("/*__MAP_UI__*/", "map_ui.js"),
                          ("/*__OCEAN_CURRENT_JS__*/", "ocean_current.js"),
@@ -39,12 +42,16 @@ def slim(d, n_days):
 
 
 SITE_URL = "https://teppeiyoshida28-tech.github.io/samegoyomi/"
+home_intro = (ROOT / "home_intro.html").read_text(encoding="utf-8").replace(
+    "<!--__HOME_SECTIONS__-->", (ROOT / "home_sections.html").read_text(encoding="utf-8"))
 
 
 def build(page_mode, fc, lr, title, outname):
-    h = tpl.replace("/*__FORECAST_JSON__*/ null", json.dumps(fc, ensure_ascii=False, allow_nan=False).replace("<", "\\u003c"))
+    h = tpl.replace("<!--__HOME_INTRO__-->", home_intro if page_mode == "" else "")
+    h = h.replace("/*__FORECAST_JSON__*/ null", json.dumps(fc, ensure_ascii=False, allow_nan=False).replace("<", "\\u003c"))
     h = h.replace("/*__LONGRANGE_JSON__*/ null", lr.replace("<", "\\u003c"))
     h = h.replace("/*__PAGE_MODE__*/ ''", f"'{page_mode}'")
+    h = h.replace('class="__PAGE_CLASS__"', f'class="{page_mode or "home"}-mode"')
     # 画像パス: ルートページは img/、サブディレクトリ配下は ../img/
     h = h.replace('content="/hammerhead/img/', f'content="{SITE_URL}img/')  # og:image は絶対URL
     h = h.replace("/hammerhead/img/", "img/" if page_mode == "" else "../img/")
@@ -60,3 +67,7 @@ build("map", slim(data, 5), "null",
       "海流予報マップ — 鮫暦AI 神子元ハンマー潮予報", "mikomoto_map.html")
 build("aim", slim(data, 1), lr_text,
       "狙い目カレンダー (半年先) — 鮫暦AI 神子元ハンマー潮予報", "mikomoto_aim.html")
+
+# Isolated first-view proposals share the current directory and introduction.
+from build_design_previews import build_previews
+build_previews()
