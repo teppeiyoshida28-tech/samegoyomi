@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-21T11:38:20+09:00",
+  "generated_at": "2026-11-21T17:13:49+09:00",
   "sources": {
     "hammers": {
-      "checked_at": "2026-11-21T11:38:05+09:00",
+      "checked_at": "2026-11-21T17:13:33+09:00",
       "listing_status": "ok",
       "status": "ok",
       "discovered_count": 16,
@@ -17,7 +17,7 @@
       "latest_article_date": "2026-11-16"
     },
     "ms": {
-      "checked_at": "2026-11-21T11:38:14+09:00",
+      "checked_at": "2026-11-21T17:13:43+09:00",
       "listing_status": "ok",
       "status": "ok",
       "discovered_count": 37,
@@ -31,7 +31,7 @@
       "latest_article_date": "2026-11-14"
     },
     "290": {
-      "checked_at": "2026-11-21T11:38:20+09:00",
+      "checked_at": "2026-11-21T17:13:49+09:00",
       "listing_status": "ok",
       "status": "ok",
       "discovered_count": 18,
