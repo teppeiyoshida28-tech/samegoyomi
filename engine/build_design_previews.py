@@ -45,14 +45,15 @@ def build_previews():
     cards = []
     for index, (slug, title, description, hero) in enumerate(VARIANTS, 1):
         hero = hero.replace("/hammerhead/img/", "../../img/")
-        bar = f'<header class="fv-review-bar"><a href="./">5案の比較に戻る</a><span>案{index} · {escape(title)} / デザイン候補</span><a href="../../">公開サイト</a></header>'
-        footer = '<footer class="fv-footer">ファーストビューのデザイン候補です。サイトマップと島・生態の紹介は全案共通です。</footer>'
+        status = '採用デザイン' if slug == 'book' else '比較用デザイン案'
+        bar = f'<header class="fv-review-bar"><a href="./">5案の比較に戻る</a><span>案{index} · {escape(title)} / {status}</span><a href="../../">公開サイト</a></header>'
+        footer = '<footer class="fv-footer">トップページには案4「暦の扉」を採用しています。サイトマップと島・生態の紹介は全案共通です。</footer>'
         page = document(title, bar + '<main class="home-intro">' + hero + sections + '</main>' + footer, css)
         (DEST / f"{slug}.html").write_text(page, encoding="utf-8")
         (DEST / f"{slug}-thumb.html").write_text(document(title, hero, css, "fv-embed"), encoding="utf-8")
-        recommend = ' is-recommended' if index == 1 else ''
+        recommend = ' is-selected' if slug == 'book' else ''
         cards.append(f'<article class="fv-choice{recommend}"><div class="fv-thumb"><iframe src="{slug}-thumb.html" title="案{index} {escape(title)}の縮小プレビュー" tabindex="-1" aria-hidden="true" loading="eager"></iframe></div><h2>{index}. {escape(title)}</h2><p>{escape(description)}</p><a href="{slug}.html">この案を実際のサイズで見る</a></article>')
-    gallery = '''<main class="fv-gallery"><header><h1>鮫暦AI、五つの入口。</h1><p>元の浮世絵・家紋・写真を使い、ファーストビューの構図を変えた5案です。各案を開くと、その下に共通のサイトマップと、神子元島・アカシュモクザメの紹介が続きます。</p></header><div class="fv-gallery-grid">''' + "".join(cards) + '''</div><div class="fv-gallery-note"><p>おすすめは「浮世絵の帯」。元のイラストを生かし、題字と絵の両方を読みやすく見せます。5案ともPC・スマートフォンに対応しています。</p><p>Claudeとの設計検討に、<a href="https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md" target="_blank" rel="noopener noreferrer">Anthropic公式 Frontend Design</a>の方針を取り入れました。新しい予報数値や素材は作っていません。</p><p><a href="../../">公開サイトに戻る</a> / <a href="../../aim/">月相と潮位曲線のカレンダーを見る</a></p></div></main>'''
+    gallery = '''<main class="fv-gallery"><header><h1>鮫暦AI、五つの入口。</h1><p>元の浮世絵・家紋・写真を使い、ファーストビューの構図を変えた5案です。各案を開くと、その下に共通のサイトマップと、神子元島・アカシュモクザメの紹介が続きます。</p></header><div class="fv-gallery-grid">''' + "".join(cards) + '''</div><div class="fv-gallery-note"><p>トップページには案4「暦の扉」を採用しました。家紋・題字と浮世絵を分けた構成です。ほかの案も比較用に残しています。</p><p>Claudeとの設計検討に、<a href="https://github.com/anthropics/skills/blob/main/skills/frontend-design/SKILL.md" target="_blank" rel="noopener noreferrer">Anthropic公式 Frontend Design</a>の方針を取り入れました。新しい予報数値や素材は作っていません。</p><p><a href="../../">公開サイトに戻る</a> / <a href="../../aim/">月相と潮位曲線のカレンダーを見る</a></p></div></main>'''
     (DEST / "index.html").write_text(document("ファーストビュー5案", gallery, css), encoding="utf-8")
     print(f"Built {len(VARIANTS)} first-view proposals and comparison page")
 

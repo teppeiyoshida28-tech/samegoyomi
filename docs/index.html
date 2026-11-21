@@ -1645,15 +1645,19 @@ button:focus-visible, a:focus-visible, select:focus-visible, summary:focus-visib
 /* The title and site directory are independent of forecast availability. */
 body.map-mode .home-intro,body.aim-mode .home-intro {display:none;}
 .home-intro {--home-gold:#d4ba79;--home-text:#f2ead8;--home-muted:#becbd5;color:var(--home-text);}
-.home-masthead {position:relative;min-height:560px;display:flex;align-items:center;padding:64px max(28px,calc((100vw - 1200px)/2));background:linear-gradient(90deg,rgba(6,22,38,.94),rgba(6,22,38,.72) 36%,rgba(6,22,38,.15) 75%),url('img/hero_ukiyoe.png') center 46%/cover no-repeat;}
-.home-masthead-copy {position:relative;max-width:620px;padding:20px 0;}
-.home-location {font-size:16px;letter-spacing:.08em;color:#e0d4b3;}
-.home-masthead h1 {font-family:'Shippori Mincho',serif;font-weight:700;font-size:clamp(70px,8vw,112px);line-height:1.3;letter-spacing:.08em;margin:18px 0 4px;}
-.home-masthead h1 span {font-size:.4em;letter-spacing:.01em;margin-left:.15em;}
-.home-tagline {font-family:'Shippori Mincho',serif;font-size:clamp(24px,2.6vw,32px);letter-spacing:.12em;margin:0 0 22px;}
-.home-introduction {font-size:16px;line-height:1.9;color:#d1dae1;margin-bottom:28px;}
-.home-primary {display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;background:#d4ba79;color:#0d2033;font-size:16px;font-weight:700;text-decoration:none;border:1px solid #d4ba79;border-radius:3px;}
+/* Selected first view: proposal 4, the calendar cover. */
+.home-masthead {position:relative;max-width:1440px;margin:auto;min-height:620px;display:grid;grid-template-columns:42% 58%;background:#0b1e32;overflow:hidden;}
+.home-masthead-copy {position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:36px 24px;}
+.home-emblem {width:96px;height:96px;object-fit:contain;margin-bottom:22px;}
+.home-location {font-size:14px;line-height:1.8;color:#d9d6c7;}
+.home-masthead h1 {font-family:'Shippori Mincho',serif;font-weight:600;font-size:clamp(70px,7vw,100px);line-height:1.25;letter-spacing:.05em;margin:8px 0 12px;}
+.home-masthead h1 span {font-size:.4em;letter-spacing:0;margin-left:.12em;}
+.home-tagline {font-family:'Shippori Mincho',serif;font-size:24px;line-height:1.8;letter-spacing:.07em;margin:0;}
+.home-introduction {font-size:15px;line-height:1.85;color:#d1dde5;margin:16px 0 0;}
+.home-primary {display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;background:#d4ba79;color:#102338;font-size:16px;font-weight:700;text-decoration:none;border-radius:3px;margin-top:28px;}
 .home-primary:hover {background:#e6d09a;}
+.home-masthead-art {min-width:0;overflow:hidden;border-left:1px solid #9b854e;}
+.home-masthead-art img {display:block;width:100%;height:100%;object-fit:cover;object-position:64% center;}
 .home-directory {max-width:1280px;padding:48px 40px 60px;margin:auto;}
 .home-section-heading {display:flex;align-items:baseline;gap:20px;margin:0 0 24px;}
 .home-section-heading h2 {font-family:'Shippori Mincho',serif;font-size:26px;font-weight:600;}
@@ -1693,10 +1697,6 @@ body.map-mode .home-intro,body.aim-mode .home-intro {display:none;}
   .top {grid-template-columns:auto minmax(0,1fr);}
   .top-meta {min-width:0;flex-direction:column;align-items:flex-end;gap:2px;}
   .top-meta>div {max-width:100%;overflow-wrap:anywhere;text-align:right;}
-  .home-masthead {min-height:540px;padding:42px 24px;background-position:center,54% center;background-image:linear-gradient(90deg,rgba(6,22,38,.89),rgba(6,22,38,.44)),url('img/hero_ukiyoe.png');}
-  .home-location {font-size:14px;letter-spacing:.03em;}
-  .home-masthead h1 {font-size:76px;letter-spacing:.04em;}
-  .home-tagline {font-size:23px;letter-spacing:.05em;}
   .home-directory {padding:32px 20px 36px;}
   .home-section-heading {display:block;}
   .home-section-heading h2 {font-size:23px;}
@@ -1710,7 +1710,17 @@ body.map-mode .home-intro,body.aim-mode .home-intro {display:none;}
   .home-story-reverse figure {order:0;}
   .home-story h2 {font-size:28px;margin-bottom:16px;}
   .home-story-subject {margin-bottom:12px;}
-  .home-primary {font-size:15px;}
+}
+@media(max-width:700px){
+  .home-masthead {min-height:590px;grid-template-columns:1fr;grid-template-rows:auto 250px;}
+  .home-masthead-copy {padding:30px 22px;}
+  .home-emblem {width:60px;height:60px;margin-bottom:8px;}
+  .home-masthead h1 {font-size:76px;margin:4px 0;}
+  .home-tagline {font-size:23px;}
+  .home-introduction {margin-top:8px;}
+  .home-primary {margin-top:20px;font-size:15px;}
+  .home-masthead-art {border-left:0;border-top:1px solid #9b854e;}
+  .home-masthead-art img {object-position:center 55%;}
 }
 
 /* Calendar data marks keep the original navy / brass palette. */
@@ -1793,13 +1803,17 @@ body.aim-mode #samegoyomi-current {display:none;}
   <nav class="site-nav" id="site-nav"></nav>
 </header>
 <div class="home-intro">
-  <section class="home-masthead" aria-labelledby="home-title">
+  <section class="home-masthead" aria-labelledby="home-title" data-design="calendar-cover">
     <div class="home-masthead-copy">
+      <img class="home-emblem" src="img/kamon.png" alt="鮫暦の家紋" width="96" height="96">
       <p class="home-location">神子元島の海況とハンマー予報</p>
       <h1 id="home-title">鮫暦<span>AI</span></h1>
       <p class="home-tagline">潮を読み、鮫に会う。</p>
-      <p class="home-introduction">海を知る。流れを読む。<br>次に潜る日を、ここから。</p>
+      <p class="home-introduction">月の満ち欠け、潮の移ろい。<br>次に潜る日を、ここから。</p>
       <a class="home-primary" href="#forecast">ハンマー予報を見る</a>
+    </div>
+    <div class="home-masthead-art">
+      <img src="img/hero_ukiyoe.png" alt="藍と金で描かれたハンマーの群れと波" width="1376" height="768" fetchpriority="high">
     </div>
   </section>
   <nav class="home-directory" aria-labelledby="home-directory-title">
