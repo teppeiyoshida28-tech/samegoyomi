@@ -1,0 +1,70 @@
+/* The title and site directory are independent of forecast availability. */
+body.map-mode .home-intro,body.aim-mode .home-intro {display:none;}
+.home-intro {--home-gold:#d4ba79;--home-text:#f2ead8;--home-muted:#becbd5;color:var(--home-text);}
+.home-masthead {position:relative;min-height:560px;display:flex;align-items:center;padding:64px max(28px,calc((100vw - 1200px)/2));background:linear-gradient(90deg,rgba(6,22,38,.94),rgba(6,22,38,.72) 36%,rgba(6,22,38,.15) 75%),url('/hammerhead/img/hero_ukiyoe.png') center 46%/cover no-repeat;}
+.home-masthead-copy {position:relative;max-width:620px;padding:20px 0;}
+.home-location {font-size:16px;letter-spacing:.08em;color:#e0d4b3;}
+.home-masthead h1 {font-family:'Shippori Mincho',serif;font-weight:700;font-size:clamp(70px,8vw,112px);line-height:1.3;letter-spacing:.08em;margin:18px 0 4px;}
+.home-masthead h1 span {font-size:.4em;letter-spacing:.01em;margin-left:.15em;}
+.home-tagline {font-family:'Shippori Mincho',serif;font-size:clamp(24px,2.6vw,32px);letter-spacing:.12em;margin:0 0 22px;}
+.home-introduction {font-size:16px;line-height:1.9;color:#d1dae1;margin-bottom:28px;}
+.home-primary {display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 24px;background:#d4ba79;color:#0d2033;font-size:16px;font-weight:700;text-decoration:none;border:1px solid #d4ba79;border-radius:3px;}
+.home-primary:hover {background:#e6d09a;}
+.home-directory {max-width:1280px;padding:48px 40px 60px;margin:auto;}
+.home-section-heading {display:flex;align-items:baseline;gap:20px;margin:0 0 24px;}
+.home-section-heading h2 {font-family:'Shippori Mincho',serif;font-size:26px;font-weight:600;}
+.home-section-heading p {font-size:14px;color:var(--home-muted);}
+.home-directory-links {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid #687482;border-bottom:1px solid #687482;}
+.home-directory-links a {display:flex;flex-direction:column;gap:12px;padding:28px 18px;color:var(--home-text);text-decoration:none;line-height:1.65;min-width:0;}
+.home-directory-links a+a {border-left:1px solid #3e5061;}
+.home-link-title {font-family:'Shippori Mincho',serif;font-size:22px;font-weight:600;}
+.home-directory-links a>span:last-child {font-size:14px;color:var(--home-muted);}
+.home-directory-links a:hover {background:#19354a;}
+.home-natural-history {max-width:1280px;margin:auto;padding:10px 40px 80px;}
+.home-story {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:64px;padding:0 0 72px;}
+.home-story figure {margin:0;min-width:0;}
+.home-story img {display:block;width:100%;height:360px;object-fit:cover;object-position:center 65%;}
+.home-story figcaption {font-size:13px;line-height:1.6;color:var(--home-muted);margin-top:10px;}
+.home-story-copy {padding:8px 0;}
+.home-story-subject {color:var(--home-gold);font-size:14px;margin-bottom:16px;}
+.home-story h2 {font-family:'Shippori Mincho',serif;font-size:clamp(27px,3vw,36px);line-height:1.65;font-weight:600;letter-spacing:.04em;margin:0 0 22px;}
+.home-story-copy>p:not(.home-story-subject) {font-size:16px;line-height:1.95;margin:0 0 16px;color:#d4dde4;}
+.home-story-copy .home-respect {color:var(--home-gold);}
+.home-source {font-size:13px;line-height:1.8;color:#abd9e6;text-decoration:underline;text-underline-offset:4px;}
+.home-sources {display:flex;flex-direction:column;gap:8px;}
+.home-story-reverse figure {order:2;}
+.home-story-reverse img {object-position:center;}
+.home-story:last-child {padding-bottom:0;}
+.hero.forecast-overview {background:none;padding-top:38px;border-top:1px solid var(--line-strong);}
+.forecast-heading {grid-column:1/-1;font-family:'Shippori Mincho',serif;font-size:28px;line-height:1.5;}
+#forecast {scroll-margin-top:150px;}
+.home-intro a:focus-visible {outline:3px solid #9de1d1;outline-offset:5px;}
+@media(max-width:900px){
+  .home-directory-links {grid-template-columns:repeat(2,minmax(0,1fr));}
+  .home-directory-links a:nth-child(3){border-left:0;border-top:1px solid #3e5061;}
+  .home-directory-links a:nth-child(4){border-top:1px solid #3e5061;}
+  .home-story {gap:32px;}
+}
+@media(max-width:600px){
+  .top {grid-template-columns:auto minmax(0,1fr);}
+  .top-meta {min-width:0;flex-direction:column;align-items:flex-end;gap:2px;}
+  .top-meta>div {max-width:100%;overflow-wrap:anywhere;text-align:right;}
+  .home-masthead {min-height:540px;padding:42px 24px;background-position:center,54% center;background-image:linear-gradient(90deg,rgba(6,22,38,.89),rgba(6,22,38,.44)),url('/hammerhead/img/hero_ukiyoe.png');}
+  .home-location {font-size:14px;letter-spacing:.03em;}
+  .home-masthead h1 {font-size:76px;letter-spacing:.04em;}
+  .home-tagline {font-size:23px;letter-spacing:.05em;}
+  .home-directory {padding:32px 20px 36px;}
+  .home-section-heading {display:block;}
+  .home-section-heading h2 {font-size:23px;}
+  .home-section-heading p {margin-top:8px;}
+  .home-directory-links a {padding:22px 12px;gap:8px;}
+  .home-link-title {font-size:18px;}
+  .home-directory-links a>span:last-child {font-size:14px;}
+  .home-natural-history {padding:0 20px 40px;}
+  .home-story {grid-template-columns:1fr;gap:24px;padding-bottom:48px;}
+  .home-story img {height:260px;}
+  .home-story-reverse figure {order:0;}
+  .home-story h2 {font-size:28px;margin-bottom:16px;}
+  .home-story-subject {margin-bottom:12px;}
+  .home-primary {font-size:15px;}
+}

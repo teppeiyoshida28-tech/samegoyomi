@@ -1,0 +1,47 @@
+/* Calendar data marks keep the original navy / brass palette. */
+.cal-moon { display:inline-block; width:32px; height:32px; flex:0 0 auto; vertical-align:middle; }
+.cal-moon-dark { fill:#193348; }
+.cal-moon-lit { fill:var(--gold,#d3b675); }
+.cal-moon-edge { fill:none; stroke:#b4bdad; stroke-width:.55; }
+.cal-moon-missing { color:#a9bfd1; }
+.cal-moon-line { display:flex; align-items:center; justify-content:center; gap:7px; color:#e2d5b7; font-size:14px; }
+.lr-day .cal-date-moon { display:flex; justify-content:space-between; align-items:center; width:100%; gap:3px; padding:0 3px; }
+.lr-day .cal-date-moon .d { font-size:16px; }
+.lr-day .cal-date-moon .d.sat { color:var(--cold); }
+.lr-day .cal-date-moon .d.sun { color:var(--coral); }
+.lr-day .cal-tide-name { display:block; font-size:14px; line-height:1.4; color:#d2dfdf; margin:3px 0 5px; }
+.lr-day .cal-moon { width:30px; height:30px; }
+.lr-day .cal-score { margin:4px 0; }
+.cal-tide-mini { display:block; width:100%; min-width:0; margin:5px auto 0; }
+.cal-tide-plot { display:block; width:100%; overflow:visible; }
+.cal-tide-plot.is-mini { height:36px; }
+.cal-tide-line { stroke:#9edbce; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
+.cal-tide-zero { stroke:#91aab8; stroke-width:1; stroke-dasharray:3 4; opacity:.5; }
+.cal-tide-grid { stroke:#4f6877; stroke-width:1; opacity:.45; }
+.cal-tide-hours { display:flex; justify-content:space-between; color:#b8ccd9; font-size:12px; line-height:1.4; }
+.cal-tide-missing { display:block; color:#b8ccd9; font-size:12px; min-height:40px; padding:8px 0; }
+.cal-tide-detail { margin:18px 0 12px; padding:18px 0 0; border-top:1px solid #3b5364; }
+.cal-tide-detail figcaption { display:flex; justify-content:space-between; flex-wrap:wrap; gap:2px 12px; color:#e6e1d1; font-size:16px; }
+.cal-tide-detail figcaption span { font-size:14px; color:#afc7d7; }
+.cal-tide-plot.is-detail { max-width:850px; margin:14px 0 8px; }
+.cal-tide-plot text { font:14px 'Zen Kaku Gothic New',sans-serif; fill:#c0d1df; }
+.cal-tide-sample { fill:#d7c18a; stroke:#193047; stroke-width:1.5; }
+.lr-day-detail .cal-tide-caption { max-width:70ch; font-size:13px; color:#b4c7d7; line-height:1.7; }
+.lr-day-detail .cal-moon-line { justify-content:flex-start; gap:10px; margin:10px 0; font-size:16px; }
+.lr-day-detail .cal-moon { width:40px; height:40px; }
+.lr-calendar-hint { max-width:90ch; }
+.lr-legend { font-size:13px; line-height:1.9; }
+.lr-digest-card .cal-moon-line { justify-content:flex-start; font-size:14px; margin:8px 0 5px; }
+.lr-digest-card .cal-tide-mini { margin:8px 0; }
+@media(max-width:700px) {
+  .lr-day { padding:7px 2px; }
+  .lr-day .cal-date-moon { padding:0; gap:1px; }
+  .lr-day .cal-date-moon .d { font-size:14px; }
+  .lr-day .cal-moon { width:22px; height:22px; }
+  .lr-day .cal-tide-name { font-size:12px; margin:4px 0; }
+  .lr-day .cal-tide-hours { font-size:11px; }
+  .cal-tide-plot.is-mini { height:30px; }
+  .cal-tide-plot.is-detail { min-height:170px; }
+  .cal-tide-detail figcaption { font-size:15px; }
+  .cal-tide-detail figcaption span { font-size:13px; }
+}

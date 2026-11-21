@@ -18,6 +18,13 @@ on:
       - 'engine/verify_publication.py'
       - 'engine/validate_ocean_publication.py'
       - 'engine/build_html.py'
+      - 'engine/build_design_previews.py'
+      - 'engine/first_view_options.css'
+      - 'engine/home.css'
+      - 'engine/home_intro.html'
+      - 'engine/home_sections.html'
+      - 'engine/calendar_visuals.js'
+      - 'engine/calendar_visuals.css'
       - 'engine/index.html'
       - 'tests/*ocean*'
       - 'tests/forecast_freshness.test.js'
@@ -90,7 +97,7 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
-          git add engine/ocean_current_forecast.json engine/longrange_data.json engine/kuroshio_forecast.json engine/mikomoto_forecast.html engine/mikomoto_map.html engine/mikomoto_aim.html docs/index.html docs/map/index.html docs/aim/index.html
+          git add engine/ocean_current_forecast.json engine/longrange_data.json engine/kuroshio_forecast.json engine/mikomoto_forecast.html engine/mikomoto_map.html engine/mikomoto_aim.html docs/index.html docs/map/index.html docs/aim/index.html docs/design/first-view
           if ! git diff --cached --quiet; then
             git commit -m "Update ocean map $(TZ=Asia/Tokyo date '+%Y-%m-%d %H:%M JST')"
             git push origin HEAD:main

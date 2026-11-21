@@ -1392,6 +1392,8 @@ body.map-mode .seigaiha-divider, body.aim-mode .seigaiha-divider { display: none
 }
 /*__UI_REFRESH__*/
 /*__OCEAN_MAP_CSS__*/
+/*__HOME_CSS__*/
+/*__CALENDAR_VISUALS_CSS__*/
 .forecast-availability {max-width:1200px;margin:22px auto;padding:16px 22px;border-left:3px solid var(--gold);background:#172d43;color:var(--foam);font-size:14px;line-height:1.8;}
 .forecast-availability[hidden] {display:none;}
 .forecast-availability a {color:#a9dce8;text-decoration:underline;}
@@ -1406,7 +1408,7 @@ body.aim-mode #samegoyomi-current {display:none;}
 @media(max-width:700px){#lr-title{font-size:clamp(22px,6vw,30px);}.cal-kuro{font-size:9px;}}
 </style>
 </head>
-<body>
+<body class="__PAGE_CLASS__">
 
 <header class="top">
   <div class="brand">
@@ -1423,16 +1425,15 @@ body.aim-mode #samegoyomi-current {display:none;}
   </div>
   <nav class="site-nav" id="site-nav"></nav>
 </header>
+<!--__HOME_INTRO__-->
+<div id="forecast"></div>
 <div id="forecast-availability" class="forecast-availability" role="status" hidden></div>
 <div id="observation-status" class="observation-status" hidden></div>
 
 <!-- HERO: TODAY -->
-<section class="hero">
+<section class="hero forecast-overview">
+  <h2 class="forecast-heading">今日のハンマー予報</h2>
   <div class="decision-summary" id="decision-summary"></div>
-  <div class="hero-brand-title">
-    <h1>鮫暦<span class="ai">AI</span></h1>
-    <div class="tagline">潮を読み、鮫に会う。</div>
-  </div>
   <div class="today-headline">
     <div class="today-left">
       <div class="today-eyebrow"><span class="te-label">今日の予報</span><span class="te-date" id="hero-date">—</span></div>
@@ -1451,20 +1452,6 @@ body.aim-mode #samegoyomi-current {display:none;}
 </section><!-- /HERO -->
 
 <div class="seigaiha-divider"></div>
-
-<!-- 島の紹介 (写真) -->
-<div class="photo-band">
-  <div class="pb-img" style="background-image:url('/hammerhead/img/island.jpg'); background-position: center 78%;"></div>
-  <div class="pb-txt">
-    <h3>神子元島 — <em>ハンマーの聖地</em></h3>
-    <p>
-      伊豆・下田沖 約9km に浮かぶ無人島。黒潮の暖流が直接あたる国内屈指の潮あたりで、
-      <b>初夏〜秋にはシュモクザメ(ハンマーヘッドシャーク)の大群</b>が回遊します。
-      当サイトは過去12年・4,000本超の現地ダイビングログと海況データを学習した
-      <b>遭遇予測モデル</b>で、毎日の狙い目を予報しています。
-    </p>
-  </div>
-</div>
 
 <!--__MAP_PANEL__-->
 
@@ -1545,10 +1532,10 @@ body.aim-mode #samegoyomi-current {display:none;}
   <div class="lr-cal" id="lr-cal"></div>
   <div id="lr-day-detail" class="lr-day-detail" aria-live="polite"></div>
   <div class="lr-legend">
-    スコア = 季節35% + <b>午前下げ潮25%</b> + 黒潮20% + 月齢20%。
+    長期見込みのスコア = 季節35% + <b>午前下げ潮25%</b> + 黒潮20% + 月齢20%。
     午前下げ潮 = 朝(8時)→昼(12時)の下げ幅＋未明からの下げ加点。潮位差は島周辺の海流の強さを直接表すものではありません。
     朝から昼の下げ潮を重視する仮説に基づく参考値です。
-    ミニグラフ = 6〜16時の予測潮位（網掛け帯がコアタイム 8-13時）、↓下げ/↑上げ/→動き小。
+    ミニグラフは8〜15時（JST）の天文潮位。全日で共通の縦軸を使い、毎時の値を曲線で結んでいます。月相アイコンはJST正午の月齢から描いた概略です。
     潮位は主要8分潮の調和近似による天文潮の参考値で、風・気圧の影響は含みません。将来期間の独立した精度検証は未実施です。海流・出航可否の長期予測ではありません。
     黒潮を日別に評価できない期間は計算上だけ中立値0.5を使用します。目撃記録には行先選択・透明度・記載頻度による観測バイアスがあります。◉フル予報のある日だけ短期予報を優先してください。欠損日は長期見込みです。
   </div>
@@ -1592,6 +1579,7 @@ const MAP_TRACE = /*__MAP_TRACE__*/ null;
 const MAP_FLOW = /*__MAP_FLOW__*/ null;
 /*__OCEAN_CURRENT_JS__*/
 /*__FORECAST_FRESHNESS_JS__*/
+/*__CALENDAR_VISUALS_JS__*/
 
 // === helpers ===
 const $ = (s) => document.querySelector(s);
@@ -2006,16 +1994,8 @@ function lrColor(s) {
 }
 function lrMonths() { return [...new Set(LONGRANGE.days.map(d => d.date.slice(0, 7)))]; }
 function lrSpark(d) {
-  // 6-16時の潮位ミニグラフ。8-13時(コア)を強調。
-  const c = d.tide_curve; if (!c || !c.length) return '';
-  const W = 56, H = 16, n = c.length;
-  const mn = Math.min(...c), mx = Math.max(...c), rg = (mx - mn) || 1;
-  const pts = c.map((v, i) => `${(i / (n - 1) * W).toFixed(1)},${(H - 2 - (v - mn) / rg * (H - 4)).toFixed(1)}`);
-  // コア時間帯 8-13時 = index 2..7
-  const x0 = 2 / (n - 1) * W, x1 = 7 / (n - 1) * W;
-  return `<svg class="spark" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">` +
-    `<rect x="${x0.toFixed(1)}" y="0" width="${(x1 - x0).toFixed(1)}" height="${H}" fill="rgba(62,107,133,0.10)"/>` +
-    `<polyline points="${pts.join(' ')}" fill="none" stroke="${d.flow_type === 'ebb' ? 'var(--surface)' : 'var(--water-2)'}" stroke-width="1.5"/></svg>`;
+  return CalendarVisuals.tidePlot(d, LONGRANGE.tide_hours,
+    CalendarVisuals.tideScale(LONGRANGE.days, LONGRANGE.tide_hours), true);
 }
 function lrSetMonth(m) { lrMonth = m; renderLrNav(); renderLrCal(); }
 function renderLrNav() {
@@ -2035,8 +2015,10 @@ function renderLrCal() {
     const kind=fc?'フル予報':'長期見込み';
     const sea=fc?(fc.diveable===false?'超過':fc.max_wind>9||fc.max_wave>1.5?'注意':'基準内'):'—';
     cells.push(`<button type="button" class="lr-day" data-date="${d.date}" aria-pressed="${d.date===selectedCalendarDate}"
-      aria-label="${d.date} ${kind} スコア${Math.round(score)}${fc?' 海況'+sea:''}">
-      <span class="d ${d.weekday===5?'sat':d.weekday===6?'sun':''}">${Number(d.date.slice(8))}</span>
+      aria-label="${d.date} ${CalendarVisuals.moonLabel(d.moon_age)} ${d.tide_name} ${kind} スコア${Math.round(score)}${fc?' 海況'+sea:''}">
+      <span class="cal-date-moon"><span class="d ${d.weekday===5?'sat':d.weekday===6?'sun':''}">${Number(d.date.slice(8))}</span>${CalendarVisuals.moonIcon(d.moon_age, true)}</span>
+      <span class="cal-tide-name">${d.tide_name}</span>
+      ${lrSpark(d)}
       <span class="cal-kind">${fc?'◉':'◇'}<span class="kind-text"> ${kind}</span></span>
       <span class="cal-score" style="color:${lrColor(score)}">${Math.round(score)}</span>
       ${!fc&&!d.kuroshio_known?'<span class="cal-kind cal-kuro">黒潮<br>未評価</span>':''}
@@ -2049,14 +2031,25 @@ function renderLrCal() {
   }));
   const d=days.find(d=>d.date===selectedCalendarDate), fc=fcMap[d.date];
   const score=fc?fc.score:d.aim_score;
+  const tideScale=CalendarVisuals.tideScale(LONGRANGE.days,LONGRANGE.tide_hours);
+  const detailWidth=$('#lr-day-detail').clientWidth-44;
+  document.querySelector('.lr-calendar-hint').textContent='月の満ち欠けと8〜15時の天文潮位（JST）を表示。曲線の縦軸は全日共通です。◉ フル予報 / ◇ 長期見込み。日付を選ぶと月齢・潮位・海況の詳細が開きます。月相はJST正午の月齢からの概略です。';
   $('#lr-day-detail').innerHTML=`<h3>${fmtDate(d.date)}（${DOW_JA[(d.weekday+1)%7]}） ${fc?'◉ フル予報':'◇ 長期見込み'}</h3>
+    <div class="cal-moon-line">${CalendarVisuals.moonIcon(d.moon_age)}<span>${d.tide_name}<br>${CalendarVisuals.moonLabel(d.moon_age)}</span></div>
     <div class="detail-score">${Math.round(score)} <small>/100</small></div>
     ${fc?`<p class="${fc.diveable===false?'is-danger':''}">${fc.sea_status}<br>波 ${fc.max_wave.toFixed(1)}m / 風 ${fc.max_wind.toFixed(1)}m/s</p>
       <p>${fc.diveable===false?'潜水できる場合の参考地点':'推奨'} ${POINT_JA[fc.best_point] || fc.best_point} · ${fc.best_hour}:00<br>広域海流 ${(fc.avg_current_kmh/1.852).toFixed(1)} kt（8〜14時平均）</p>`:
       '<p>海況データがない期間の見込みです。出航可否は予測していません。</p>'}
-    <p>${d.phase_icon} ${d.tide_name} · ${d.flow_label}</p>${lrSpark(d)}
+    ${CalendarVisuals.tidePlot(d,LONGRANGE.tide_hours,tideScale,false,detailWidth)}
     <p>${fc?'最新の海況・気象を使用':d.kuroshio_known?'黒潮条件を評価済み':'黒潮未評価（計算上は中立）'}<br>スコアは遭遇確率ではありません。</p>`;
 }
+let calendarResizeTimer;
+window.addEventListener('resize',()=>{
+  clearTimeout(calendarResizeTimer);
+  calendarResizeTimer=setTimeout(()=>{
+    if(AIM_MODE&&lrMonth&&ForecastFreshness.longrange(LONGRANGE,Date.now()))renderLrCal();
+  },120);
+});
 function renderLongrange() {
   if (!LONGRANGE) { const w = document.querySelector('.lr-wrap'); if (w) w.style.display = 'none'; return; }
   const k = LONGRANGE.kuroshio || {};
@@ -2110,7 +2103,7 @@ function renderLrDigest() {
     const w = dt.getDay();
     const wdCls = w === 6 ? 'sat' : w === 0 ? 'sun' : '';
     const dateHtml = `<div class="ld-date">${date.slice(5).replace('-', '/')}<span class="ld-wd ${wdCls}">(${wd[w]})</span></div>`;
-    const tideLine = lr ? `${lr.phase_icon || ''}${lr.tide_name || ''}` : (fc ? (fc.tide_name || '') : '');
+    const tideLine = lr ? `<span class="cal-moon-line">${CalendarVisuals.moonIcon(lr.moon_age)}<span>${lr.tide_name || ''}</span></span>${lrSpark(lr)}` : (fc ? (fc.tide_name || '') : '');
     if (fc && fc.forecast_kind === 'full') {
       // 8〜14時の必須海況がすべて揃った予報 (Open-Meteo 日次データあり)
       const sc = Math.round(fc.score);
@@ -2119,7 +2112,7 @@ function renderLrDigest() {
         <div class="ld-badge full">◉ フル予報</div>
         ${dateHtml}
         <div class="ld-score">${sc}</div>
-        <div class="ld-tags">${tideLine}<br>${fc.tier_label || (lr && lr.flow_label) || ''}<br>${fc.sea_status || '海況判定なし'}</div>
+        ${tideLine}<div class="ld-tags">${fc.tier_label || ''}<br>${fc.sea_status || '海況判定なし'}</div>
       </a>`;
     }
     if (lr) {
@@ -2129,7 +2122,7 @@ function renderLrDigest() {
         <div class="ld-badge lrng">◇ 長期見込み</div>
         ${dateHtml}
         <div class="ld-score">${sc}</div>
-        <div class="ld-tags">${tideLine}<br>${lr.flow_label || ''}${!lr.kuroshio_known?'<br>黒潮未評価':''}</div>
+        ${tideLine}<div class="ld-tags">天文潮位の参考曲線${!lr.kuroshio_known?'<br>黒潮未評価':''}</div>
       </a>`;
     }
     // データなし (フォールバック)
@@ -2173,7 +2166,7 @@ function renderNavLinks() {
   if (!el) return;
   const base = PAGE_MODE ? '../' : '';
   el.innerHTML =
-    `<a href="${base}./" class="${PAGE_MODE ? '' : 'here'}"><span class="nav-long">◆ 今日の予報</span><span class="nav-short">今日の予報</span></a>` +
+    `<a href="${base}./#forecast" class="${PAGE_MODE ? '' : 'here'}"><span class="nav-long">◆ 今日の予報</span><span class="nav-short">今日の予報</span></a>` +
     `<a href="${base}map/" class="${MAP_MODE ? 'here' : ''}"><span class="nav-long">◇ 予測マップ</span><span class="nav-short">マップ</span></a>` +
     `<a href="${base}aim/" class="${AIM_MODE ? 'here' : ''}"><span class="nav-long">◆ 狙い目カレンダー</span><span class="nav-short">カレンダー</span></a>` +
     `<a href="${base}history/"><span class="nav-long">◇ 検証ログ</span><span class="nav-short">検証ログ</span></a>`;

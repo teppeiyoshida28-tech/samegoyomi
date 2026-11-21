@@ -7,7 +7,7 @@ function renderIsland() {
   try { mapController = createMapController(root); }
   catch (error) {
     root.querySelector('#sc-data-status').textContent = '地図データを表示できません';
-    root.querySelector('#sc-caption').textContent = 'データの整合性を確認できないため、流れの表示を保留しています。';
+    root.querySelector('#sc-explanation').textContent = 'データの整合性を確認できないため、流れの表示を保留しています。';
     root.querySelector('#sc-play').disabled = true;
     console.error('Ocean map initialization failed', error);
   }
@@ -19,7 +19,7 @@ function createMapController(root) {
   const svg = root.querySelector('#sc-svg'), canvas = root.querySelector('#sc-particles'), ctx = canvas.getContext('2d');
   const get = id => root.querySelector('#' + id), NS = 'http://www.w3.org/2000/svg';
   const node = (tag, attrs = {}) => { const e = document.createElementNS(NS, tag); Object.entries(attrs).forEach(([k,v]) => e.setAttribute(k,String(v))); return e; };
-  const state = { mode:'schematic', depths:true, running:true, day:null, hour:8 };
+  const state = { running:true, day:null, hour:8 };
   let prepared = A.prepare(forecast), current, destroyed = false, particles = [], raf = 0, resizeRaf = 0, last = 0, visible = true;
   let scale = 1, ratio = 1, offsetX = 0, offsetY = 0, width = 0, height = 0, seed = 21017, simTime = 0;
   let checkedDate = A.jstDate(Date.now()), checkedStatus = A.bundleStatus(forecast), checkedPast = false;
@@ -44,8 +44,7 @@ function createMapController(root) {
   try {
     const saved = JSON.parse(sessionStorage.getItem('samegoyomi-ocean-v1') || 'null');
     if (saved) {
-      if (['schematic','regional'].includes(saved.mode)) state.mode=saved.mode;
-      if (typeof saved.depths==='boolean') state.depths=saved.depths;
+      // Removed display toggles must not be restored from older saved sessions.
       if (typeof saved.running==='boolean') state.running=saved.running;
       if (prepared.days.includes(saved.day) && A.HOURS.includes(saved.hour)) { state.day=saved.day; state.hour=saved.hour; }
     }
@@ -71,7 +70,7 @@ function createMapController(root) {
   }
   function sample(x,y) {
     if (current?.status!=='available'||x<bounds[0]||y<bounds[1]||x>bounds[0]+bounds[2]||y>bounds[1]+bounds[3]||onLand(x,y)) return null;
-    return state.mode==='regional' ? A.vector(current.direction) : A.sampleField(flow,fields,x,y,current.direction);
+    return A.sampleField(flow,fields,x,y,current.direction);
   }
   function spawn(p,initial=false) {
     for(let i=0;i<90;i++){const x=bounds[0]+random()*bounds[2],y=bounds[1]+2+random()*(bounds[3]-4);if(sample(x,y)){p.x=x;p.y=y;p.life=5+random()*7;p.age=initial?random()*p.life:0;p.tone=random();p.trail=[];return true;}}p.age=100;p.life=0;p.trail=[];return false;
@@ -112,21 +111,12 @@ function createMapController(root) {
     canvas.dataset.particleCount=String(count);canvas.dataset.renderer='continuous-field-rk2';canvas.dataset.tailLength=style.length.toFixed(2);canvas.dataset.strength=style.valid?String(style.kt):'missing';canvas.dataset.color=style.rgb.join(',');canvas.dataset.status=current.status;
     if(!count){advance(0);return;}for(let i=0;i<30;i++)advance(1/30);
   }
-  function strengthLegend() {
-    const style=appearance();get('sc-strength-gradient').style.background='linear-gradient(to right,'+A.COLOR_STOPS.map(([k])=>rgb(A.strengthStyle(k,width),waterAlpha)+' '+(k/A.MAX_KT*100)+'%').join(',')+'),#0a2336';
-    get('sc-strength-marker').hidden=!style.valid;get('sc-strength-marker').style.left=Math.min(100,(style.kt||0)/A.MAX_KT*100)+'%';
-    for(const c of root.querySelectorAll('[data-tail-example]')){
-      const s=A.strengthStyle(Number(c.dataset.tailExample),width),p=c.getContext('2d'),d=Math.min(window.devicePixelRatio||1,2),w=c.getBoundingClientRect().width||90;
-      c.width=Math.round(w*d);c.height=18*d;p.scale(d,d);const end=w-5,x=end-s.length;
-      const fade=p.createLinearGradient(x,0,end,0);fade.addColorStop(0,rgb(s,.12));fade.addColorStop(1,rgb(s,1));p.strokeStyle=fade;p.lineWidth=1.9;p.lineCap='round';p.beginPath();p.moveTo(x,9);p.lineTo(end,9);p.stroke();p.strokeStyle='rgba(238,248,249,.8)';p.lineWidth=.85;p.beginPath();p.moveTo(end-2.6,7.65);p.lineTo(end,9);p.lineTo(end-2.6,10.35);p.stroke();
-    }
-  }
   function labelLayout() {
     const small=width<500,primary=['Aポイント','ザブ西','ザブ根','カメ根','プレート','ハンマーズロック','三つ目の高根'],keyDepth=['a_near','zabu_west','north_rock','plate','hammers','eagleray','third_high15','third_high18'];
     const texts=[...svg.querySelectorAll('text')],placed=[],priority=e=>e.dataset.symbol?0:e.classList.contains('depth')?2:primary.includes(e.textContent)?1:3;
     texts.sort((a,b)=>priority(a)-priority(b)).forEach(e=>{
       e.style.display='';e.style.fontSize=(e.dataset.symbol==='island'?14:12)/scale+'px';e.style.strokeWidth=3.8/scale+'px';
-      const isDepth=e.classList.contains('depth'),allowed=(!isDepth||state.depths)&&(!small||e.dataset.symbol||(isDepth?keyDepth.includes(e.dataset.depth):primary.includes(e.textContent)));
+      const isDepth=e.classList.contains('depth'),allowed=!small||e.dataset.symbol||(isDepth?keyDepth.includes(e.dataset.depth):primary.includes(e.textContent));
       const q=e.getBBox(),pad=2/scale,r={x:q.x-pad,y:q.y-pad,w:q.width+2*pad,h:q.height+2*pad};
       const inside=r.x>=box[0]+3/scale&&r.x+r.w<=box[0]+box[2]-3/scale&&r.y>=box[1]+42/scale&&r.y+r.h<=box[1]+box[3]-3/scale;
       if(!allowed||!inside||placed.some(p=>r.x<p.x+p.w&&r.x+r.w>p.x&&r.y<p.y+p.h&&r.y+r.h>p.y))e.style.display='none';else placed.push(r);
@@ -138,12 +128,13 @@ function createMapController(root) {
     const changed=Math.abs(width-w)>.5||Math.abs(height-h)>.5||ratio!==dpr;
     width=w;height=h;ratio=dpr;scale=Math.min(w/box[2],h/box[3]);offsetX=(w-box[2]*scale)/2-box[0]*scale;offsetY=(h-box[3]*scale)/2-box[1]*scale;
     if(changed){canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);canvas.style.width=w+'px';canvas.style.height=h+'px';resetParticles();last=0;}
-    labelLayout();strengthLegend();
+    labelLayout();
   }
   function playing(){return !destroyed&&appearance().moving&&state.running&&visible&&!document.hidden&&!motion.matches&&root.isConnected;}
   function syncPlayback() {
     const active=playing(),moving=appearance().moving,requested=state.running&&!motion.matches&&moving;
-    get('sc-play').disabled=motion.matches||!moving;get('sc-play').textContent=motion.matches||!moving?'静止表示':requested?'一時停止':'再生';get('sc-play').setAttribute('aria-pressed',String(requested));canvas.dataset.playing=String(active);
+    const button=get('sc-play'),staticView=motion.matches||!moving;
+    button.disabled=staticView;button.textContent=staticView?'—':requested?'Ⅱ':'▶';button.setAttribute('aria-label',staticView?'海流は静止表示です':requested?'海流アニメーションを一時停止':'海流アニメーションを再生');button.setAttribute('aria-pressed',String(requested));canvas.dataset.playing=String(active);
     cancelAnimationFrame(raf);raf=0;last=0;if(active)raf=requestAnimationFrame(frame);
   }
   function frame(t) {
@@ -183,19 +174,16 @@ function createMapController(root) {
   }
   function render() {
     if(destroyed)return;current=A.select(forecast,prepared,state.day,state.hour);checkedPast=current.isPast;
-    const regional=state.mode==='regional',style=appearance(),missing=current.status!=='available';
+    const style=appearance(),missing=current.status!=='available';
     root.style.setProperty('--flow-color',rgb(style,1));root.dataset.currentStatus=current.status;
-    root.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode===state.mode)));get('sc-depth-toggle').checked=state.depths;
     const direction=style.moving?`${['北','北東','東','南東','南','南西','西','北西'][Math.round(current.direction/45)%8]}へ ${Math.round(current.direction)}°`:'方向の描画なし';
     const value=style.valid?style.kt.toFixed(2)+' kt':current.status==='expired'?'期限切れ':'未取得';
-    get('sc-direction').textContent=direction;get('sc-speed').textContent=value;get('sc-strength-value').textContent=value;
+    get('sc-direction').textContent=direction;get('sc-speed').textContent=value;
     get('sc-data-status').textContent=missing?(current.status==='expired'?'更新期限を過ぎたため表示を保留':'選択時刻の海流データがありません'):'広域の海面流予報';get('sc-data-status').dataset.state=current.status;
     get('sc-target-time').textContent=current.time?formatTime(current.time)+(current.isPast?' · 対象時刻を過ぎた予報':''):'現在選択できる予報時刻がありません';
     get('sc-explanation').textContent=missing?'欠測・期限切れは0 ktと区別します':'流速は南側全体に共通の一つの値です';
-    get('sc-strength-status').textContent=missing?'流れの表示を保留しています':style.kt<.2?'0.2 kt未満：方向の描画を省略':style.kt>6?'6 kt以上：色と線の長さは6 ktを上限に表示':'色と線の長さが広域予報の流速に連動';
-    get('sc-description').textContent='提供図をトレースした神子元島と南側の根。'+(current.time?formatTime(current.time)+'。':'')+value+'。'+(style.moving?direction+(regional?'への一様な流れ。':'へ島沿いに曲がる模式的な流れ。'):'方向は描画しません。')+'地点・深度ごとの流れの予報ではありません。';
-    get('sc-mode-badge').textContent=(regional?'広域予報の向き':'回り込み · 模式')+' / '+value;get('sc-flow-legend').textContent=regional?'広域予報の向き':'島沿いの回り込み（模式）';
-    get('sc-caption').textContent=regional?'海面の広域予報を一様に表示しています。根ごとの流速差・水中の流れは表していません。':'広域予報の向きと流速を入力に、島沿いの曲がりを模式表示しています。地点・深度ごとの流れを予報するものではありません。';
+    get('sc-description').textContent='提供図をトレースした神子元島と南側の根。'+(current.time?formatTime(current.time)+'。':'')+value+'。'+(style.moving?direction+'へ島沿いに曲がる模式的な流れ。':'方向は描画しません。')+'地点・深度ごとの流れの予報ではありません。';
+    get('sc-mode-badge').textContent='回り込み · 模式 / '+value;get('sc-flow-legend').textContent='島沿いの回り込み（模式）';
     timeControls();sourceLabels();layout();resetParticles();syncPlayback();
   }
   function refresh() {
@@ -207,8 +195,6 @@ function createMapController(root) {
   }
   listen(get('ocean-day-tabs'),'click',event=>{const b=event.target.closest('[data-ocean-day]');if(!b)return;state.day=b.dataset.oceanDay;render();save();});
   listen(get('ocean-hour-controls'),'click',event=>{const b=event.target.closest('[data-ocean-hour]');if(!b)return;state.hour=Number(b.dataset.oceanHour);render();save();});
-  for(const button of root.querySelectorAll('[data-mode]'))listen(button,'click',()=>{state.mode=button.dataset.mode;render();save();});
-  listen(get('sc-depth-toggle'),'change',event=>{state.depths=event.target.checked;labelLayout();save();});
   listen(get('sc-play'),'click',()=>{state.running=!state.running;syncPlayback();save();});
   listen(document,'visibilitychange',refresh);listen(motion,'change',refresh);listen(window,'pageshow',refresh);
   const intersection=typeof IntersectionObserver==='function'?new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;refresh();},{threshold:0}):null;intersection?.observe(svg);
