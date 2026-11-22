@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "generated_at": "2026-11-21T18:49:12.806868+09:00",
+  "generated_at": "2026-11-22T10:28:27.228698+09:00",
   "coverage": {
-    "start": "2026-11-21",
-    "end": "2027-05-22",
+    "start": "2026-11-22",
+    "end": "2027-05-23",
     "days": 183,
     "complete": true
   },
@@ -11,8 +11,8 @@
   "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
   "kuroshio": {
     "schema_version": 2,
-    "retrieved_at": "2026-11-21T18:49:12+09:00",
-    "updated": "2026-11-21",
+    "retrieved_at": "2026-11-22T10:28:26+09:00",
+    "updated": "2026-11-22",
     "issued_on": "2026-11-19",
     "valid_from": "2026-11-19",
     "valid_until": "2027-01-16",
@@ -98,42 +98,6 @@
   },
   "tide_note": "潮位は主要8分潮の調和近似による天文潮の参考値。風・気圧等の気象効果は含めず、将来期間の独立した精度検証は未実施。下げ因子=「朝(8時)に下げ進行中×昼まで継続」。未明からの下げは加点、8-9時下げ止まりは低評価。流れのタイムラグを考慮し昼過ぎ以降の下げは要求しない。",
   "days": [
-    {
-      "date": "2026-11-21",
-      "weekday": 5,
-      "moon_age": 11.8,
-      "lunar_day": 12,
-      "tide_name": "中潮",
-      "phase_icon": "🌔",
-      "phase_name": "",
-      "tide_curve": [
-        0.11,
-        -0.02,
-        -0.06,
-        -0.02,
-        0.11,
-        0.3,
-        0.49,
-        0.64,
-        0.7,
-        0.66,
-        0.51
-      ],
-      "ebb_m": 0.17,
-      "morning_ebb_m": -0.55,
-      "predawn_ebb_m": 0.33,
-      "stop_h": 8,
-      "rise_m": 0.55,
-      "flow_label": "上げ主体",
-      "flow_type": "flood",
-      "f_month": 0.092,
-      "f_moon": 0.575,
-      "f_ebb": 0.123,
-      "f_kuroshio": null,
-      "kuroshio_known": false,
-      "kuroshio_state": "unassessed",
-      "aim_score": 27.8
-    },
     {
       "date": "2026-11-22",
       "weekday": 6,
@@ -6706,6 +6670,42 @@
       "kuroshio_state": "outside_period",
       "aim_score": 49.4,
       "is_top": true
+    },
+    {
+      "date": "2027-05-23",
+      "weekday": 6,
+      "moon_age": 16.7,
+      "lunar_day": 17,
+      "tide_name": "大潮",
+      "phase_icon": "🌖",
+      "phase_name": "",
+      "tide_curve": [
+        0.73,
+        0.55,
+        0.28,
+        -0.03,
+        -0.33,
+        -0.55,
+        -0.65,
+        -0.61,
+        -0.45,
+        -0.19,
+        0.1
+      ],
+      "ebb_m": 1.19,
+      "morning_ebb_m": 0.93,
+      "predawn_ebb_m": 0.51,
+      "stop_h": 12,
+      "rise_m": 0.0,
+      "flow_label": "下げ 〜12時",
+      "flow_type": "ebb",
+      "f_month": 0.073,
+      "f_moon": 0.541,
+      "f_ebb": 0.862,
+      "f_kuroshio": null,
+      "kuroshio_known": false,
+      "kuroshio_state": "outside_period",
+      "aim_score": 44.9
     }
   ]
 }

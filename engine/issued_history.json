@@ -1,13 +1,13 @@
 {
- "generated_at": "2026-11-21T18:49:24.621808+09:00",
+ "generated_at": "2026-11-22T10:28:28.019676+09:00",
  "evaluation_type": "issued",
  "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
  "method": "保存した発表時点の予報を評価。同じ対象日・予測日数では最初の発表を採用。未観測は採点しません。",
  "by_lead": {
   "0": {
-   "n_days": 2,
+   "n_days": 3,
    "n_evaluated": 2,
-   "n_no_report": 0,
+   "n_no_report": 1,
    "n_seen_days": 2,
    "n_unknown_seen": 0,
    "n_size_days": 2,
@@ -8922,6 +8922,85 @@
      "ms"
     ]
    }
+  },
+  {
+   "date": "2026-11-21",
+   "lead_days": 0,
+   "predicted": {
+    "seen_probability": 0.9258,
+    "large_probability": 0.4641,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.11,
+    "size_label": "中群(50前後)",
+    "count_est": 70,
+    "visibility_m": 11.9,
+    "water_temp": 18.5,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "higashi_ne",
+     "kabe_ne",
+     "kita_ne"
+    ],
+    "avg_anomaly": -4.04,
+    "avg_current_kmh": 0.96,
+    "max_wave": 2.28,
+    "max_wind": 16.0,
+    "diveable": false,
+    "observation_basis": {
+     "recent_dates": [],
+     "latest_date": "2026-11-16",
+     "age_days": 5.0
+    },
+    "score": 48.2
+   },
+   "recommendation": {
+    "best_point": "higashi_ne",
+    "best_point_score": 0.701,
+    "best_point_evidence": {
+     "stats_key": "kame_ne",
+     "tide_name": {
+      "name": "中潮",
+      "rate": 0.9574,
+      "n": 775
+     },
+     "month": {
+      "month": 11,
+      "rate": 0.9677,
+      "n": 186
+     },
+     "flow": {
+      "flow": "up",
+      "rate": 0.951,
+      "n": 245
+     }
+    },
+    "top3_points": [
+     {
+      "point": "higashi_ne",
+      "score": 0.701
+     },
+     {
+      "point": "kabe_ne",
+      "score": 0.595
+     },
+     {
+      "point": "kita_ne",
+      "score": 0.567
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9698492462311558,
+    "persistence": null,
+    "seasonal_large": 0.3826530612244898
+   },
+   "issued_at": "2026-11-21T04:19:59.050363+09:00",
+   "model_version": "2026-11-fresh-inputs-v2",
+   "actual": null
   }
  ]
 }
