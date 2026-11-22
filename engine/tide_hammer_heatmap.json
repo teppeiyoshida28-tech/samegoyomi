@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-22T10:28:27.047960+09:00",
+  "generated_at": "2026-11-23T07:00:47.297412+09:00",
   "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
-  "n_days": 193,
+  "n_days": 192,
   "window_days": 365,
   "entries": [
     {
@@ -194,17 +194,6 @@
       "large_rate": 0.586
     },
     {
-      "phase": "新月大潮",
-      "days": 29,
-      "seen_days": 27,
-      "encounter_rate": 0.9310344827586207,
-      "avg_size": 3.2758620689655173,
-      "n_known_size": 29,
-      "weighted_size": 2.96,
-      "large_days": 15,
-      "large_rate": 0.517
-    },
-    {
       "phase": "長潮",
       "days": 24,
       "seen_days": 22,
@@ -213,6 +202,17 @@
       "n_known_size": 24,
       "weighted_size": 2.94,
       "large_days": 12,
+      "large_rate": 0.5
+    },
+    {
+      "phase": "新月大潮",
+      "days": 28,
+      "seen_days": 26,
+      "encounter_rate": 0.9285714285714286,
+      "avg_size": 3.25,
+      "n_known_size": 28,
+      "weighted_size": 2.92,
+      "large_days": 14,
       "large_rate": 0.5
     },
     {

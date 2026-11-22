@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-11-22T10:28:39.822363+09:00",
+ "generated_at": "2026-11-23T07:00:48.289500+09:00",
  "evaluation_type": "issued",
  "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
  "method": "保存した発表時点の予報を評価。同じ対象日・予測日数では最初の発表を採用。未観測は採点しません。",
@@ -152,9 +152,9 @@
    "point_top3_hit_rate": null
   },
   "1": {
-   "n_days": 11,
+   "n_days": 12,
    "n_evaluated": 11,
-   "n_no_report": 0,
+   "n_no_report": 1,
    "n_seen_days": 9,
    "n_unknown_seen": 2,
    "n_size_days": 9,
@@ -8989,6 +8989,85 @@
      {
       "point": "kita_ne",
       "score": 0.567
+     }
+    ]
+   },
+   "baselines": {
+    "always_seen": 1.0,
+    "seasonal": 0.9698492462311558,
+    "persistence": null,
+    "seasonal_large": 0.3826530612244898
+   },
+   "issued_at": "2026-11-21T04:19:59.050363+09:00",
+   "model_version": "2026-11-fresh-inputs-v2",
+   "actual": null
+  },
+  {
+   "date": "2026-11-22",
+   "lead_days": 1,
+   "predicted": {
+    "seen_probability": 0.9277,
+    "large_probability": 0.464,
+    "probability_note": "既知ラベルで学習した目撃確率。観測バイアスあり。校正は検証ページを参照。",
+    "size_num": 3.12,
+    "size_label": "中群(50前後)",
+    "count_est": 71,
+    "visibility_m": 12.4,
+    "water_temp": 19.5,
+    "weather_risk": 1.0,
+    "sea_status": "海況基準超過・出航判断は現地確認",
+    "tier": "D",
+    "tier_label": "△ 単体〜小群",
+    "points": [
+     "kabe_ne",
+     "higashi_ne",
+     "view_point"
+    ],
+    "avg_anomaly": -3.56,
+    "avg_current_kmh": 1.0,
+    "max_wave": 1.56,
+    "max_wind": 13.0,
+    "diveable": false,
+    "observation_basis": {
+     "recent_dates": [],
+     "latest_date": "2026-11-16",
+     "age_days": 6.0
+    },
+    "score": 48.3
+   },
+   "recommendation": {
+    "best_point": "kabe_ne",
+    "best_point_score": 0.779,
+    "best_point_evidence": {
+     "stats_key": "kame_ne",
+     "tide_name": {
+      "name": "中潮",
+      "rate": 0.9574,
+      "n": 775
+     },
+     "month": {
+      "month": 11,
+      "rate": 0.9677,
+      "n": 186
+     },
+     "flow": {
+      "flow": "up",
+      "rate": 0.951,
+      "n": 245
+     }
+    },
+    "top3_points": [
+     {
+      "point": "kabe_ne",
+      "score": 0.779
+     },
+     {
+      "point": "higashi_ne",
+      "score": 0.774
+     },
+     {
+      "point": "view_point",
+      "score": 0.744
      }
     ]
    },
