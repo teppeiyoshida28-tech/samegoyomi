@@ -1,23 +1,23 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-11-23T10:52:50+09:00",
+  "generated_at": "2026-11-25T13:24:44+09:00",
   "sources": {
     "hammers": {
-      "checked_at": "2026-11-23T10:52:34+09:00",
+      "checked_at": "2026-11-25T13:24:23+09:00",
       "listing_status": "ok",
       "status": "ok",
       "discovered_count": 16,
-      "new_url_count": 0,
-      "article_attempted": 0,
-      "article_succeeded": 0,
+      "new_url_count": 1,
+      "article_attempted": 1,
+      "article_succeeded": 1,
       "article_failed": 0,
       "unresolved_url_count": 0,
-      "latest_discovered_article_date": "2026-11-16",
+      "latest_discovered_article_date": "2026-11-23",
       "listing_regressed": false,
-      "latest_article_date": "2026-11-16"
+      "latest_article_date": "2026-11-23"
     },
     "ms": {
-      "checked_at": "2026-11-23T10:52:44+09:00",
+      "checked_at": "2026-11-25T13:24:33+09:00",
       "listing_status": "ok",
       "status": "ok",
       "discovered_count": 37,
@@ -31,18 +31,18 @@
       "latest_article_date": "2026-11-14"
     },
     "290": {
-      "checked_at": "2026-11-23T10:52:50+09:00",
+      "checked_at": "2026-11-25T13:24:39+09:00",
       "listing_status": "ok",
       "status": "ok",
       "discovered_count": 18,
-      "new_url_count": 0,
-      "article_attempted": 0,
-      "article_succeeded": 0,
+      "new_url_count": 1,
+      "article_attempted": 1,
+      "article_succeeded": 1,
       "article_failed": 0,
       "unresolved_url_count": 0,
-      "latest_discovered_article_date": "2026-11-14",
+      "latest_discovered_article_date": "2026-11-23",
       "listing_regressed": false,
-      "latest_article_date": "2026-11-14"
+      "latest_article_date": "2026-11-23"
     }
   }
 }

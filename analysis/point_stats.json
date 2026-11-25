@@ -1,10 +1,10 @@
 {
- "generated_at": "2026-11-23T10:52:51.306003+09:00",
+ "generated_at": "2026-11-25T13:24:45.493852+09:00",
  "source": "data/dive_logs_structured_full.json",
- "n_known_articles": 2438,
+ "n_known_articles": 2440,
  "n_unknown_articles": 928,
  "definition": "P(article reports a sighting | explicitly visited point, known seen label). Unknown excluded. Multi-point articles do not confirm the exact sighting location.",
- "n_articles_used": 3366,
+ "n_articles_used": 3368,
  "baseline_rate": 0.9639,
  "alias_table": {
   "kame_ne": [
@@ -82,10 +82,10 @@
  "points": {
   "kame_ne": {
    "overall": {
-    "n": 2138,
-    "seen": 2060,
+    "n": 2139,
+    "seen": 2061,
     "unknown": 726,
-    "total": 2864,
+    "total": 2865,
     "rate": 0.9635,
     "reliable": true
    },
@@ -99,11 +99,11 @@
      "reliable": true
     },
     "大潮": {
-     "n": 660,
-     "seen": 641,
+     "n": 661,
+     "seen": 642,
      "unknown": 207,
-     "total": 867,
-     "rate": 0.9712,
+     "total": 868,
+     "rate": 0.9713,
      "reliable": true
     },
     "小潮": {
@@ -149,11 +149,11 @@
      "reliable": true
     },
     "11": {
-     "n": 186,
-     "seen": 180,
+     "n": 187,
+     "seen": 181,
      "unknown": 49,
-     "total": 235,
-     "rate": 0.9677,
+     "total": 236,
+     "rate": 0.9679,
      "reliable": true
     },
     "12": {
@@ -257,11 +257,11 @@
      "reliable": true
     },
     "nNLM": {
-     "n": 419,
-     "seen": 383,
+     "n": 420,
+     "seen": 384,
      "unknown": 153,
-     "total": 572,
-     "rate": 0.9141,
+     "total": 573,
+     "rate": 0.9143,
      "reliable": true
     },
     "oNLM": {
@@ -688,11 +688,11 @@
   },
   "zabu_ne": {
    "overall": {
-    "n": 112,
-    "seen": 108,
+    "n": 113,
+    "seen": 109,
     "unknown": 50,
-    "total": 162,
-    "rate": 0.9643,
+    "total": 163,
+    "rate": 0.9646,
     "reliable": true
    },
    "by_tide_name": {
@@ -705,10 +705,10 @@
      "reliable": true
     },
     "大潮": {
-     "n": 25,
-     "seen": 25,
+     "n": 26,
+     "seen": 26,
      "unknown": 15,
-     "total": 40,
+     "total": 41,
      "rate": 1.0,
      "reliable": true
     },
@@ -755,10 +755,10 @@
      "reliable": true
     },
     "11": {
-     "n": 8,
-     "seen": 8,
+     "n": 9,
+     "seen": 9,
      "unknown": 7,
-     "total": 15,
+     "total": 16,
      "rate": 1.0,
      "reliable": false
     },
@@ -829,10 +829,10 @@
    },
    "by_flow": {
     "down": {
-     "n": 6,
-     "seen": 6,
+     "n": 7,
+     "seen": 7,
      "unknown": 3,
-     "total": 9,
+     "total": 10,
      "rate": 1.0,
      "reliable": false
     },
@@ -855,11 +855,11 @@
      "reliable": true
     },
     "nNLM": {
-     "n": 33,
-     "seen": 32,
+     "n": 34,
+     "seen": 33,
      "unknown": 6,
-     "total": 39,
-     "rate": 0.9697,
+     "total": 40,
+     "rate": 0.9706,
      "reliable": true
     },
     "oNLM": {
