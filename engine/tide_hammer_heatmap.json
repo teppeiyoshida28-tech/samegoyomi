@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-25T13:24:52.988785+09:00",
+  "generated_at": "2026-11-27T12:42:42.544992+09:00",
   "observation_bias_note": "ショップによる行先・時間の選択、透明度による発見率、記事の記載頻度に偏りがあります。目撃率は自然界の出現確率ではありません。無言及・規模不明・地点不明は未知として扱います。",
-  "n_days": 192,
+  "n_days": 191,
   "window_days": 365,
   "entries": [
     {
@@ -228,14 +228,14 @@
     },
     {
       "phase": "中潮",
-      "days": 63,
-      "seen_days": 60,
-      "encounter_rate": 0.9523809523809523,
-      "avg_size": 3.193548387096774,
-      "n_known_size": 62,
-      "weighted_size": 2.79,
+      "days": 62,
+      "seen_days": 59,
+      "encounter_rate": 0.9516129032258065,
+      "avg_size": 3.2295081967213113,
+      "n_known_size": 61,
+      "weighted_size": 2.83,
       "large_days": 26,
-      "large_rate": 0.419
+      "large_rate": 0.426
     },
     {
       "phase": "若潮",
