@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "retrieved_at": "2026-11-27T12:43:41+09:00",
-  "expires_at": "2026-11-29T00:43:41+09:00",
+  "retrieved_at": "2026-11-28T12:24:34+09:00",
+  "expires_at": "2026-11-30T00:24:34+09:00",
   "status": "partial",
   "source": {
     "provider": "Open-Meteo",
@@ -28,321 +28,177 @@
   },
   "hourly": [
     {
-      "time": "2026-11-27T00:00+09:00",
-      "current_velocity_kmh": 3.5,
-      "current_direction": 69.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T01:00+09:00",
-      "current_velocity_kmh": 3.3,
-      "current_direction": 68.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T02:00+09:00",
-      "current_velocity_kmh": 3.0,
-      "current_direction": 65.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T03:00+09:00",
-      "current_velocity_kmh": 2.8,
-      "current_direction": 63.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T04:00+09:00",
-      "current_velocity_kmh": 2.7,
-      "current_direction": 62.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T05:00+09:00",
-      "current_velocity_kmh": 2.4,
-      "current_direction": 63.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T06:00+09:00",
-      "current_velocity_kmh": 2.4,
-      "current_direction": 63.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T07:00+09:00",
-      "current_velocity_kmh": 2.7,
-      "current_direction": 62.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T08:00+09:00",
-      "current_velocity_kmh": 2.8,
-      "current_direction": 63.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T09:00+09:00",
-      "current_velocity_kmh": 2.9,
-      "current_direction": 60.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T10:00+09:00",
-      "current_velocity_kmh": 3.1,
-      "current_direction": 59.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T11:00+09:00",
-      "current_velocity_kmh": 3.1,
-      "current_direction": 59.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T12:00+09:00",
-      "current_velocity_kmh": 3.0,
-      "current_direction": 57.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T13:00+09:00",
-      "current_velocity_kmh": 3.0,
-      "current_direction": 57.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T14:00+09:00",
-      "current_velocity_kmh": 2.7,
-      "current_direction": 58.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T15:00+09:00",
-      "current_velocity_kmh": 2.5,
-      "current_direction": 60.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T16:00+09:00",
-      "current_velocity_kmh": 2.3,
-      "current_direction": 58.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T17:00+09:00",
-      "current_velocity_kmh": 2.3,
-      "current_direction": 61.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T18:00+09:00",
-      "current_velocity_kmh": 2.3,
-      "current_direction": 61.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T19:00+09:00",
-      "current_velocity_kmh": 2.4,
-      "current_direction": 63.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T20:00+09:00",
-      "current_velocity_kmh": 2.7,
-      "current_direction": 62.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T21:00+09:00",
-      "current_velocity_kmh": 2.9,
-      "current_direction": 60.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T22:00+09:00",
-      "current_velocity_kmh": 3.2,
-      "current_direction": 56.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-27T23:00+09:00",
-      "current_velocity_kmh": 3.5,
-      "current_direction": 55.0,
-      "status": "available"
-    },
-    {
       "time": "2026-11-28T00:00+09:00",
-      "current_velocity_kmh": 3.6,
-      "current_direction": 53.0,
+      "current_velocity_kmh": 3.5,
+      "current_direction": 51.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T01:00+09:00",
-      "current_velocity_kmh": 3.6,
-      "current_direction": 49.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-28T02:00+09:00",
       "current_velocity_kmh": 3.4,
       "current_direction": 47.0,
       "status": "available"
     },
     {
-      "time": "2026-11-28T03:00+09:00",
-      "current_velocity_kmh": 3.2,
+      "time": "2026-11-28T02:00+09:00",
+      "current_velocity_kmh": 3.4,
       "current_direction": 43.0,
       "status": "available"
     },
     {
+      "time": "2026-11-28T03:00+09:00",
+      "current_velocity_kmh": 3.5,
+      "current_direction": 39.0,
+      "status": "available"
+    },
+    {
       "time": "2026-11-28T04:00+09:00",
-      "current_velocity_kmh": 3.1,
-      "current_direction": 40.0,
+      "current_velocity_kmh": 3.6,
+      "current_direction": 37.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T05:00+09:00",
-      "current_velocity_kmh": 2.8,
-      "current_direction": 35.0,
+      "current_velocity_kmh": 3.5,
+      "current_direction": 39.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T06:00+09:00",
-      "current_velocity_kmh": 2.7,
-      "current_direction": 32.0,
+      "current_velocity_kmh": 3.3,
+      "current_direction": 41.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T07:00+09:00",
-      "current_velocity_kmh": 2.5,
-      "current_direction": 30.0,
+      "current_velocity_kmh": 3.3,
+      "current_direction": 45.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T08:00+09:00",
-      "current_velocity_kmh": 2.7,
-      "current_direction": 32.0,
+      "current_velocity_kmh": 3.2,
+      "current_direction": 52.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T09:00+09:00",
-      "current_velocity_kmh": 3.1,
-      "current_direction": 40.0,
+      "current_velocity_kmh": 3.4,
+      "current_direction": 58.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T10:00+09:00",
       "current_velocity_kmh": 3.6,
-      "current_direction": 49.0,
+      "current_direction": 63.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T11:00+09:00",
       "current_velocity_kmh": 3.7,
-      "current_direction": 55.0,
+      "current_direction": 67.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T12:00+09:00",
-      "current_velocity_kmh": 4.0,
-      "current_direction": 60.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-28T13:00+09:00",
-      "current_velocity_kmh": 3.8,
-      "current_direction": 65.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-28T14:00+09:00",
       "current_velocity_kmh": 3.5,
       "current_direction": 69.0,
       "status": "available"
     },
     {
+      "time": "2026-11-28T13:00+09:00",
+      "current_velocity_kmh": 3.4,
+      "current_direction": 72.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-11-28T14:00+09:00",
+      "current_velocity_kmh": 3.0,
+      "current_direction": 76.0,
+      "status": "available"
+    },
+    {
       "time": "2026-11-28T15:00+09:00",
-      "current_velocity_kmh": 3.2,
-      "current_direction": 74.0,
+      "current_velocity_kmh": 2.8,
+      "current_direction": 79.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T16:00+09:00",
-      "current_velocity_kmh": 3.1,
-      "current_direction": 77.0,
+      "current_velocity_kmh": 2.7,
+      "current_direction": 82.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T17:00+09:00",
-      "current_velocity_kmh": 2.9,
-      "current_direction": 83.0,
+      "current_velocity_kmh": 2.5,
+      "current_direction": 82.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T18:00+09:00",
-      "current_velocity_kmh": 2.9,
+      "current_velocity_kmh": 2.5,
       "current_direction": 86.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T19:00+09:00",
-      "current_velocity_kmh": 2.9,
-      "current_direction": 90.0,
+      "current_velocity_kmh": 2.7,
+      "current_direction": 86.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T20:00+09:00",
-      "current_velocity_kmh": 3.1,
-      "current_direction": 90.0,
+      "current_velocity_kmh": 2.9,
+      "current_direction": 86.0,
       "status": "available"
     },
     {
       "time": "2026-11-28T21:00+09:00",
       "current_velocity_kmh": 3.1,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-28T22:00+09:00",
-      "current_velocity_kmh": 3.2,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-11-28T23:00+09:00",
-      "current_velocity_kmh": 3.4,
       "current_direction": 87.0,
       "status": "available"
     },
     {
-      "time": "2026-11-29T00:00+09:00",
-      "current_velocity_kmh": 3.6,
+      "time": "2026-11-28T22:00+09:00",
+      "current_velocity_kmh": 3.4,
       "current_direction": 84.0,
       "status": "available"
     },
     {
-      "time": "2026-11-29T01:00+09:00",
+      "time": "2026-11-28T23:00+09:00",
       "current_velocity_kmh": 3.6,
       "current_direction": 81.0,
       "status": "available"
     },
     {
+      "time": "2026-11-29T00:00+09:00",
+      "current_velocity_kmh": 3.8,
+      "current_direction": 79.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-11-29T01:00+09:00",
+      "current_velocity_kmh": 3.9,
+      "current_direction": 77.0,
+      "status": "available"
+    },
+    {
       "time": "2026-11-29T02:00+09:00",
-      "current_velocity_kmh": 3.5,
-      "current_direction": 78.0,
+      "current_velocity_kmh": 3.7,
+      "current_direction": 76.0,
       "status": "available"
     },
     {
       "time": "2026-11-29T03:00+09:00",
-      "current_velocity_kmh": 3.3,
-      "current_direction": 77.0,
+      "current_velocity_kmh": 3.7,
+      "current_direction": 76.0,
       "status": "available"
     },
     {
       "time": "2026-11-29T04:00+09:00",
-      "current_velocity_kmh": 3.3,
-      "current_direction": 77.0,
+      "current_velocity_kmh": 3.4,
+      "current_direction": 74.0,
       "status": "available"
     },
     {
@@ -360,54 +216,54 @@
     {
       "time": "2026-11-29T07:00+09:00",
       "current_velocity_kmh": 3.1,
-      "current_direction": 77.0,
+      "current_direction": 80.0,
       "status": "available"
     },
     {
       "time": "2026-11-29T08:00+09:00",
       "current_velocity_kmh": 3.1,
-      "current_direction": 77.0,
+      "current_direction": 80.0,
       "status": "available"
     },
     {
       "time": "2026-11-29T09:00+09:00",
-      "current_velocity_kmh": 3.3,
-      "current_direction": 81.0,
+      "current_velocity_kmh": 3.1,
+      "current_direction": 80.0,
       "status": "available"
     },
     {
       "time": "2026-11-29T10:00+09:00",
-      "current_velocity_kmh": 3.3,
-      "current_direction": 77.0,
+      "current_velocity_kmh": 3.1,
+      "current_direction": 83.0,
       "status": "available"
     },
     {
       "time": "2026-11-29T11:00+09:00",
-      "current_velocity_kmh": 3.3,
-      "current_direction": 77.0,
+      "current_velocity_kmh": 3.1,
+      "current_direction": 83.0,
       "status": "available"
     },
     {
       "time": "2026-11-29T12:00+09:00",
       "current_velocity_kmh": 3.1,
-      "current_direction": 80.0,
+      "current_direction": 83.0,
       "status": "available"
     },
     {
       "time": "2026-11-29T13:00+09:00",
-      "current_velocity_kmh": 3.3,
-      "current_direction": 77.0,
+      "current_velocity_kmh": 2.9,
+      "current_direction": 79.0,
       "status": "available"
     },
     {
       "time": "2026-11-29T14:00+09:00",
-      "current_velocity_kmh": 3.1,
-      "current_direction": 80.0,
+      "current_velocity_kmh": 2.9,
+      "current_direction": 79.0,
       "status": "available"
     },
     {
       "time": "2026-11-29T15:00+09:00",
-      "current_velocity_kmh": 2.9,
+      "current_velocity_kmh": 2.8,
       "current_direction": 79.0,
       "status": "available"
     },
@@ -431,7 +287,7 @@
     },
     {
       "time": "2026-11-29T19:00+09:00",
-      "current_velocity_kmh": 2.0,
+      "current_velocity_kmh": 2.2,
       "current_direction": 85.0,
       "status": "available"
     },
@@ -461,14 +317,14 @@
     },
     {
       "time": "2026-11-30T00:00+09:00",
-      "current_velocity_kmh": 2.3,
-      "current_direction": 67.0,
+      "current_velocity_kmh": 2.6,
+      "current_direction": 65.0,
       "status": "available"
     },
     {
       "time": "2026-11-30T01:00+09:00",
-      "current_velocity_kmh": 2.6,
-      "current_direction": 65.0,
+      "current_velocity_kmh": 2.7,
+      "current_direction": 62.0,
       "status": "available"
     },
     {
@@ -503,26 +359,26 @@
     },
     {
       "time": "2026-11-30T07:00+09:00",
-      "current_velocity_kmh": 2.3,
-      "current_direction": 67.0,
+      "current_velocity_kmh": 2.2,
+      "current_direction": 66.0,
       "status": "available"
     },
     {
       "time": "2026-11-30T08:00+09:00",
-      "current_velocity_kmh": 2.4,
-      "current_direction": 73.0,
+      "current_velocity_kmh": 2.3,
+      "current_direction": 72.0,
       "status": "available"
     },
     {
       "time": "2026-11-30T09:00+09:00",
-      "current_velocity_kmh": 2.4,
-      "current_direction": 73.0,
+      "current_velocity_kmh": 2.3,
+      "current_direction": 72.0,
       "status": "available"
     },
     {
       "time": "2026-11-30T10:00+09:00",
-      "current_velocity_kmh": 2.6,
-      "current_direction": 78.0,
+      "current_velocity_kmh": 2.4,
+      "current_direction": 77.0,
       "status": "available"
     },
     {
@@ -558,7 +414,7 @@
     {
       "time": "2026-11-30T16:00+09:00",
       "current_velocity_kmh": 2.4,
-      "current_direction": 81.0,
+      "current_direction": 77.0,
       "status": "available"
     },
     {
@@ -570,7 +426,7 @@
     {
       "time": "2026-11-30T18:00+09:00",
       "current_velocity_kmh": 2.0,
-      "current_direction": 80.0,
+      "current_direction": 85.0,
       "status": "available"
     },
     {
@@ -582,13 +438,13 @@
     {
       "time": "2026-11-30T20:00+09:00",
       "current_velocity_kmh": 1.8,
-      "current_direction": 84.0,
+      "current_direction": 90.0,
       "status": "available"
     },
     {
       "time": "2026-11-30T21:00+09:00",
       "current_velocity_kmh": 1.8,
-      "current_direction": 84.0,
+      "current_direction": 90.0,
       "status": "available"
     },
     {
@@ -665,56 +521,56 @@
     },
     {
       "time": "2026-12-01T10:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 84.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-01T11:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 84.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-01T12:00+09:00",
       "current_velocity_kmh": 2.0,
       "current_direction": 85.0,
       "status": "available"
     },
     {
-      "time": "2026-12-01T13:00+09:00",
+      "time": "2026-12-01T11:00+09:00",
+      "current_velocity_kmh": 2.0,
+      "current_direction": 85.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-01T12:00+09:00",
       "current_velocity_kmh": 2.2,
-      "current_direction": 81.0,
+      "current_direction": 85.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-01T13:00+09:00",
+      "current_velocity_kmh": 2.3,
+      "current_direction": 86.0,
       "status": "available"
     },
     {
       "time": "2026-12-01T14:00+09:00",
-      "current_velocity_kmh": 2.2,
+      "current_velocity_kmh": 2.4,
       "current_direction": 81.0,
       "status": "available"
     },
     {
       "time": "2026-12-01T15:00+09:00",
-      "current_velocity_kmh": 2.4,
-      "current_direction": 81.0,
+      "current_velocity_kmh": 2.5,
+      "current_direction": 82.0,
       "status": "available"
     },
     {
       "time": "2026-12-01T16:00+09:00",
-      "current_velocity_kmh": 2.4,
-      "current_direction": 81.0,
+      "current_velocity_kmh": 2.5,
+      "current_direction": 82.0,
       "status": "available"
     },
     {
       "time": "2026-12-01T17:00+09:00",
-      "current_velocity_kmh": 2.4,
-      "current_direction": 81.0,
+      "current_velocity_kmh": 2.5,
+      "current_direction": 82.0,
       "status": "available"
     },
     {
       "time": "2026-12-01T18:00+09:00",
-      "current_velocity_kmh": 2.4,
-      "current_direction": 81.0,
+      "current_velocity_kmh": 2.5,
+      "current_direction": 86.0,
       "status": "available"
     },
     {
@@ -725,25 +581,25 @@
     },
     {
       "time": "2026-12-01T20:00+09:00",
-      "current_velocity_kmh": 2.2,
+      "current_velocity_kmh": 2.3,
       "current_direction": 90.0,
       "status": "available"
     },
     {
       "time": "2026-12-01T21:00+09:00",
       "current_velocity_kmh": 2.2,
-      "current_direction": 90.0,
+      "current_direction": 95.0,
       "status": "available"
     },
     {
       "time": "2026-12-01T22:00+09:00",
-      "current_velocity_kmh": 2.0,
+      "current_velocity_kmh": 2.2,
       "current_direction": 95.0,
       "status": "available"
     },
     {
       "time": "2026-12-01T23:00+09:00",
-      "current_velocity_kmh": 2.0,
+      "current_velocity_kmh": 2.2,
       "current_direction": 95.0,
       "status": "available"
     },
@@ -761,14 +617,14 @@
     },
     {
       "time": "2026-12-02T02:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 84.0,
+      "current_velocity_kmh": 2.0,
+      "current_direction": 85.0,
       "status": "available"
     },
     {
       "time": "2026-12-02T03:00+09:00",
-      "current_velocity_kmh": 1.6,
-      "current_direction": 84.0,
+      "current_velocity_kmh": 1.8,
+      "current_direction": 79.0,
       "status": "available"
     },
     {
@@ -779,188 +635,188 @@
     },
     {
       "time": "2026-12-02T05:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 69.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-02T06:00+09:00",
       "current_velocity_kmh": 1.4,
       "current_direction": 67.0,
       "status": "available"
     },
     {
-      "time": "2026-12-02T06:00+09:00",
+      "time": "2026-12-02T07:00+09:00",
       "current_velocity_kmh": 1.2,
       "current_direction": 63.0,
       "status": "available"
     },
     {
-      "time": "2026-12-02T07:00+09:00",
+      "time": "2026-12-02T08:00+09:00",
       "current_velocity_kmh": 1.0,
       "current_direction": 59.0,
       "status": "available"
     },
     {
-      "time": "2026-12-02T08:00+09:00",
-      "current_velocity_kmh": 0.8,
-      "current_direction": 63.0,
-      "status": "available"
-    },
-    {
       "time": "2026-12-02T09:00+09:00",
-      "current_velocity_kmh": 0.8,
-      "current_direction": 63.0,
+      "current_velocity_kmh": 0.9,
+      "current_direction": 53.0,
       "status": "available"
     },
     {
       "time": "2026-12-02T10:00+09:00",
-      "current_velocity_kmh": 0.8,
-      "current_direction": 63.0,
+      "current_velocity_kmh": 0.9,
+      "current_direction": 53.0,
       "status": "available"
     },
     {
       "time": "2026-12-02T11:00+09:00",
-      "current_velocity_kmh": 0.8,
-      "current_direction": 63.0,
+      "current_velocity_kmh": 0.9,
+      "current_direction": 53.0,
       "status": "available"
     },
     {
       "time": "2026-12-02T12:00+09:00",
       "current_velocity_kmh": 1.0,
-      "current_direction": 68.0,
+      "current_direction": 59.0,
       "status": "available"
     },
     {
       "time": "2026-12-02T13:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 72.0,
+      "current_velocity_kmh": 1.0,
+      "current_direction": 59.0,
       "status": "available"
     },
     {
       "time": "2026-12-02T14:00+09:00",
+      "current_velocity_kmh": 1.2,
+      "current_direction": 63.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-02T15:00+09:00",
+      "current_velocity_kmh": 1.4,
+      "current_direction": 67.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-02T16:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 69.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-02T17:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 69.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-02T18:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 69.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-02T19:00+09:00",
       "current_velocity_kmh": 1.5,
       "current_direction": 76.0,
       "status": "available"
     },
     {
-      "time": "2026-12-02T15:00+09:00",
-      "current_velocity_kmh": 1.7,
-      "current_direction": 77.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-02T16:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 79.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-02T17:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 79.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-02T18:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 79.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-02T19:00+09:00",
-      "current_velocity_kmh": 1.6,
-      "current_direction": 84.0,
-      "status": "available"
-    },
-    {
       "time": "2026-12-02T20:00+09:00",
-      "current_velocity_kmh": 1.5,
-      "current_direction": 83.0,
+      "current_velocity_kmh": 1.3,
+      "current_direction": 74.0,
       "status": "available"
     },
     {
       "time": "2026-12-02T21:00+09:00",
-      "current_velocity_kmh": 1.5,
-      "current_direction": 83.0,
+      "current_velocity_kmh": 1.1,
+      "current_direction": 81.0,
       "status": "available"
     },
     {
       "time": "2026-12-02T22:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 90.0,
+      "current_velocity_kmh": 1.1,
+      "current_direction": 81.0,
       "status": "available"
     },
     {
       "time": "2026-12-02T23:00+09:00",
-      "current_velocity_kmh": 1.3,
+      "current_velocity_kmh": 1.1,
       "current_direction": 90.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T00:00+09:00",
-      "current_velocity_kmh": 1.4,
+      "current_velocity_kmh": 1.1,
       "current_direction": 90.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T01:00+09:00",
-      "current_velocity_kmh": 1.4,
-      "current_direction": 90.0,
+      "current_velocity_kmh": 1.3,
+      "current_direction": 82.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T02:00+09:00",
-      "current_velocity_kmh": 1.6,
-      "current_direction": 84.0,
+      "current_velocity_kmh": 1.3,
+      "current_direction": 82.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T03:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 84.0,
+      "current_velocity_kmh": 1.5,
+      "current_direction": 76.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T04:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 79.0,
+      "current_velocity_kmh": 1.5,
+      "current_direction": 76.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T05:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 79.0,
+      "current_velocity_kmh": 1.5,
+      "current_direction": 76.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T06:00+09:00",
-      "current_velocity_kmh": 1.7,
-      "current_direction": 77.0,
+      "current_velocity_kmh": 1.5,
+      "current_direction": 76.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T07:00+09:00",
-      "current_velocity_kmh": 1.7,
-      "current_direction": 77.0,
+      "current_velocity_kmh": 1.3,
+      "current_direction": 74.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T08:00+09:00",
-      "current_velocity_kmh": 1.5,
-      "current_direction": 76.0,
+      "current_velocity_kmh": 1.3,
+      "current_direction": 74.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T09:00+09:00",
-      "current_velocity_kmh": 1.5,
-      "current_direction": 76.0,
+      "current_velocity_kmh": 1.1,
+      "current_direction": 72.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T10:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 82.0,
+      "current_velocity_kmh": 1.1,
+      "current_direction": 72.0,
       "status": "available"
     },
     {
       "time": "2026-12-03T11:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 82.0,
+      "current_velocity_kmh": 1.1,
+      "current_direction": 81.0,
       "status": "available"
     },
     {
@@ -971,314 +827,314 @@
     },
     {
       "time": "2026-12-03T13:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 82.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-03T14:00+09:00",
-      "current_velocity_kmh": 1.5,
-      "current_direction": 76.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-03T15:00+09:00",
-      "current_velocity_kmh": 1.7,
-      "current_direction": 77.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-03T16:00+09:00",
-      "current_velocity_kmh": 1.7,
-      "current_direction": 72.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-03T17:00+09:00",
-      "current_velocity_kmh": 1.9,
-      "current_direction": 73.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-03T18:00+09:00",
-      "current_velocity_kmh": 1.9,
-      "current_direction": 73.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-03T19:00+09:00",
-      "current_velocity_kmh": 1.7,
-      "current_direction": 72.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-03T20:00+09:00",
-      "current_velocity_kmh": 1.7,
-      "current_direction": 72.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-03T21:00+09:00",
-      "current_velocity_kmh": 1.5,
-      "current_direction": 76.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-03T22:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 74.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-03T23:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 82.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T00:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 81.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T01:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T02:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T03:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T04:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T05:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 82.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T06:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 82.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T07:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 82.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T08:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T09:00+09:00",
-      "current_velocity_kmh": 0.9,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T10:00+09:00",
-      "current_velocity_kmh": 0.7,
-      "current_direction": 104.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T11:00+09:00",
-      "current_velocity_kmh": 0.7,
-      "current_direction": 104.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T12:00+09:00",
-      "current_velocity_kmh": 0.7,
-      "current_direction": 104.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T13:00+09:00",
-      "current_velocity_kmh": 0.7,
-      "current_direction": 104.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T14:00+09:00",
-      "current_velocity_kmh": 0.9,
-      "current_direction": 101.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T15:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 99.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T16:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 98.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T17:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T18:00+09:00",
-      "current_velocity_kmh": 1.4,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T19:00+09:00",
       "current_velocity_kmh": 1.5,
       "current_direction": 83.0,
       "status": "available"
     },
     {
-      "time": "2026-12-04T20:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 82.0,
+      "time": "2026-12-03T14:00+09:00",
+      "current_velocity_kmh": 1.7,
+      "current_direction": 77.0,
       "status": "available"
     },
     {
-      "time": "2026-12-04T21:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 82.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T22:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 81.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-04T23:00+09:00",
-      "current_velocity_kmh": 0.9,
+      "time": "2026-12-03T15:00+09:00",
+      "current_velocity_kmh": 1.8,
       "current_direction": 79.0,
       "status": "available"
     },
     {
-      "time": "2026-12-05T00:00+09:00",
-      "current_velocity_kmh": 0.7,
-      "current_direction": 76.0,
+      "time": "2026-12-03T16:00+09:00",
+      "current_velocity_kmh": 2.0,
+      "current_direction": 80.0,
       "status": "available"
     },
     {
-      "time": "2026-12-05T01:00+09:00",
-      "current_velocity_kmh": 0.7,
-      "current_direction": 90.0,
+      "time": "2026-12-03T17:00+09:00",
+      "current_velocity_kmh": 2.0,
+      "current_direction": 80.0,
       "status": "available"
     },
     {
-      "time": "2026-12-05T02:00+09:00",
-      "current_velocity_kmh": 0.7,
-      "current_direction": 90.0,
+      "time": "2026-12-03T18:00+09:00",
+      "current_velocity_kmh": 2.0,
+      "current_direction": 80.0,
       "status": "available"
     },
     {
-      "time": "2026-12-05T03:00+09:00",
-      "current_velocity_kmh": 0.7,
-      "current_direction": 90.0,
+      "time": "2026-12-03T19:00+09:00",
+      "current_velocity_kmh": 2.0,
+      "current_direction": 85.0,
       "status": "available"
     },
     {
-      "time": "2026-12-05T04:00+09:00",
-      "current_velocity_kmh": 0.7,
-      "current_direction": 90.0,
+      "time": "2026-12-03T20:00+09:00",
+      "current_velocity_kmh": 1.8,
+      "current_direction": 84.0,
       "status": "available"
     },
     {
-      "time": "2026-12-05T05:00+09:00",
-      "current_velocity_kmh": 0.9,
-      "current_direction": 79.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-05T06:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 81.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-05T07:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 72.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-05T08:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 72.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-05T09:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 72.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-05T10:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 72.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-05T11:00+09:00",
-      "current_velocity_kmh": 1.0,
-      "current_direction": 68.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-05T12:00+09:00",
-      "current_velocity_kmh": 1.1,
-      "current_direction": 81.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-05T13:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 82.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-05T14:00+09:00",
-      "current_velocity_kmh": 1.4,
-      "current_direction": 90.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-05T15:00+09:00",
+      "time": "2026-12-03T21:00+09:00",
       "current_velocity_kmh": 1.6,
       "current_direction": 90.0,
       "status": "available"
     },
     {
-      "time": "2026-12-05T16:00+09:00",
-      "current_velocity_kmh": 1.8,
+      "time": "2026-12-03T22:00+09:00",
+      "current_velocity_kmh": 1.6,
       "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-03T23:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 97.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T00:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 97.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T01:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 97.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T02:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 97.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T03:00+09:00",
+      "current_velocity_kmh": 1.4,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T04:00+09:00",
+      "current_velocity_kmh": 1.6,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T05:00+09:00",
+      "current_velocity_kmh": 1.6,
+      "current_direction": 84.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T06:00+09:00",
+      "current_velocity_kmh": 1.6,
+      "current_direction": 84.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T07:00+09:00",
+      "current_velocity_kmh": 1.7,
+      "current_direction": 77.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T08:00+09:00",
+      "current_velocity_kmh": 1.7,
+      "current_direction": 77.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T09:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 76.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T10:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 83.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T11:00+09:00",
+      "current_velocity_kmh": 1.3,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T12:00+09:00",
+      "current_velocity_kmh": 1.3,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T13:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 97.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T14:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 97.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T15:00+09:00",
+      "current_velocity_kmh": 1.6,
+      "current_direction": 96.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T16:00+09:00",
+      "current_velocity_kmh": 1.6,
+      "current_direction": 96.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T17:00+09:00",
+      "current_velocity_kmh": 1.6,
+      "current_direction": 96.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T18:00+09:00",
+      "current_velocity_kmh": 1.6,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T19:00+09:00",
+      "current_velocity_kmh": 1.4,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T20:00+09:00",
+      "current_velocity_kmh": 1.3,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T21:00+09:00",
+      "current_velocity_kmh": 0.9,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T22:00+09:00",
+      "current_velocity_kmh": 0.7,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-04T23:00+09:00",
+      "current_velocity_kmh": 0.6,
+      "current_direction": 108.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T00:00+09:00",
+      "current_velocity_kmh": 0.4,
+      "current_direction": 117.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T01:00+09:00",
+      "current_velocity_kmh": 0.3,
+      "current_direction": 135.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T02:00+09:00",
+      "current_velocity_kmh": 0.3,
+      "current_direction": 135.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T03:00+09:00",
+      "current_velocity_kmh": 0.4,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T04:00+09:00",
+      "current_velocity_kmh": 0.4,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T05:00+09:00",
+      "current_velocity_kmh": 0.6,
+      "current_direction": 72.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T06:00+09:00",
+      "current_velocity_kmh": 0.7,
+      "current_direction": 76.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T07:00+09:00",
+      "current_velocity_kmh": 0.8,
+      "current_direction": 63.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T08:00+09:00",
+      "current_velocity_kmh": 0.8,
+      "current_direction": 63.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T09:00+09:00",
+      "current_velocity_kmh": 0.8,
+      "current_direction": 63.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T10:00+09:00",
+      "current_velocity_kmh": 0.7,
+      "current_direction": 76.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T11:00+09:00",
+      "current_velocity_kmh": 0.7,
+      "current_direction": 76.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T12:00+09:00",
+      "current_velocity_kmh": 0.9,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T13:00+09:00",
+      "current_velocity_kmh": 1.1,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T14:00+09:00",
+      "current_velocity_kmh": 1.3,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T15:00+09:00",
+      "current_velocity_kmh": 1.5,
+      "current_direction": 97.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T16:00+09:00",
+      "current_velocity_kmh": 1.6,
+      "current_direction": 96.0,
       "status": "available"
     },
     {
@@ -1289,188 +1145,332 @@
     },
     {
       "time": "2026-12-05T18:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 96.0,
+      "current_velocity_kmh": 2.0,
+      "current_direction": 90.0,
       "status": "available"
     },
     {
       "time": "2026-12-05T19:00+09:00",
-      "current_velocity_kmh": 1.8,
-      "current_direction": 96.0,
+      "current_velocity_kmh": 2.0,
+      "current_direction": 90.0,
       "status": "available"
     },
     {
       "time": "2026-12-05T20:00+09:00",
-      "current_velocity_kmh": 1.7,
-      "current_direction": 103.0,
+      "current_velocity_kmh": 2.0,
+      "current_direction": 90.0,
       "status": "available"
     },
     {
       "time": "2026-12-05T21:00+09:00",
-      "current_velocity_kmh": 1.3,
-      "current_direction": 106.0,
+      "current_velocity_kmh": 1.8,
+      "current_direction": 90.0,
       "status": "available"
     },
     {
       "time": "2026-12-05T22:00+09:00",
+      "current_velocity_kmh": 1.6,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-05T23:00+09:00",
+      "current_velocity_kmh": 1.3,
+      "current_direction": 98.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T00:00+09:00",
+      "current_velocity_kmh": 1.1,
+      "current_direction": 99.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T01:00+09:00",
       "current_velocity_kmh": 1.0,
       "current_direction": 112.0,
       "status": "available"
     },
     {
-      "time": "2026-12-05T23:00+09:00",
-      "current_velocity_kmh": 0.8,
-      "current_direction": 135.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-06T00:00+09:00",
-      "current_velocity_kmh": 0.6,
-      "current_direction": 162.0,
-      "status": "available"
-    },
-    {
-      "time": "2026-12-06T01:00+09:00",
-      "current_velocity_kmh": 0.5,
-      "current_direction": 180.0,
-      "status": "available"
-    },
-    {
       "time": "2026-12-06T02:00+09:00",
-      "current_velocity_kmh": 0.6,
-      "current_direction": 198.0,
+      "current_velocity_kmh": 0.8,
+      "current_direction": 117.0,
       "status": "available"
     },
     {
       "time": "2026-12-06T03:00+09:00",
-      "current_velocity_kmh": 0.6,
-      "current_direction": 198.0,
+      "current_velocity_kmh": 0.8,
+      "current_direction": 117.0,
       "status": "available"
     },
     {
       "time": "2026-12-06T04:00+09:00",
-      "current_velocity_kmh": 0.4,
-      "current_direction": 207.0,
+      "current_velocity_kmh": 0.7,
+      "current_direction": 104.0,
       "status": "available"
     },
     {
       "time": "2026-12-06T05:00+09:00",
-      "current_velocity_kmh": 0.3,
-      "current_direction": 225.0,
+      "current_velocity_kmh": 0.7,
+      "current_direction": 90.0,
       "status": "available"
     },
     {
       "time": "2026-12-06T06:00+09:00",
-      "current_velocity_kmh": 0.2,
-      "current_direction": 270.0,
+      "current_velocity_kmh": 0.7,
+      "current_direction": 90.0,
       "status": "available"
     },
     {
       "time": "2026-12-06T07:00+09:00",
-      "current_velocity_kmh": 0.2,
-      "current_direction": 270.0,
+      "current_velocity_kmh": 0.7,
+      "current_direction": 76.0,
       "status": "available"
     },
     {
       "time": "2026-12-06T08:00+09:00",
+      "current_velocity_kmh": 0.6,
+      "current_direction": 72.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T09:00+09:00",
+      "current_velocity_kmh": 0.4,
+      "current_direction": 63.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T10:00+09:00",
+      "current_velocity_kmh": 0.4,
+      "current_direction": 63.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T11:00+09:00",
+      "current_velocity_kmh": 0.3,
+      "current_direction": 45.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T12:00+09:00",
+      "current_velocity_kmh": 0.2,
+      "current_direction": 0.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T13:00+09:00",
+      "current_velocity_kmh": 0.0,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T14:00+09:00",
+      "current_velocity_kmh": 0.0,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T15:00+09:00",
+      "current_velocity_kmh": 0.0,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T16:00+09:00",
+      "current_velocity_kmh": 0.2,
+      "current_direction": 90.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T17:00+09:00",
+      "current_velocity_kmh": 0.4,
+      "current_direction": 63.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T18:00+09:00",
+      "current_velocity_kmh": 0.6,
+      "current_direction": 72.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T19:00+09:00",
+      "current_velocity_kmh": 0.6,
+      "current_direction": 72.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T20:00+09:00",
+      "current_velocity_kmh": 0.6,
+      "current_direction": 72.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T21:00+09:00",
+      "current_velocity_kmh": 0.4,
+      "current_direction": 63.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T22:00+09:00",
+      "current_velocity_kmh": 0.3,
+      "current_direction": 45.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-06T23:00+09:00",
+      "current_velocity_kmh": 0.2,
+      "current_direction": 0.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-07T00:00+09:00",
+      "current_velocity_kmh": 0.4,
+      "current_direction": 270.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-07T01:00+09:00",
+      "current_velocity_kmh": 0.5,
+      "current_direction": 270.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-07T02:00+09:00",
+      "current_velocity_kmh": 0.7,
+      "current_direction": 256.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-07T03:00+09:00",
+      "current_velocity_kmh": 0.7,
+      "current_direction": 256.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-07T04:00+09:00",
+      "current_velocity_kmh": 0.7,
+      "current_direction": 256.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-07T05:00+09:00",
+      "current_velocity_kmh": 0.5,
+      "current_direction": 270.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-07T06:00+09:00",
+      "current_velocity_kmh": 0.4,
+      "current_direction": 297.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-07T07:00+09:00",
+      "current_velocity_kmh": 0.4,
+      "current_direction": 297.0,
+      "status": "available"
+    },
+    {
+      "time": "2026-12-07T08:00+09:00",
       "current_velocity_kmh": 0.3,
       "current_direction": 315.0,
       "status": "available"
     },
     {
-      "time": "2026-12-06T09:00+09:00",
+      "time": "2026-12-07T09:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T10:00+09:00",
+      "time": "2026-12-07T10:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T11:00+09:00",
+      "time": "2026-12-07T11:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T12:00+09:00",
+      "time": "2026-12-07T12:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T13:00+09:00",
+      "time": "2026-12-07T13:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T14:00+09:00",
+      "time": "2026-12-07T14:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T15:00+09:00",
+      "time": "2026-12-07T15:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T16:00+09:00",
+      "time": "2026-12-07T16:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T17:00+09:00",
+      "time": "2026-12-07T17:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T18:00+09:00",
+      "time": "2026-12-07T18:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T19:00+09:00",
+      "time": "2026-12-07T19:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T20:00+09:00",
+      "time": "2026-12-07T20:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T21:00+09:00",
+      "time": "2026-12-07T21:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T22:00+09:00",
+      "time": "2026-12-07T22:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     },
     {
-      "time": "2026-12-06T23:00+09:00",
+      "time": "2026-12-07T23:00+09:00",
       "current_velocity_kmh": null,
       "current_direction": null,
       "status": "missing"
     }
   ],
   "coverage": {
-    "start": "2026-11-27T00:00+09:00",
-    "end": "2026-12-06T23:00+09:00",
-    "last_valid_time": "2026-12-06T08:00+09:00"
+    "start": "2026-11-28T00:00+09:00",
+    "end": "2026-12-07T23:00+09:00",
+    "last_valid_time": "2026-12-07T08:00+09:00"
   }
 }
